@@ -1,0 +1,6 @@
+.home-page {
+  width: 100%;
+  height: 95vh; /* Chiều cao toàn bộ màn hình */
+  display: flex;
+  color: #FFF; /* Màu chữ */
+}
