@@ -1,0 +1,163 @@
+/* Tổng thể form tìm kiếm */
+.form-header * {
+  color: white;
+  text-align: center;
+  margin-bottom: 10px;
+}
+
+.title {
+  font-size: 36px;
+  font-weight: bold;
+}
+
+.subtitle {
+  font-size: 18px;
+  margin-bottom: 20px;
+}
+
+.form-search {
+  padding: 20px;
+  border-radius: 10px;
+  max-width: 900px;
+  margin: 0 auto;
+}
+
+.form-top {
+  display: flex;
+  justify-content: center;
+  font-size: 22px;
+  background-color: #fff;
+  margin: 0 160px;
+  border-radius: 10px 10px 0 0;
+}
+
+.form-top a {
+  padding: 10px 20px;
+  margin: 0 10px;
+  text-decoration: none;
+  color: #428bca;
+}
+
+.form-top a.active,
+.form-top a:hover {
+  text-decoration: underline;
+  color: #0979fd;
+}
+
+/* Desktop và Mobile */
+.desktop {
+  display: block;
+}
+
+.mobile {
+  display: none;
+}
+
+@media screen and (max-width: 768px) {
+  .title {
+    font-size: 24px;
+  }
+  .subtitle {
+    font-size: 18px;
+  }
+  .form-top {
+    background-color: #fff;
+    margin: 0 8%;
+    border-radius: 5px 5px 0 0;
+    font-size: 18px;
+  }
+
+  .form-chose-date {
+    font-size: 14px !important;
+  }
+  .desktop {
+    display: none;
+  }
+  .mobile {
+    display: block;
+  }
+}
+
+/* Form chọn ngày và thông tin */
+.form-chose-date {
+  background-color: #fff;
+  border-radius: 10px;
+  font-size: 18px;
+  padding: 10px;
+}
+
+.row {
+  display: flex;
+  justify-content: space-between;
+  flex-wrap: wrap;
+}
+
+.column {
+  flex: 1;
+  padding: 10px;
+}
+
+.item {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: 10px;
+  border: 1px solid #ccc;
+  border-radius: 5px;
+  background-color: #fff;
+  margin-bottom: 15px;
+  min-height: 60px;
+}
+
+.item-chose {
+  width: 100%;
+  text-align: center;
+}
+
+.item-chose span {
+  display: block;
+  margin-bottom: 5px;
+}
+
+.item-chose .form-control-x {
+  width: fit-content;
+  padding: 5px;
+  border-radius: 3px;
+  border: none;
+  color: #0979fd;
+}
+
+/* Button tìm kiếm */
+.btn-search {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background-color: #dc3545;
+  color: white;
+  border-radius: 5px;
+  cursor: pointer;
+  text-align: center;
+  min-height: 81.6px;
+}
+
+.btn-search:hover {
+  background-color: #c82333;
+}
+
+.chose * {
+  text-align: center;
+  cursor: pointer;
+}
+
+/* Datepicker */
+input.calendar {
+  text-align: center;
+  border: 0px;
+  color: #0979fd;
+  cursor: pointer;
+}
+
+.react-datepicker {
+  transform: scale(1.5);
+  transform-origin: top left;
+}

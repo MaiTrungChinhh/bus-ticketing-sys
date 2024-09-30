@@ -6,13 +6,10 @@ export const routes = [
   {
     path: '/home',
     page: HomePage,
-    isShowFooter: true,
   },
   {
     path: '/order',
     page: OrderPage,
-    isShowHeader: true,
-    isShowFooter: true,
   },
   {
     path: '*',

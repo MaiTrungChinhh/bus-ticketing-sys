@@ -14,7 +14,7 @@ function App() {
   const currentRoute = routes.find((route) => route.path === location.pathname);
 
   return (
-    <div>
+    <>
       {currentRoute && currentRoute.isShowHeader && <HeaderComponent />}
       <Routes>
         {routes.map((route, index) => (
@@ -22,7 +22,7 @@ function App() {
         ))}
       </Routes>
       {currentRoute && currentRoute.isShowFooter && <FooterComponent />}
-    </div>
+    </>
   );
 }
 

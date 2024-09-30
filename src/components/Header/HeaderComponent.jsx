@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 import logo from 'frontend/src/assets/images/logo.png';
 import 'frontend/src/styles/HomePage.css';
 import { PiUserCircleThin } from 'react-icons/pi';
@@ -6,10 +6,16 @@ import { IoHome } from 'react-icons/io5';
 import { LuClock3 } from 'react-icons/lu';
 
 const HeaderComponent = () => {
+  const [isMenuOpen, setIsMenuOpen] = useState(false);
+
+  const toggleMenu = () => {
+    setIsMenuOpen(!isMenuOpen);
+  };
+
   return (
-    <div className="wrapper">
+    <div className="Header">
       <div className="container">
-        <div className="menu-bar">
+        <div className="menu-bar" onClick={toggleMenu}>
           <span className="line-1"></span>
           <span className="line-2"></span>
           <span className="line-3"></span>
@@ -21,8 +27,8 @@ const HeaderComponent = () => {
         >
           <img src={logo} alt="Logo" />
         </a>
-        <div className="header-nav-container">
-          <nav className="header-nav">
+        <div className={`header-nav-container ${isMenuOpen ? 'active' : ''}`}>
+          <nav className={`header-nav ${isMenuOpen ? 'active' : ''}`}>
             <ul className="nav-list">
               <li className="nav-item">
                 <a className="home" title="Trang chủ" href="/home">
@@ -61,7 +67,6 @@ const HeaderComponent = () => {
         <div className="account-header">
           <div className="account">
             <a href="/users/login/" alt="user" className="account-link">
-              {' '}
               <PiUserCircleThin className="icon-large" />
               <span className="text">
                 Tài khoản <i className="fa fa-angle-down"></i>

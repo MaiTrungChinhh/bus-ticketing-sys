@@ -1,11 +1,11 @@
 import React, { useEffect, useState } from 'react';
 import { BACKGROUND_IMAGE_URLS } from 'frontend/src/constants/constrants';
-import HeaderComponent from '../../components/Header/HeaderComponent';
+import FindTicketComponent from '../../components/FindTicketComponent/FindTicketComponent';
 import 'frontend/src/styles/HomePage.css';
+import HeaderComponent from '../../components/Header/HeaderComponent';
 
-const HomePage = () => {
-  const [backgroundImage, setBackgroundImage] = useState('');
-
+// Component riêng để xử lý việc thay đổi hình nền
+const BackgroundChanger = ({ setBackgroundImage }) => {
   useEffect(() => {
     const images = Object.values(BACKGROUND_IMAGE_URLS);
     const randomImage = images[Math.floor(Math.random() * images.length)];
@@ -17,7 +17,13 @@ const HomePage = () => {
     }, 5000); // Chuyển đổi mỗi 5 giây
 
     return () => clearInterval(interval); // Dọn dẹp interval khi component unmount
-  }, []);
+  }, [setBackgroundImage]);
+
+  return null; // Không cần render gì cả
+};
+
+const HomePage = () => {
+  const [backgroundImage, setBackgroundImage] = useState('');
 
   return (
     <div
@@ -29,6 +35,8 @@ const HomePage = () => {
       }}
     >
       <HeaderComponent />
+      <FindTicketComponent />
+      <BackgroundChanger setBackgroundImage={setBackgroundImage} />
     </div>
   );
 };
