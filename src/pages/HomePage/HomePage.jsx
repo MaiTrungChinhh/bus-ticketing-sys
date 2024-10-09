@@ -1,8 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { BACKGROUND_IMAGE_URLS } from 'frontend/src/constants/constrants';
-import FindTicketComponent from '../../components/FindTicketComponent/FindTicketComponent';
-import 'frontend/src/styles/HomePage.css';
 import HeaderComponent from '../../components/Header/HeaderComponent';
+import FindTicketComponent from '../../components/FindTicketComponent/FindTicketComponent';
 
 // Component riêng để xử lý việc thay đổi hình nền
 const BackgroundChanger = ({ setBackgroundImage }) => {
@@ -27,11 +26,9 @@ const HomePage = () => {
 
   return (
     <div
-      className="home-page"
+      className="h-[95vh] bg-cover bg-center"
       style={{
         backgroundImage: `url(${backgroundImage})`,
-        backgroundSize: 'cover',
-        backgroundPosition: 'center',
       }}
     >
       <HeaderComponent />
