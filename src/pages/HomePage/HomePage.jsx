@@ -32,7 +32,9 @@ const HomePage = () => {
       }}
     >
       <HeaderComponent />
-      <FindTicketComponent />
+      <div className="flex justify-center items-center h-full mt-[-40px]">
+        <FindTicketComponent />
+      </div>
       <BackgroundChanger setBackgroundImage={setBackgroundImage} />
     </div>
   );
