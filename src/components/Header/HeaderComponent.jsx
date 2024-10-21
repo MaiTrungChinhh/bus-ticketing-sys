@@ -1,12 +1,15 @@
-import React, { useState } from 'react';
 import logo from 'frontend/src/assets/images/logo.png';
-import { PiUserCircleThin } from 'react-icons/pi';
-import { IoHome, IoClose } from 'react-icons/io5';
+import React, { useState } from 'react';
+import { IoClose, IoHome } from 'react-icons/io5';
 import { LuClock3 } from 'react-icons/lu';
+import { PiUserCircleThin } from 'react-icons/pi';
+import Login from '../../Account/Login';
+import RegisterAccount from '../../Account/RegisterAccout';
 
 const HeaderComponent = () => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [isAccountDropdownOpen, setIsAccountDropdownOpen] = useState(false);
+  const [showLogin, setShowLogin, ShowRegister, setRegister] = useState(false);   // Quản lý trạng thái hiển thị
 
   const toggleMenu = () => {
     setIsMenuOpen(!isMenuOpen);
@@ -19,6 +22,18 @@ const HeaderComponent = () => {
   const handleMouseLeave = () => {
     setIsAccountDropdownOpen(false);
   };
+
+  const handleLoginClick = () => {
+    setShowLogin(true);
+    setRegister(true) // Khi nhấn vào nút, đổi trạng thái để hiển thị component Login
+  }
+  if (showLogin) {
+    return <Login />; // Nếu trạng thái là true, hiển thị component Login
+  };
+  if (ShowRegister) {
+    return <RegisterAccount />; // Nếu trạng thái là true, hiển thị component Login
+  };
+
 
   return (
     <div className="header-container w-full font-medium">
@@ -48,9 +63,8 @@ const HeaderComponent = () => {
         </div>
 
         <div
-          className={`${
-            isMenuOpen ? 'flex' : 'hidden'
-          } flex-col lg:flex lg:flex-row lg:items-center lg:ml-10 bg-white lg:bg-transparent lg:relative absolute left-0 w-full lg:w-auto z-10 mt-72 lg:mt-0`}
+          className={`${isMenuOpen ? 'flex' : 'hidden'
+            } flex-col lg:flex lg:flex-row lg:items-center lg:ml-10 bg-white lg:bg-transparent lg:relative absolute left-0 w-full lg:w-auto z-10 mt-72 lg:mt-0`}
         >
           <nav className="navigation">
             <ul className="nav-list flex flex-col lg:flex-row lg:space-x-6 space-y-2 lg:space-y-0 p-4 lg:p-0">
@@ -107,26 +121,26 @@ const HeaderComponent = () => {
               </span>
             </a>
             <ul
-              className={`absolute left-0 w-fit bg-white border border-gray-300 mt-2 ${
-                isAccountDropdownOpen ? 'block' : 'hidden'
-              }`}
+              className={`absolute left-0 w-fit bg-white border border-gray-300 mt-2 ${isAccountDropdownOpen ? 'block' : 'hidden'
+                }`}
             >
               <li>
                 <a
                   className="block px-4 py-2 text-blue-500 hover:bg-gray-100 dropdown-item text-2xl whitespace-nowrap"
-                  href="/users/login/"
+                  href="/login"
                   title="Đăng nhập"
+
                 >
-                  Đăng nhập
+                  <button onClick={handleLoginClick} className="login-button">Đăng nhập</button>
                 </a>
               </li>
               <li>
                 <a
                   className="block px-4 py-2 text-blue-500 hover:bg-gray-100 dropdown-item text-2xl whitespace-nowrap"
-                  href="/users/register/"
+                  href="/register"
                   title="Đăng ký"
                 >
-                  Đăng ký
+                  <button onClick={handleLoginClick} className="register-button">Đăng ký</button>
                 </a>
               </li>
               <li>
