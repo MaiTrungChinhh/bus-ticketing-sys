@@ -1,7 +1,7 @@
-import React, { useEffect, useState } from 'react';
 import { BACKGROUND_IMAGE_URLS } from 'frontend/src/constants/constrants';
-import HeaderComponent from '../../components/Header/HeaderComponent';
+import React, { useEffect, useState } from 'react';
 import FindTicketComponent from '../../components/FindTicketComponent/FindTicketComponent';
+import HeaderComponent from '../../components/Header/HeaderComponent';
 
 // Component riêng để xử lý việc thay đổi hình nền
 const BackgroundChanger = ({ setBackgroundImage }) => {
@@ -22,7 +22,7 @@ const BackgroundChanger = ({ setBackgroundImage }) => {
 };
 
 const HomePage = () => {
-  const [backgroundImage, setBackgroundImage] = useState('');
+  const [backgroundImage, setBackgroundImage] = useState(''); 
 
   return (
     <div

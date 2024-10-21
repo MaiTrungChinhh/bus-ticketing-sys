@@ -1,14 +1,14 @@
 import React from 'react';
-import './App.css';
 import {
+  Route,
   BrowserRouter as Router,
   Routes,
-  Route,
   useLocation,
 } from 'react-router-dom';
-import { routes } from './routes';
-import HeaderComponent from './components/Header/HeaderComponent';
+import './App.css';
 import FooterComponent from './components/Footer/FooterComponent';
+import HeaderComponent from './components/Header/HeaderComponent';
+import { routes } from './routes';
 
 function App() {
   const location = useLocation();
@@ -17,12 +17,13 @@ function App() {
   return (
     <>
       {currentRoute && currentRoute.isShowHeader && <HeaderComponent />}
+    
       <Routes>
         {routes.map((route, index) => (
           <Route key={index} path={route.path} element={<route.page />} />
         ))}
       </Routes>
-      {currentRoute && currentRoute.isShowFooter && <FooterComponent />}
+        {currentRoute && currentRoute.isShowFooter && <FooterComponent />} 
     </>
   );
 }
