@@ -41,7 +41,7 @@ const HeaderComponent = () => {
           <a
             className="logo flex-shrink-0"
             title="Chín Nghĩa - Tất cả vì khách hàng"
-            href="/home"
+            href="/"
           >
             <img src={logo} alt="Logo" className="logo-image h-12 lg:h-24" />
           </a>
@@ -56,7 +56,7 @@ const HeaderComponent = () => {
             <ul className="nav-list flex flex-col lg:flex-row lg:space-x-6 space-y-2 lg:space-y-0 p-4 lg:p-0">
               {[
                 {
-                  href: '/home',
+                  href: '/',
                   title: 'Trang chủ',
                   icon: <IoHome className="text-3xl" />,
                 },

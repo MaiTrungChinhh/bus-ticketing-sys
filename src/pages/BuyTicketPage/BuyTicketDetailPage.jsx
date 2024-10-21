@@ -2,10 +2,10 @@ import React from 'react';
 import DefaultComponent from '../../components/DefaultComponent/DefaultComponent';
 import Breadcrumb from '../../components/Breadcrumb/Breadcrumb';
 import StepProgress from '../../components/StepProgress/StepProgress';
-import BookingForm from '../../components/FindTicketComponent/BookingForm';
-import TableTrip from '../../components/FindTicketComponent/TableTrip';
+import FormTicketInformation from '../../components/DetailTicket/FormTicketInfor';
+import ChooseChair from '../../components/DetailTicket/ChooseChair';
 
-const BuyTicketPage = () => {
+const BuyTicketDetailPage = () => {
   const breadcrumbItems = [
     { label: 'Trang nhất', link: '/' },
     { label: 'Mua vé online', link: '/muave' },
@@ -16,21 +16,12 @@ const BuyTicketPage = () => {
     <DefaultComponent>
       <div className="mx-20 flex flex-col">
         <Breadcrumb items={breadcrumbItems} />
-        <StepProgress currentStep={0} />
-        <div className="flex justify-between mx-10 w-full">
-          {' '}
-          <div className="flex-grow pr-4">
-            {' '}
-            <TableTrip />
-          </div>
-          <div className="flex-grow pl-4">
-            {' '}
-            <BookingForm />
-          </div>
-        </div>
+        <StepProgress currentStep={1} />
+        <FormTicketInformation />
+        <ChooseChair vehicleId="1" />
       </div>
     </DefaultComponent>
   );
 };
 
-export default BuyTicketPage;
+export default BuyTicketDetailPage;

@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import { MdOutlineLocationOn } from 'react-icons/md';
 import { GoArrowSwitch } from 'react-icons/go';
 import DatePicker from 'react-datepicker';
+import { Link } from 'react-router-dom';
 import 'react-datepicker/dist/react-datepicker.css';
 
 const FindTicketComponent = () => {
@@ -146,9 +147,11 @@ const FindTicketComponent = () => {
           )}
 
           <div className="text-center mt-4">
-            <button className="bg-blue-500 text-white lg:text-2xl px-6 py-3 rounded-lg hover:bg-blue-900">
-              Tìm vé
-            </button>
+            <Link to="/buyticket">
+              <button className="bg-blue-500 text-white lg:text-2xl px-6 py-3 rounded-lg hover:bg-blue-900">
+                Tìm vé
+              </button>
+            </Link>
           </div>
         </div>
       </div>
