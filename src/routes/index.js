@@ -8,6 +8,8 @@ import NotFoundPage from '../pages/NotFoundPage/NotFoundPage';
 import OrderPage from '../pages/OrderPage/OrderPage';
 import BuyTicketPage from '../pages/BuyTicketPage/BuyTicketPage';
 import BuyTicketDetailPage from '../pages/BuyTicketPage/BuyTicketDetailPage';
+import PaymentPage from '../pages/BuyTicketPage/PaymentPage';
+import Dashboard from '../pages/AdminPage/DashboardPage';
 
 export const routes = [
   {
@@ -33,7 +35,10 @@ export const routes = [
   {
     path: '/admin',
     page: AdminPage,
-    isShowAdmin: true,
+  },
+  {
+    path: '/dashboard',
+    page: Dashboard,
   },
   {
     path: '/login',
@@ -46,6 +51,10 @@ export const routes = [
   {
     path: '/buyticket/detail/:id',
     page: BuyTicketDetailPage,
+  },
+  {
+    path: '/payment',
+    page: PaymentPage,
   },
   {
     path: '*',

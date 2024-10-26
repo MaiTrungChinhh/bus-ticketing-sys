@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 
+// Hàm fetch để lấy thông tin xe
 const fetchVehicleDetails = async (vehicleId) => {
   const sampleData = {
     1: {
@@ -33,12 +34,12 @@ const fetchVehicleDetails = async (vehicleId) => {
   });
 };
 
-const SeatSelection = ({ vehicleId }) => {
+const ChooseChair = ({ selectedSeats, onSeatSelect, vehicleId }) => {
   const [vehicleType, setVehicleType] = useState('');
   const [reservedSeats, setReservedSeats] = useState([]);
-  const [selectedSeat, setSelectedSeat] = useState(null);
   const [totalSeats, setTotalSeats] = useState(0);
 
+  // Hàm để lấy thông tin xe
   useEffect(() => {
     const getVehicleDetails = async () => {
       try {
@@ -54,111 +55,133 @@ const SeatSelection = ({ vehicleId }) => {
     getVehicleDetails();
   }, [vehicleId]);
 
+  // Hàm kiểm tra ghế có hợp lệ không
+  const isSeatValid = (currentSeatNumber) => {
+    return currentSeatNumber < totalSeats;
+  };
+
+  // Hàm để chọn hoặc hủy chọn ghế
+  const toggleSeatSelection = (seat) => {
+    if (selectedSeats.includes(seat)) {
+      onSeatSelect(seat); // Bỏ chọn ghế
+    } else if (selectedSeats.length < 4) {
+      onSeatSelect(seat); // Chọn ghế nếu chưa đủ 4 ghế
+    } else {
+      alert('Bạn chỉ có thể chọn tối đa 4 ghế!'); // Thông báo cho người dùng
+    }
+  };
+
+  // Hàm để render ghế dựa trên loại xe
   const renderSeats = () => {
     switch (vehicleType) {
       case 'regular':
-        return (
-          <div className="grid grid-cols-6 gap-4">
-            {Array.from({ length: totalSeats }).map((_, index) => (
-              <div
-                key={index}
-                className={`seat regular h-16 w-16 flex items-center justify-center border-2 rounded-lg cursor-pointer transition duration-200 ease-in-out ${
-                  selectedSeat === index
-                    ? 'bg-blue-500 text-white'
-                    : reservedSeats.includes(index)
-                    ? 'bg-gray-300 text-gray-500 cursor-not-allowed'
-                    : 'bg-white text-black'
-                }`}
-                onClick={() => {
-                  if (!reservedSeats.includes(index)) {
-                    setSelectedSeat(index);
-                  }
-                }}
-              >
-                {index + 1}
-              </div>
-            ))}
-          </div>
-        );
-
+        return renderRegularSeats();
       case 'luxury':
-        const seatsPerRow = 6; // Số ghế trong mỗi hàng
-        const numberOfRows = Math.ceil(totalSeats / seatsPerRow); // Tính số hàng dựa trên tổng số ghế
-
-        return (
-          <div className="space-y-4">
-            {/* Tạo các hàng ghế cho xe VIP */}
-            {Array.from({ length: numberOfRows }).map((_, rowIndex) => (
-              <div key={rowIndex} className="flex gap-x-4">
-                {Array.from({ length: seatsPerRow }).map((_, seatIndex) => {
-                  const seatLetter = String.fromCharCode(
-                    65 + Math.floor(seatIndex / 2)
-                  ); // Chuyển đổi chỉ số ghế thành chữ cái
-                  const seatNumber = (seatIndex % 2) + 1 + rowIndex * 2; // Tính số ghế theo định dạng A1, A2, B1, B2
-
-                  const currentSeatNumber =
-                    rowIndex * seatsPerRow + seatIndex + 1; // Tính số ghế hiện tại
-
-                  if (currentSeatNumber > totalSeats) return null; // Bỏ qua ghế nếu vượt quá tổng ghế
-
-                  return (
-                    <div
-                      key={`${seatLetter}${seatNumber}`}
-                      className={`seat vip h-16 w-16 flex items-center justify-center border-2 rounded-lg cursor-pointer transition duration-200 ease-in-out ${
-                        selectedSeat === `${seatLetter}${seatNumber}` // So sánh ghế đã chọn
-                          ? 'bg-blue-500 text-white'
-                          : reservedSeats.includes(currentSeatNumber)
-                          ? 'bg-gray-300 text-gray-500 cursor-not-allowed'
-                          : 'bg-white text-black'
-                      }`}
-                      onClick={() => {
-                        if (!reservedSeats.includes(currentSeatNumber)) {
-                          setSelectedSeat(`${seatLetter}${seatNumber}`); // Đặt ghế đã chọn
-                        }
-                      }}
-                    >
-                      {`${seatLetter}${seatNumber}`}{' '}
-                      {/* Hiển thị số ghế với định dạng A1, A2, B1, B2 */}
-                    </div>
-                  );
-                })}
-              </div>
-            ))}
-          </div>
-        );
-
+        return renderLuxurySeats();
       case 'limousine':
-        return (
-          <div className="grid grid-cols-4 gap-4">
-            <div className="text-lg font-semibold">
-              Tổng số ghế: {totalSeats}
-            </div>
-            {Array.from({ length: totalSeats }).map((_, index) => (
-              <div
-                key={index}
-                className={`seat limousine h-16 w-16 flex items-center justify-center border-2 rounded-lg cursor-pointer transition duration-200 ease-in-out ${
-                  selectedSeat === index
-                    ? 'bg-blue-500 text-white'
-                    : reservedSeats.includes(index)
-                    ? 'bg-gray-300 text-gray-500 cursor-not-allowed'
-                    : 'bg-white text-black'
-                }`}
-                onClick={() => {
-                  if (!reservedSeats.includes(index)) {
-                    setSelectedSeat(index);
-                  }
-                }}
-              >
-                {index + 1}
-              </div>
-            ))}
-          </div>
-        );
-
+        return renderLimousineSeats();
       default:
         return null;
     }
   };
+
+  // Hàm để render ghế cho xe thường
+  const renderRegularSeats = () => (
+    <div className="grid grid-cols-6 gap-4">
+      {Array.from({ length: totalSeats }).map((_, index) => (
+        <div
+          key={index}
+          className={`seat regular h-16 w-16 flex items-center justify-center border-2 rounded-lg cursor-pointer transition duration-200 ease-in-out ${
+            selectedSeats.includes(index)
+              ? 'bg-blue-500 text-white'
+              : reservedSeats.includes(index)
+              ? 'bg-gray-300 text-gray-500 cursor-not-allowed'
+              : 'bg-white text-black'
+          }`}
+          onClick={() => {
+            if (!reservedSeats.includes(index)) {
+              toggleSeatSelection(index); // Chọn ghế
+            }
+          }}
+        >
+          {index + 1}
+        </div>
+      ))}
+    </div>
+  );
+
+  // Hàm để render ghế cho xe VIP
+  const renderLuxurySeats = () => {
+    const seatsPerRow = 6; // Số ghế trong mỗi hàng
+    const numberOfRows = Math.ceil(totalSeats / seatsPerRow); // Tính số hàng
+
+    return (
+      <div className="space-y-4">
+        {Array.from({ length: numberOfRows }).map((_, rowIndex) => (
+          <div key={rowIndex} className="flex gap-x-4">
+            {Array.from({ length: seatsPerRow }).map((_, seatIndex) => {
+              const seatLetter = String.fromCharCode(
+                65 + Math.floor(seatIndex / 2)
+              );
+              const seatNumber = (seatIndex % 2) + 1 + rowIndex * 2;
+              const currentSeatNumber = rowIndex * seatsPerRow + seatIndex;
+              const seatId = `${seatLetter}${seatNumber}`;
+
+              if (!isSeatValid(currentSeatNumber)) {
+                return null;
+              }
+
+              return (
+                <div
+                  key={seatId}
+                  className={`seat vip h-16 w-20 flex items-center justify-center border-2 rounded-lg cursor-pointer transition duration-200 ease-in-out ${
+                    selectedSeats.includes(seatId)
+                      ? 'bg-blue-500 text-white'
+                      : reservedSeats.includes(currentSeatNumber)
+                      ? 'bg-gray-300 text-gray-500 cursor-not-allowed'
+                      : 'bg-white text-black'
+                  }`}
+                  onClick={() => {
+                    if (!reservedSeats.includes(currentSeatNumber)) {
+                      toggleSeatSelection(seatId);
+                    }
+                  }}
+                >
+                  {seatId}
+                </div>
+              );
+            })}
+          </div>
+        ))}
+      </div>
+    );
+  };
+
+  // Hàm để render ghế cho xe limousine
+  const renderLimousineSeats = () => (
+    <div className="grid grid-cols-4 gap-4">
+      <div className="text-lg font-semibold">Tổng số ghế: {totalSeats}</div>
+      {Array.from({ length: totalSeats }).map((_, index) => (
+        <div
+          key={index}
+          className={`seat limousine h-16 w-16 flex items-center justify-center border-2 rounded-lg cursor-pointer transition duration-200 ease-in-out ${
+            selectedSeats.includes(index)
+              ? 'bg-blue-500 text-white'
+              : reservedSeats.includes(index)
+              ? 'bg-gray-300 text-gray-500 cursor-not-allowed'
+              : 'bg-white text-black'
+          }`}
+          onClick={() => {
+            if (!reservedSeats.includes(index)) {
+              toggleSeatSelection(index); // Chọn ghế
+            }
+          }}
+        >
+          {index + 1}
+        </div>
+      ))}
+    </div>
+  );
 
   return (
     <div className="p-4">
@@ -168,4 +191,4 @@ const SeatSelection = ({ vehicleId }) => {
   );
 };
 
-export default SeatSelection;
+export default ChooseChair;
