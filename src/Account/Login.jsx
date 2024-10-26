@@ -21,6 +21,7 @@ const Login = () => {
             // Kiểm tra mã phản hồi từ server
             if (response.status === 201 && data.result.token) {
                 localStorage.setItem('token', data.result.token);  // Lưu token vào localStorage
+                localStorage.setItem('username', username);  // Lưu tên đăng nhập vào localStorage
                 setLoginStatus('Đăng nhập thành công!');  // Hiển thị thông báo thành công
             } else {
                 setLoginStatus(`Đăng nhập thất bại: ${data.message}`);  // Hiển thị lỗi nếu có
@@ -46,8 +47,10 @@ const Login = () => {
     };
 
 
+
     return (
-        <div className="flex justify-center items-center h-screen bg-gray-100">
+        <div className="flex justify-center items-center min-h-screen bg-gray-100">
+
             <form className="bg-white p-16 rounded-lg shadow-2xl w-full max-w-3xl" onSubmit={handleLogin}>
                 <h3 className="text-5xl font-bold text-center mb-12">Đăng nhập</h3>
 

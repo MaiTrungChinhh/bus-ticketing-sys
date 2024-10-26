@@ -1,17 +1,16 @@
 import React from 'react';
 import Login from '../../Account/Login';
+import FooterComponent from '../../components/Footer/FooterComponent';
 import HeaderComponent from '../../components/Header/HeaderComponent';
-import HomePage from '../HomePage/HomePage';
-
 
 const LoginPage = () => {
     return (
-        <HeaderComponent />,
-        <HomePage />,
-        <Login />
-    )
+        <div>
+            <HeaderComponent />
+            <Login />
+            <FooterComponent />
+        </div>
+    );
 }
-
-
 
 export default LoginPage;

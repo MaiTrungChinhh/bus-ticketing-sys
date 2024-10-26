@@ -3,9 +3,9 @@ import React, { useState } from 'react';
 import { IoClose, IoHome } from 'react-icons/io5';
 import { LuClock3 } from 'react-icons/lu';
 import { PiUserCircleThin } from 'react-icons/pi';
+import { useLocation } from 'react-router-dom'; // Import useLocation
 import Login from '../../Account/Login';
 import RegisterAccount from '../../Account/RegisterAccout';
-import { useLocation } from 'react-router-dom'; // Import useLocation
 
 const HeaderComponent = () => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
@@ -70,14 +70,12 @@ const HeaderComponent = () => {
         </div>
 
         <div
-          className={`${
-            isMenuOpen ? 'flex' : 'hidden'
-          } flex-col lg:flex lg:flex-row lg:items-center lg:ml-10 bg-white lg:bg-transparent lg:relative absolute left-0 w-full lg:w-auto z-10 mt-72 lg:mt-0`}
+          className={`${isMenuOpen ? 'flex' : 'hidden'
+            } flex-col lg:flex lg:flex-row lg:items-center lg:ml-10 bg-white lg:bg-transparent lg:relative absolute left-0 w-full lg:w-auto z-10 mt-72 lg:mt-0`}
         >
           <nav
-            className={`navigation text-2xl flex items-center ${
-              isHomePage ? 'text-white' : 'lg:text-blue-400'
-            }`}
+            className={`navigation text-2xl flex items-center ${isHomePage ? 'text-white' : 'lg:text-blue-400'
+              }`}
           >
             <ul className="nav-list flex flex-col lg:flex-row lg:space-x-6 space-y-2 lg:space-y-0 p-4 lg:p-0">
               {[
@@ -124,9 +122,8 @@ const HeaderComponent = () => {
           <div className="relative group account-menu">
             <a
               href="/users/login/"
-              className={`flex items-center text-2xl account-link ${
-                isHomePage ? 'text-white' : 'text-blue-400'
-              }`}
+              className={`flex items-center text-2xl account-link ${isHomePage ? 'text-white' : 'text-blue-400'
+                }`}
               title="Tài khoản"
             >
               <PiUserCircleThin className="text-2xl lg:text-4xl account-icon" />
@@ -135,9 +132,8 @@ const HeaderComponent = () => {
               </span>
             </a>
             <ul
-              className={`absolute left-0 w-fit bg-white border border-gray-300 mt-2 ${
-                isAccountDropdownOpen ? 'block' : 'hidden'
-              }`}
+              className={`absolute left-0 w-fit bg-white border border-gray-300 mt-2 ${isAccountDropdownOpen ? 'block' : 'hidden'
+                }`}
             >
               <li>
                 <a
@@ -198,9 +194,8 @@ const HeaderComponent = () => {
               </span>
             </a>
             <p
-              className={`working-hours text-base lg:text-2xl ${
-                isHomePage ? 'text-white' : 'text-blue-400'
-              }`}
+              className={`working-hours text-base lg:text-2xl ${isHomePage ? 'text-white' : 'text-blue-400'
+                }`}
             >
               <LuClock3 className="inline-block " /> 05h → 21h
             </p>

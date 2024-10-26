@@ -1,6 +1,8 @@
-import { faArrowRight, faEnvelope, faFileAlt, faMapMarkerAlt, faPhone } from '@fortawesome/free-solid-svg-icons';
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import React from 'react';
+import { CiLocationArrow1 } from "react-icons/ci";
+import { FaMapMarkedAlt } from "react-icons/fa";
+import { FaPhoneVolume } from "react-icons/fa6";
+import { IoIosMail, IoMdDocument } from "react-icons/io";
 import logo from '../../assets/images/logo.png';
 
 const LogoSection = () => {
@@ -21,16 +23,16 @@ const ContactSection = () => {
     <div className="w-full md:w-1/4 p-4">
       <h3 className="text-3xl font-semibold mb-4">LIÊN HỆ</h3>  {/* Kích thước lớn hơn cho tiêu đề */}
       <p className="mb-2 flex items-center text-xl md:text-2xl">
-        <FontAwesomeIcon icon={faFileAlt} className="mr-2" /> Công ty TNHH Chín Nghĩa
+        <IoMdDocument className="mr-2" /> Công ty TNHH Chín Nghĩa
       </p>
       <p className="mb-2 flex items-center text-xl md:text-2xl">
-        <FontAwesomeIcon icon={faMapMarkerAlt} className="mr-2" /> Địa chỉ: 273 An Dương Vương, Phường 3, Quận 5, Tp. Hồ Chí Minh.
+        <FaMapMarkedAlt className="mr-2" /> Địa chỉ: 273 An Dương Vương, Phường 3, Quận 5, Tp. Hồ Chí Minh.
       </p>
       <p className="mb-2 flex items-center text-xl md:text-2xl">
-        <FontAwesomeIcon icon={faPhone} className="mr-2" /> Điện thoại: 0987654321
+        <FaPhoneVolume className="mr-2" /> Điện thoại: 0987654321
       </p>
       <p className="flex items-center text-xl md:text-2xl">
-        <FontAwesomeIcon icon={faEnvelope} className="mr-2" /> Email: ChinNghia@gmail.com
+        <IoIosMail className="mr-2" /> Email: ChinNghia@gmail.com
       </p>
     </div>
   );
@@ -60,10 +62,10 @@ const EmailSubscriptionSection = () => {
     <div className="w-full md:w-1/4 p-4">
       <h3 className="text-3xl font-semibold mb-4">NHẬN THÔNG TIN MỚI NHẤT</h3>
       <form className="flex items-center border-b border-gray-500 pb-2 mb-6">
-        <FontAwesomeIcon className="mr-2 text-gray-400" icon={faEnvelope} />
+        <IoIosMail className="mr-2 text-gray-400" />
         <input className="w-full bg-transparent text-gray-300 placeholder-gray-400 focus:outline-none text-xl md:text-2xl" type="email" placeholder="Ex: abc@gmail.com" required />
         <button className="ml-2">
-          <FontAwesomeIcon className="text-white" icon={faArrowRight} />
+          <CiLocationArrow1 className="text-white" />
         </button>
       </form>
     </div>

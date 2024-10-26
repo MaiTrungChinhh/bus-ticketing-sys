@@ -1,15 +1,15 @@
 import React from 'react';
-import RegisterAccount from '../../Account/RegisterAccout'; // Đảm bảo không trùng lặp tên
+import RegisterAccount from '../../Account/RegisterAccout';
+import FooterComponent from '../../components/Footer/FooterComponent'; // Thêm Footer để hiển thị đầy đủ giao diện
 import HeaderComponent from '../../components/Header/HeaderComponent';
-import HomePage from '../HomePage/HomePage';
 
 const RegisterPage = () => {
     return (
-
-        <HeaderComponent />,
-        <HomePage />,
-        <RegisterAccount />
-
+        <div>
+            <HeaderComponent />
+            <RegisterAccount />
+            <FooterComponent />
+        </div>
     );
 };
 
