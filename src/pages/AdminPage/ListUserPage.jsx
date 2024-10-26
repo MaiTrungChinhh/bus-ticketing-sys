@@ -1,12 +1,12 @@
 import React from 'react';
 import DefaultComponent from '../../components/Admin/DefaultComponent/DefaultComponent';
 
-const DashboardPage = () => {
+const ListUserPage = () => {
   return (
-    <DefaultComponent title="Dashboard">
+    <DefaultComponent title="List Users">
       <div>truyền các componet cua page vao</div>
     </DefaultComponent>
   );
 };
 
-export default DashboardPage;
+export default ListUserPage;
