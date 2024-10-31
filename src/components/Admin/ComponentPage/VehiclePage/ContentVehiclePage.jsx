@@ -1,21 +1,21 @@
 import React from 'react';
-import TableTrip from '../../ComponentPage/TripPage/TableTrip';
+import TableVehicle from './TableVehicle';
 import { Link } from 'react-router-dom';
 import Breadcrumb from '../../../Breadcrumb/Breadcrumb';
 import { FaCog, FaPlus } from 'react-icons/fa'; // Import icons from react-icons
 
 const breadcrumbItems = [
   {
-    label: 'Quản lý chuyến xe',
-    link: '/dashboard/trip/list',
+    label: 'Quản lý xe',
+    link: '/dashboard/vehicle/list',
     className: 'text-3xl ',
   },
-  { label: 'Danh sách chuyến', className: 'text-3xl font-bold' },
+  { label: 'Danh sách xe', className: 'text-3xl font-bold' },
 ];
 
-const ContentTrip = ({ bookings, totalResults }) => {
+const ContentVehicle = ({ bookings, totalResults }) => {
   return (
-    <div className="content-trip">
+    <div className="content-vehicle">
       <div className="card bg-light-subtle bg-white shadow-md p-5">
         <div className="card-header border-0">
           <div className="flex justify-between items-center">
@@ -37,10 +37,10 @@ const ContentTrip = ({ bookings, totalResults }) => {
                 More Setting <FaCog className="ms-2" /> {/* Icon after text */}
               </button>
               <Link
-                to="/dashboard/trip/add"
+                to="/dashboard/vehicle/add"
                 className="text-xl btn btn-success me-1 flex items-center text-blue-500 hover:text-blue-600 p-2 m-2 bg-blue-100 hover:bg-blue-200 rounded-xl"
               >
-                Thêm chuyến xe <FaPlus className="ms-2" />{' '}
+                Thêm xe <FaPlus className="ms-2" />{' '}
                 {/* Icon after text */}
               </Link>
             </div>
@@ -48,7 +48,7 @@ const ContentTrip = ({ bookings, totalResults }) => {
         </div>
       </div>
       {bookings && bookings.length > 0 ? (
-        <TableTrip bookings={bookings} />
+        <TableVehicle bookings={bookings} />
       ) : (
         <p>Không có chuyến đi nào.</p>
       )}
@@ -56,4 +56,4 @@ const ContentTrip = ({ bookings, totalResults }) => {
   );
 };
 
-export default ContentTrip;
+export default ContentVehicle;

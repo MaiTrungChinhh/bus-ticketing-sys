@@ -12,6 +12,8 @@ import PaymentPage from '../pages/BuyTicketPage/PaymentPage';
 import Dashboard from '../pages/AdminPage/DashboardPage';
 import ListUser from '../pages/AdminPage/ListUserPage';
 import ListTrip from '../pages/AdminPage/TripPage';
+import AddTrip from '../pages/AdminPage/Add/AddTripPage';
+import ListVehicle from '../pages/AdminPage/VehiclePage';
 
 export const routes = [
   {
@@ -49,6 +51,14 @@ export const routes = [
   {
     path: '/dashboard/trip/list',
     page: ListTrip,
+  },
+  {
+    path: '/dashboard/trip/add',
+    page: AddTrip,
+  },
+  {
+    path: '/dashboard/vehicles/list',
+    page: ListVehicle,
   },
   {
     path: '/login',

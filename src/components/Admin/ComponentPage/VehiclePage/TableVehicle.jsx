@@ -1,9 +1,9 @@
 import React from 'react';
 import { useNavigate } from 'react-router-dom';
 import { FaPencilAlt, FaTrashAlt } from 'react-icons/fa';
-import { deleteTrip } from '../../../../services/tripService';
+import { deleteVehicle } from '../../../../services/vehicleService';
 
-const TableTrip = ({ bookings }) => {
+const TableVehicle = ({ bookings }) => {
   const navigate = useNavigate();
 
   const book = (id) => {
@@ -13,18 +13,18 @@ const TableTrip = ({ bookings }) => {
 
   const editBooking = (id) => {
     console.log(`Edit Booking ID: ${id}`);
-    // Add navigation or edit functionality here
+    // Thêm chức năng điều hướng hoặc chỉnh sửa ở đây
   };
 
   const deleteBooking = async (id) => {
     const confirmDelete = window.confirm(
-      'Are you sure you want to delete this booking?'
+      'Bạn có chắc chắn muốn xóa đặt chỗ này không?'
     );
     if (confirmDelete) {
       try {
-        await deleteTrip(id);
+        await deleteVehicle(id);
         console.log(`Booking with ID: ${id} deleted successfully`);
-        // Optionally, refresh the list or call a function to update the data
+        // Tùy chọn, làm mới danh sách hoặc gọi một hàm để cập nhật dữ liệu
       } catch (error) {
         console.error('Failed to delete booking:', error);
       }
@@ -38,18 +38,6 @@ const TableTrip = ({ bookings }) => {
           <thead className="bg-gray-100">
             <tr>
               <th className="px-6 py-3 text-2xl font-semibold text-gray-800 text-center">
-                Tuyến
-              </th>
-              <th className="px-6 py-3 text-2xl font-semibold text-gray-800 text-center">
-                Ngày Giờ khởi hành
-              </th>
-              <th className="px-6 py-3 text-2xl font-semibold text-gray-800 text-center">
-                Ngày Giờ đến
-              </th>
-              <th className="px-6 py-3 text-2xl font-semibold text-gray-800 text-center">
-                Bến (Khởi hành - Đến)
-              </th>
-              <th className="px-6 py-3 text-2xl font-semibold text-gray-800 text-center">
                 Tên xe
               </th>
               <th className="px-6 py-3 text-2xl font-semibold text-gray-800 text-center">
@@ -59,10 +47,13 @@ const TableTrip = ({ bookings }) => {
                 Số lượng ghế
               </th>
               <th className="px-6 py-3 text-2xl font-semibold text-gray-800 text-center">
-                Trạng thái xe
+                Màu sắc
               </th>
               <th className="px-6 py-3 text-2xl font-semibold text-gray-800 text-center">
                 Loại xe
+              </th>
+              <th className="px-6 py-3 text-2xl font-semibold text-gray-800 text-center">
+                Trạng thái xe
               </th>
               <th className="px-6 py-3 text-2xl font-semibold text-gray-800 text-center">
                 Hành động
@@ -77,47 +68,22 @@ const TableTrip = ({ bookings }) => {
                 className="hover:bg-gray-100 transition-colors duration-200"
               >
                 <td className="px-6 py-4 text-xl text-gray-700 whitespace-nowrap text-center">
-                  {booking.route?.departureLocation} -{' '}
-                  {booking.route?.arrivalLocation || 'N/A'}
+                  {booking.vehicleName || 'N/A'}
                 </td>
                 <td className="px-6 py-4 text-xl text-gray-700 whitespace-nowrap text-center">
-                  {booking.departureDate ? (
-                    <div>
-                      {booking.departureDate} <br />
-                      {booking.departureTime}
-                    </div>
-                  ) : (
-                    'N/A'
-                  )}
+                  {booking.licensePlate || 'N/A'}
                 </td>
                 <td className="px-6 py-4 text-xl text-gray-700 whitespace-nowrap text-center">
-                  {booking.arrivalDate ? (
-                    <div>
-                      {booking.arrivalDate} <br />
-                      {booking.arrivalTime}
-                    </div>
-                  ) : (
-                    'N/A'
-                  )}
+                  {booking.seatCount || 'N/A'}
                 </td>
                 <td className="px-6 py-4 text-xl text-gray-700 whitespace-nowrap text-center">
-                  {booking.route?.departurePoint || 'N/A'} -{' '}
-                  {booking.route?.arrivalPoint || 'N/A'}
+                  {booking.color || 'N/A'}
                 </td>
                 <td className="px-6 py-4 text-xl text-gray-700 whitespace-nowrap text-center">
-                  {booking.vehicle?.vehicleName || 'N/A'}
+                  {booking.vehicleType?.vehicleTypeName || 'N/A'}
                 </td>
                 <td className="px-6 py-4 text-xl text-gray-700 whitespace-nowrap text-center">
-                  {booking.vehicle?.licensePlate || 'N/A'}
-                </td>
-                <td className="px-6 py-4 text-xl text-gray-700 whitespace-nowrap text-center">
-                  {booking.vehicle?.seatCount || 'N/A'}
-                </td>
-                <td className="px-6 py-4 text-xl text-gray-700 whitespace-nowrap text-center">
-                  {booking.vehicle?.status || 'N/A'}
-                </td>
-                <td className="px-6 py-4 text-xl text-gray-700 whitespace-nowrap text-center">
-                  {booking.vehicle.vehicleType?.vehicleTypeName || 'N/A'}
+                  {booking.status || 'N/A'}
                 </td>
                 <td className="px-6 py-4 whitespace-nowrap text-center">
                   <div className="d-flex gap-2">
@@ -144,4 +110,4 @@ const TableTrip = ({ bookings }) => {
   );
 };
 
-export default TableTrip;
+export default TableVehicle;

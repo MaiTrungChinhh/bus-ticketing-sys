@@ -115,17 +115,17 @@ const SidebarMenu = () => {
             subMenus={[
               {
                 label: 'Danh sách chuyến xe',
-                to: '/bus-schedule/list',
+                to: '/dashboard/trip/list',
                 icon: <FaList />,
               },
               {
                 label: 'Thêm chuyến xe',
-                to: '/bus-schedule/add',
+                to: '/dashboard/trip/add',
                 icon: <FaPlus />,
               },
               {
                 label: 'Cập nhật chuyến xe',
-                to: '/bus-schedule/update',
+                to: '/dashboard/trip/edit',
                 icon: <FaEdit />,
               },
             ]}
@@ -137,11 +137,11 @@ const SidebarMenu = () => {
             to="/vehicles"
             icon={<FaBus />}
             subMenus={[
-              { label: 'Danh sách xe', to: '/vehicles/list', icon: <FaList /> },
-              { label: 'Thêm xe', to: '/vehicles/add', icon: <FaPlus /> },
+              { label: 'Danh sách xe', to: '/dashboard/vehicles/list', icon: <FaList /> },
+              { label: 'Thêm xe', to: '/dashboard/vehicles/add', icon: <FaPlus /> },
               {
                 label: 'Cập nhật thông tin xe',
-                to: '/vehicles/update',
+                to: '/dashboard/vehicles/update',
                 icon: <FaEdit />,
               },
             ]}
