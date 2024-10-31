@@ -1,29 +1,29 @@
-// src/components/Breadcrumb/Breadcrumb.js
 import React from 'react';
 import { Link } from 'react-router-dom';
 
 const Breadcrumb = ({ items }) => {
   return (
-    <ul className="flex space-x-2 text-gray-600 text-2xl">
-      {' '}
-      {/* Thêm text-2xl ở đây */}
+    <ul className="flex space-x-2 text-gray-600">
       {items.map((item, index) => (
         <li key={index} className="flex items-center">
           {item.link ? (
-            <Link to={item.link} className="hover:text-blue-500">
+            <Link
+              to={item.link}
+              className={`hover:text-blue-500 ${item.className || ''}`}
+            >
               {item.label}
             </Link>
           ) : (
-            <span>{item.label}</span>
+            <span className={item.className || ''}>{item.label}</span>
           )}
           {index < items.length - 1 && (
-            <span className="mx-2 text-gray-400">
+            <span className="mx-2 text-gray-400 flex items-center">
               <svg
                 aria-hidden="true"
                 focusable="false"
                 xmlns="http://www.w3.org/2000/svg"
                 viewBox="0 0 320 512"
-                className="w-3 h-3"
+                className="w-4 h-4"
               >
                 <path
                   fill="currentColor"

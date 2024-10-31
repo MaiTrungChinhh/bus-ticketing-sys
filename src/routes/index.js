@@ -11,6 +11,7 @@ import BuyTicketDetailPage from '../pages/BuyTicketPage/BuyTicketDetailPage';
 import PaymentPage from '../pages/BuyTicketPage/PaymentPage';
 import Dashboard from '../pages/AdminPage/DashboardPage';
 import ListUser from '../pages/AdminPage/ListUserPage';
+import ListTrip from '../pages/AdminPage/TripPage';
 
 export const routes = [
   {
@@ -44,6 +45,10 @@ export const routes = [
   {
     path: '/dashboard/users/list',
     page: ListUser,
+  },
+  {
+    path: '/dashboard/trip/list',
+    page: ListTrip,
   },
   {
     path: '/login',
