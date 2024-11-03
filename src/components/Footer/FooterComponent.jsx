@@ -24,7 +24,6 @@ const LogoSection = () => {
 const ContactSection = () => {
   return (
     <div className="w-full md:w-1/4 p-4">
-<<<<<<< HEAD
   <h3 className="text-3xl font-semibold mb-4">LIÊN HỆ</h3>  {/* Kích thước lớn hơn cho tiêu đề */ }
       <p className="mb-2 flex items-center text-xl md:text-2xl">
         <IoMdDocument className="mr-2" /> Công ty TNHH Chín Nghĩa
@@ -37,13 +36,11 @@ const ContactSection = () => {
       </p>
       <p className="flex items-center text-xl md:text-2xl">
         <IoIosMail className="mr-2" /> Email: ChinNghia@gmail.com
-=======
       <h3 className="text-3xl font-semibold mb-4">LIÊN HỆ</h3>{' '}
       {/* Kích thước lớn hơn cho tiêu đề */}
       <p className="mb-2 text-xl md:text-2xl">Công ty TNHH Chín Nghĩa</p>
       <p className="mb-2 text-xl md:text-2xl">
         Địa chỉ: 273 An Dương Vương, Phường 3, Quận 5, Tp. Hồ Chí Minh.
->>>>>>> f0ebe4abf01fed0c7b4299e0314f85666d0a976e
       </p>
       <p className="mb-2 text-xl md:text-2xl">Điện thoại: 0987654321</p>
       <p className="text-xl md:text-2xl">Email: ChinNghia@gmail.com</p>
