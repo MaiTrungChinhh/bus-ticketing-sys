@@ -11,7 +11,8 @@ const axiosInstance = axios.create({
 axiosInstance.interceptors.request.use(
   (config) => {
     // const token = localStorage.getItem('authToken');
-    const token = 'eyJhbGciOiJIUzUxMiJ9.eyJpc3MiOiJidXMtdGlja2V0LmNvbSIsInN1YiI6ImFkbWluIiwiZXhwIjoxNzMwNDgyNzkwLCJpYXQiOjE3MzAzOTYzOTAsImp0aSI6IjZkYzA4OWRmLWYzNDctNGIzYy04MTU2LTJiNzRkYjg1ZGIzNSIsInNjb3BlIjoiQURNSU4ifQ.qQ6ogbsdx-4h86BIMdqZF_nDbPrVWS_ePOQVQrWW_geuStKog80_WosJnS851hOZGR5FMstQgclIb70tuCHqyA';
+    const token =
+      'eyJhbGciOiJIUzUxMiJ9.eyJpc3MiOiJidXMtdGlja2V0LmNvbSIsInN1YiI6ImFkbWluIiwiZXhwIjoxNzMwODA1MDcyLCJpYXQiOjE3MzA3MTg2NzIsImp0aSI6ImVjY2U4MDUzLTMyNjEtNGE1ZC1iYmQ2LTQ0NzVmMTk2Y2Y5YiIsInNjb3BlIjoiQURNSU4ifQ.viFap4VNdOXiW097U828UkWojZvcd1UMjXGQXYdUn7iRzj5nH4UBs8UEPH7SaTvgUW-Gi2pbtRTvodqywNOuYQ';
     if (token) {
       config.headers.Authorization = `Bearer ${token}`;
     }

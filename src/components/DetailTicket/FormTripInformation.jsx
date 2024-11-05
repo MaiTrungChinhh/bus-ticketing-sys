@@ -1,6 +1,10 @@
 import React from 'react';
 
-const TripInfo = () => {
+const TripInfo = ({ tripDetails }) => {
+  const route = tripDetails?.route;
+  const vehicle = tripDetails?.vehicle;
+  console.log('TripInfo:', tripDetails);
+
   return (
     <div className="lg:w-1/3 md:col-span-8 sm:col-span-10 col-span-24">
       <div className="bg-white p-4 shadow-md rounded">
@@ -26,22 +30,31 @@ const TripInfo = () => {
                   <tr>
                     <td className="w-5/12">Tuyến:</td>
                     <td className="w-7/12">
-                      Quảng Ngãi{' '}
-                      <i className="fas fa-long-arrow-alt-right mx-2"></i> Bx.An
-                      Sương
+                      {route ? (
+                        <>
+                          {route.departureLocation}{' '}
+                          <i className="fas fa-long-arrow-alt-right mx-2"></i>
+                          {route.arrivalLocation}
+                        </>
+                      ) : (
+                        'N/A'
+                      )}
                     </td>
                   </tr>
                   <tr>
                     <td>Ngày khởi hành:</td>
                     <td>
-                      <strong className="text-red-500">14:00</strong>{' '}
-                      <span>24/10/2024</span>
+                      <strong className="text-red-500">
+                        {tripDetails?.departureTime || 'N/A'}
+                      </strong>{' '}
+                      <span>{tripDetails?.departureDate || 'N/A'}</span>
                     </td>
                   </tr>
                   <tr>
                     <td>Thời gian mua còn lại:</td>
                     <td>
                       <strong className="text-blue-500 countdown_time">
+                        {/* Countdown or remaining time calculation here */}
                         15:10:55
                       </strong>
                     </td>
@@ -56,13 +69,17 @@ const TripInfo = () => {
                   <tr>
                     <td className="w-5/12">Phương tiện:</td>
                     <td className="w-7/12">
-                      <strong className="text-blue-500">Xe Luxury</strong>
+                      <strong className="text-blue-500">
+                        {tripDetails?.vehicleName || 'N/A'}
+                      </strong>
                     </td>
                   </tr>
                   <tr>
                     <td>Tổng số vé:</td>
                     <td>
-                      <strong className="text-blue-500">37</strong>
+                      <strong className="text-blue-500">
+                        {vehicle?.seatCount || 'N/A'}
+                      </strong>
                     </td>
                   </tr>
                   <tr>
