@@ -1,21 +1,31 @@
 import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 
-const FormGuestInformation = ({ selectedSeats, onGuestInfoChange }) => {
+const FormGuestInformation = ({
+  selectedSeats,
+  onGuestInfoChange,
+  tripDetails,
+}) => {
   const [formData, setFormData] = useState({
     hoten: '',
     dienthoai: '',
     email: '',
     kieudon: '',
-    magiamgia: '',
   });
   const [loading, setLoading] = useState(false); // State for loading spinner
   const navigate = useNavigate();
-
+  const ticketPrice = tripDetails?.ticketPrice;
+  const departurePoint = tripDetails?.route.departurePoint;
   useEffect(() => {
     // Gọi hàm onGuestInfoChange mỗi khi formData thay đổi
     onGuestInfoChange(formData);
   }, [formData, onGuestInfoChange]);
+
+  useEffect(() => {
+    // Cập nhật tổng tiền vé mỗi khi ghế được chọn
+    const totalAmount = selectedSeats.length * ticketPrice;
+    document.getElementById('tongtien').innerText = totalAmount;
+  }, [selectedSeats, ticketPrice]);
 
   const handleInputChange = (e) => {
     setFormData({ ...formData, [e.target.name]: e.target.value });
@@ -25,8 +35,28 @@ const FormGuestInformation = ({ selectedSeats, onGuestInfoChange }) => {
     e.preventDefault();
     setLoading(true); // Show loading spinner
 
+    if (selectedSeats.length === 0) {
+      alert('Vui lòng chọn ghế trước khi tiếp tục!');
+      return; // Dừng quá trình gửi form nếu chưa chọn ghế
+    }
+
+    // Tính tổng tiền vé
+    const totalAmount = selectedSeats.length * ticketPrice;
+
+    // Mã hóa dữ liệu trước khi gửi qua URL
+    const encodedSeats = encodeURIComponent(selectedSeats.join(', '));
+    const encodedTotalAmount = encodeURIComponent(totalAmount);
+
+    // Điều hướng tới trang thanh toán và truyền tham số
+    const encodedFullName = encodeURIComponent(formData.hoten);
+    const encodedPhoneNumber = encodeURIComponent(formData.dienthoai);
+    const encodedEmail = encodeURIComponent(formData.email);
+    const encodedPickupPoint = encodeURIComponent(formData.kieudon);
+    const encodedTripDetails = encodeURIComponent(JSON.stringify(tripDetails));
+
+    // Điều hướng tới trang thanh toán và truyền tham số
     navigate(
-      `/payment?hoten=${formData.hoten}&dienthoai=${formData.dienthoai}&email=${formData.email}&kieudon=${formData.kieudon}&magiamgia=${formData.magiamgia}`
+      `/payment?hoten=${encodedFullName}&dienthoai=${encodedPhoneNumber}&email=${encodedEmail}&kieudon=${encodedPickupPoint}&seats=${encodedSeats}&totalAmount=${encodedTotalAmount}&tripDetails=${encodedTripDetails}`
     );
   };
 
@@ -48,7 +78,7 @@ const FormGuestInformation = ({ selectedSeats, onGuestInfoChange }) => {
           <p>
             Tổng tiền vé:{' '}
             <strong id="tongtien" className="text-red-500">
-              0
+              {selectedSeats.length * ticketPrice}
             </strong>{' '}
             VND
           </p>
@@ -109,35 +139,12 @@ const FormGuestInformation = ({ selectedSeats, onGuestInfoChange }) => {
                 />
               </div>
               <div>
-                <label className="block mb-1" htmlFor="kieudon">
+                <label className="block mb-1" htmlFor="departurePoint">
                   Điểm lên xe
                 </label>
-                <select
-                  id="kieudon"
-                  name="kieudon"
-                  className="form-control w-full border rounded-lg p-2"
-                  value={formData.kieudon}
-                  onChange={handleInputChange}
-                  required
-                >
-                  {/* Options */}
-                  <option value="0">Bx.Chín Nghĩa</option>
-                  <option value="103">Thành phố Quảng Ngãi</option>
-                  {/* Add other options here */}
-                </select>
-              </div>
-              <div>
-                <label className="block mb-1" htmlFor="magiamgia">
-                  Mã giảm giá
-                </label>
-                <input
-                  type="text"
-                  className="form-control w-full border rounded-lg p-2"
-                  name="magiamgia"
-                  id="magiamgia"
-                  value={formData.magiamgia}
-                  onChange={handleInputChange}
-                />
+                <p className="form-control w-full border rounded-lg p-2">
+                  {departurePoint}
+                </p>
               </div>
             </div>
 

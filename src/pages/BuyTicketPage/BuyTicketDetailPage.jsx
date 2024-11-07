@@ -7,13 +7,16 @@ import FormGuestInformation from '../../components/DetailTicket/FormGuestInforma
 import ChooseChair from '../../components/DetailTicket/ChooseChair';
 import TripInfo from '../../components/DetailTicket/FormTripInformation';
 import { TbRippleOff } from 'react-icons/tb';
-import { tripUserById } from '../../services/tripService';
+import { tripUserById, fetchTripById } from '../../services/tripService';
 
 const BuyTicketDetailPage = () => {
   const { id } = useParams();
   const [selectedSeats, setSelectedSeats] = useState([]);
   const [guestInfo, setGuestInfo] = useState({});
   const [tripDetails, setTripDetails] = useState(null);
+  const [vehicleId, setVehicleId] = useState(null);
+  const [ticketPrice, setTicketPrice] = useState(0);
+  const [departurePoint, setDeparturePoint] = useState('');
 
   const breadcrumbItems = [
     { label: 'Trang nhất', link: '/' },
@@ -25,6 +28,9 @@ const BuyTicketDetailPage = () => {
     const fetchData = async () => {
       try {
         const data = await tripUserById(id);
+        const vehicleId = setVehicleId(data.result.vehicleId);
+        const ticketPrice = setTicketPrice(data.result.ticketPrice);
+        const departurePoint = setDeparturePoint(data.result.route.departurePoint);
         // Check if data.result exists and is an object (based on your API response)
         if (data?.result) {
           setTripDetails(data.result); // Store the result directly
@@ -64,13 +70,14 @@ const BuyTicketDetailPage = () => {
           <FormGuestInformation
             selectedSeats={selectedSeats}
             onGuestInfoChange={handleGuestInfoChange}
+            tripDetails={tripDetails}
           />
 
           {/* Truyền selectedSeats và handleSeatSelection vào ChooseChair */}
           <ChooseChair
             selectedSeats={selectedSeats}
             onSeatSelect={handleSeatSelection}
-            vehicleId="1"
+            vehicleId={vehicleId}
           />
 
           {/* Hiển thị thông tin chuyến nếu có */}

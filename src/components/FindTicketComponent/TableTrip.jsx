@@ -38,7 +38,6 @@ const BookingTable = () => {
   }, [date, selectedDeparture, selectedArrival]);
 
   const book = (id) => {
-    console.log(`Booking ID: ${id}`);
     navigate(`/buyticket/detail/${id}`);
   };
 

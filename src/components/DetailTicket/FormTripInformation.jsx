@@ -3,7 +3,6 @@ import React from 'react';
 const TripInfo = ({ tripDetails }) => {
   const route = tripDetails?.route;
   const vehicle = tripDetails?.vehicle;
-  console.log('TripInfo:', tripDetails);
 
   return (
     <div className="lg:w-1/3 md:col-span-8 sm:col-span-10 col-span-24">
@@ -78,14 +77,18 @@ const TripInfo = ({ tripDetails }) => {
                     <td>Tổng số vé:</td>
                     <td>
                       <strong className="text-blue-500">
-                        {vehicle?.seatCount || 'N/A'}
+                        {tripDetails?.availableSeats || 'N/A'}
                       </strong>
                     </td>
                   </tr>
                   <tr>
                     <td>Giá vé:</td>
                     <td>
-                      <strong className="text-red-500">455.000</strong> VND
+                      <strong className="text-red-500">
+                        {' '}
+                        {tripDetails?.ticketPrice || 'N/A'}
+                      </strong>{' '}
+                      VND
                     </td>
                   </tr>
                 </tbody>

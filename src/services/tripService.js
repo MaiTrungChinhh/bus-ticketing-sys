@@ -45,7 +45,6 @@ export const fetchTripById = async (tripId) => {
 
 export const tripUserById = async (tripId) => {
   try {
-    console.log('tripId:', tripId);
     const response = await axiosInstance.get(`/tickets/buyTicket/${tripId}`);
     return response.data;
   } catch (error) {
