@@ -1,9 +1,12 @@
 import React, { useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 
 const Login = () => {
     const [username, setUsername] = useState('');
     const [password, setPassword] = useState('');
     const [loginStatus, setLoginStatus] = useState('');
+
+    const navigate = useNavigate();
 
     const handleLogin = async (e) => {
         e.preventDefault();
@@ -18,39 +21,32 @@ const Login = () => {
 
             const data = await response.json();  // Lấy phản hồi từ server
 
-            // Kiểm tra mã phản hồi từ server
-            if (response.status === 201 && data.result.token) {
+            // Ghi log phản hồi để kiểm tra cấu trúc phản hồi từ server
+            console.log("Phản hồi từ server:", data);
+
+            // Kiểm tra phản hồi
+            if (response.ok && data.result && data.result.token) {
+                // Nếu thành công và có token
                 localStorage.setItem('token', data.result.token);  // Lưu token vào localStorage
                 localStorage.setItem('username', username);  // Lưu tên đăng nhập vào localStorage
                 setLoginStatus('Đăng nhập thành công!');  // Hiển thị thông báo thành công
+
+                // Điều hướng tới trang dashboard
+                navigate('/dashboard');
             } else {
-                setLoginStatus(`Đăng nhập thất bại: ${data.message}`);  // Hiển thị lỗi nếu có
+                // Nếu không thành công
+                setLoginStatus(`Đăng nhập thất bại: ${data.message || 'Vui lòng kiểm tra lại thông tin đăng nhập.'}`);  // Hiển thị lỗi nếu có
             }
         } catch (error) {
-            setLoginStatus('Đăng nhập thất bại. Vui lòng thử lại.');  // Hiển thị lỗi nếu đăng nhập thất bại
+            // Trường hợp gặp lỗi khi gọi API
+            setLoginStatus('Đăng nhập thất bại. Vui lòng thử lại.');
             console.error('Error:', error);
         }
     };
-    const fetchProtectedData = async () => {
-        const token = localStorage.getItem('token');
-
-        const response = await fetch('http://localhost:8080/api/protected', {
-            method: 'GET',
-            headers: {
-                'Authorization': `Bearer ${token}`,
-                'Content-Type': 'application/json'
-            }
-        });
-
-        const data = await response.json();
-        console.log(data);
-    };
-
 
 
     return (
         <div className="flex justify-center items-center min-h-screen bg-gray-100">
-
             <form className="bg-white p-16 rounded-lg shadow-2xl w-full max-w-3xl" onSubmit={handleLogin}>
                 <h3 className="text-5xl font-bold text-center mb-12">Đăng nhập</h3>
 
@@ -100,9 +96,8 @@ const Login = () => {
                     </a>
                 </div>
             </form>
-
         </div>
     );
 };
 
-export default Login; 
+export default Login;

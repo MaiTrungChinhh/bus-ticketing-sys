@@ -11,9 +11,9 @@ const DefaultComponent = ({ children, title }) => {
       </div>
 
       {/* Main content area with HeaderAdmin and dynamic children */}
-      <div className="flex-1 bg-#f9f7f7">
+      <div className="flex-1 bg-gray-100">
         <HeaderAdmin pageTitle={title} />
-        <div className="container p-4">
+        <div className="container mx-auto p-4">
           {/* Render children passed to DashboardPage */}
           {children}
         </div>

@@ -1,21 +1,21 @@
 import React, { useState } from 'react';
-import NavMenuItem from './NavMenuItem';
 import {
-  FaTachometerAlt,
-  FaUsers,
-  FaTicketAlt,
   FaBus,
   FaChartLine,
   FaCogs,
-  FaList,
-  FaPlus,
-  FaHistory,
   FaEdit,
   FaFileAlt,
+  FaHistory,
+  FaList,
+  FaPlus,
+  FaTachometerAlt,
+  FaTicketAlt,
   FaUserFriends,
-  FaWrench,
+  FaUsers,
   FaUserShield,
+  FaWrench,
 } from 'react-icons/fa';
+import NavMenuItem from './NavMenuItem';
 
 const SidebarMenu = () => {
   const [isOpen, setIsOpen] = useState(true); // Trạng thái mở/đóng sidebar
@@ -38,9 +38,8 @@ const SidebarMenu = () => {
 
   return (
     <div
-      className={`flex sidebar transition-all duration-500 ease-in-out ${
-        isOpen || isHovered ? 'w-96 opacity-100' : 'w-24 opacity-75'
-      } bg-gradient-to-r from-blue-400 to-blue-600 p-1 shadow-lg`}
+      className={`flex sidebar transition-all duration-500 ease-in-out ${isOpen || isHovered ? 'w-96 opacity-100' : 'w-24 opacity-75'
+        } bg-gradient-to-r from-blue-400 to-blue-600 p-1 shadow-lg`}
       onMouseEnter={() => setIsHovered(true)} // Hiện sidebar khi hover
       onMouseLeave={() => {
         setIsHovered(false); // Ẩn sidebar khi không hover
@@ -51,9 +50,8 @@ const SidebarMenu = () => {
         <nav className="flex flex-col p-4">
           <div className="flex items-center justify-between mb-4">
             <h1
-              className={`text-2xl font-bold transition-opacity duration-500 ${
-                isOpen || isHovered ? 'block opacity-100' : 'hidden opacity-0'
-              }`}
+              className={`text-2xl font-bold transition-opacity duration-500 ${isOpen || isHovered ? 'block opacity-100' : 'hidden opacity-0'
+                }`}
             >
               {isOpen || isHovered ? 'Quản lý Hệ thống' : ''}
             </h1>
@@ -79,15 +77,46 @@ const SidebarMenu = () => {
             icon={<FaUsers />}
             subMenus={[
               {
-                label: 'Danh sách người dùng',
+                label: 'Quản lý loại nhân viên',
+                to: '/dashboard/employees/type',
+                icon: <FaList />,
+              },
+              {
+                label: 'Quản lý nhân viên',
+                to: '/dashboard/employees/list',
+                icon: <FaList />,
+              },
+              {
+                label: 'Danh sách nhân viên', // Thêm danh sách nhân viên
+                to: '/dashboard/employees/list',
+                icon: <FaList />,
+              },
+              {
+                label: 'Thêm nhân viên', // Thêm nhân viên
+                to: '/dashboard/employee/add',
+                icon: <FaPlus />,
+              },
+              {
+                label: 'Quản lý người dùng',
+                to: '/dashboard/users',
+                icon: <FaList />,
+              },
+              {
+                label: 'Quản lý người dùng',
                 to: '/dashboard/users/list',
                 icon: <FaList />,
               },
-              { label: 'Thêm người dùng', to: '/users/add', icon: <FaPlus /> },
+              {
+                label: 'Thêm người dùng',
+                to: '/users/add',
+                icon: <FaPlus />,
+              },
+
             ]}
             onSubMenuToggle={() => handleSubMenuToggle('users')}
             isOpen={isOpen}
           />
+
           <NavMenuItem
             label={isOpen || isHovered ? 'Quản lý đặt vé' : ''} // Hiện text khi hover
             to="/bookings"
@@ -115,17 +144,17 @@ const SidebarMenu = () => {
             subMenus={[
               {
                 label: 'Danh sách chuyến xe',
-                to: '/bus-schedule/list',
+                to: '/dashboard/trip/list',
                 icon: <FaList />,
               },
               {
                 label: 'Thêm chuyến xe',
-                to: '/bus-schedule/add',
+                to: '/dashboard/trip/add',
                 icon: <FaPlus />,
               },
               {
                 label: 'Cập nhật chuyến xe',
-                to: '/bus-schedule/update',
+                to: '/dashboard/trip/edit',
                 icon: <FaEdit />,
               },
             ]}
@@ -137,11 +166,11 @@ const SidebarMenu = () => {
             to="/vehicles"
             icon={<FaBus />}
             subMenus={[
-              { label: 'Danh sách xe', to: '/vehicles/list', icon: <FaList /> },
-              { label: 'Thêm xe', to: '/vehicles/add', icon: <FaPlus /> },
+              { label: 'Danh sách xe', to: '/dashboard/vehicles/list', icon: <FaList /> },
+              { label: 'Thêm xe', to: '/dashboard/vehicles/add', icon: <FaPlus /> },
               {
                 label: 'Cập nhật thông tin xe',
-                to: '/vehicles/update',
+                to: '/dashboard/vehicles/update',
                 icon: <FaEdit />,
               },
             ]}

@@ -1,8 +1,8 @@
 import axios from 'axios';
 import React, { useEffect, useState } from 'react';
 import { useLocation, useNavigate, useParams } from 'react-router-dom';
+import EmployeeForm from '../../../components/Admin/ComponentPage/EmployeePage/EmployeeForm';
 import DefaultComponent from '../../../components/Admin/DefaultComponent/DefaultComponent';
-import EmployeeForm from '../../../components/Admin/Modules/StaffManagement/EmployeeForm';
 
 const EditEmployeePage = () => {
     const { id } = useParams();
