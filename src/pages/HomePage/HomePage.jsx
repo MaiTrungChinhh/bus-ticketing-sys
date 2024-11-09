@@ -3,9 +3,7 @@ import React, { useEffect, useState } from 'react';
 import FindTicketComponent from '../../components/FindTicketComponent/FindTicketComponent';
 import FooterComponent from '../../components/Footer/FooterComponent';
 import HeaderComponent from '../../components/Header/HeaderComponent';
-
-
-// Component riêng để xử lý việc thay đổi hình nền
+import FooterComponent from '../../components/Footer/FooterComponent';
 const BackgroundChanger = ({ setBackgroundImage }) => {
   useEffect(() => {
     const images = Object.values(BACKGROUND_IMAGE_URLS);
@@ -37,6 +35,7 @@ const HomePage = () => {
       <div className="flex justify-center items-center h-full mt-[-40px]">
         <FindTicketComponent />
       </div>
+      <FooterComponent />
       <BackgroundChanger setBackgroundImage={setBackgroundImage} />
       <FooterComponent />
     </div>
