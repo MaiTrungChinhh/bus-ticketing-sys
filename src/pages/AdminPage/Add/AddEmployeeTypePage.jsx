@@ -49,7 +49,7 @@ const AddEmployeeTypePage = ({ initialData }) => {
     };
 
     return (
-        <DefaultComponent title={initialData ? 'Edit Employee Type' : 'Add Employee Type'}>
+        <DefaultComponent>
             <form onSubmit={handleSubmit} className="p-4 bg-white shadow rounded">
                 <h2 className="text-2xl mb-4">{initialData ? 'Chỉnh sửa loại nhân viên' : 'Thêm loại nhân viên'}</h2>
                 <div className="mb-4">
