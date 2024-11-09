@@ -1,6 +1,8 @@
 import AddEmployeePage from '../pages/AdminPage/Add/AddEmployeePage.jsx'; // Thêm trang thêm nhân viên
+import AddEmployeeTypePage from '../pages/AdminPage/Add/AddEmployeeTypePage.jsx';
 import AddTrip from '../pages/AdminPage/Add/AddTripPage';
 import Dashboard from '../pages/AdminPage/DashboardPage';
+import EditEmployeeTypePage from '../pages/AdminPage/Edit/EditEmployeeTypePage';
 import EmployeeTypePage from '../pages/AdminPage/EmployeeTypePage.jsx';
 import ListEmployeePage from '../pages/AdminPage/ListEmployeePage.jsx';
 import ListTrip from '../pages/AdminPage/TripPage';
@@ -15,8 +17,7 @@ import LoginPage from '../pages/LoginLogout/LoginPage';
 import RegisterPage from '../pages/LoginLogout/RegisterPage';
 import NotFoundPage from '../pages/NotFoundPage/NotFoundPage';
 import OrderPage from '../pages/OrderPage/OrderPage';
-import AddEmployeeTypePage from '../pages/AdminPage/Add/AddEmployeeTypePage.jsx'
-import EditEmployeeTypePage from '../pages/AdminPage/Edit/EditEmployeeTypePage';
+
 
 export const routes = [
   {
@@ -68,6 +69,18 @@ export const routes = [
   {
     path: '/dashboard/employee/add',
     page: AddEmployeePage,
+  },
+  {
+    path: '/dashboard/trip/list',
+    page: ListTrip,
+  },
+  {
+    path: '/dashboard/trip/add',
+    page: AddTrip,
+  },
+  {
+    path: '/dashboard/vehicles/list',
+    page: ListVehicle,
   },
   {
     path: '/dashboard/trip/list',

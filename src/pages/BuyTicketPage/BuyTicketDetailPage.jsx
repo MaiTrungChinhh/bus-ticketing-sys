@@ -7,40 +7,16 @@ import FormGuestInformation from '../../components/DetailTicket/FormGuestInforma
 import ChooseChair from '../../components/DetailTicket/ChooseChair';
 import TripInfo from '../../components/DetailTicket/FormTripInformation';
 import { TbRippleOff } from 'react-icons/tb';
-
-// Giả sử đây là hàm fetch thông tin chuyến
-const fetchTripDetails = async (tripId) => {
-  const sampleTripData = {
-    1: {
-      id: 1,
-      destination: 'Hà Nội',
-      departureTime: '2024-10-25T10:00:00',
-      duration: '5h',
-    },
-    2: {
-      id: 2,
-      destination: 'Đà Nẵng',
-      departureTime: '2024-10-25T12:00:00',
-      duration: '10h',
-    },
-  };
-
-  return new Promise((resolve, reject) => {
-    setTimeout(() => {
-      if (sampleTripData[tripId]) {
-        resolve(sampleTripData[tripId]);
-      } else {
-        reject(new Error('Trip not found'));
-      }
-    }, 1000);
-  });
-};
+import { tripUserById, fetchTripById } from '../../services/tripService';
 
 const BuyTicketDetailPage = () => {
-  const { id } = useParams(); // Lấy ID từ URL
-  const [selectedSeats, setSelectedSeats] = useState([]); // State quản lý ghế đã chọn
-  const [guestInfo, setGuestInfo] = useState({}); // State quản lý thông tin khách hàng
-  const [tripDetails, setTripDetails] = useState(null); // State quản lý thông tin chuyến
+  const { id } = useParams();
+  const [selectedSeats, setSelectedSeats] = useState([]);
+  const [guestInfo, setGuestInfo] = useState({});
+  const [tripDetails, setTripDetails] = useState(null);
+  const [vehicleId, setVehicleId] = useState(null);
+  const [ticketPrice, setTicketPrice] = useState(0);
+  const [departurePoint, setDeparturePoint] = useState('');
 
   const breadcrumbItems = [
     { label: 'Trang nhất', link: '/' },
@@ -48,19 +24,27 @@ const BuyTicketDetailPage = () => {
     { label: 'Chọn chuyến' },
   ];
 
-  // Gọi API để lấy thông tin chuyến
   useEffect(() => {
-    const getTripDetails = async () => {
+    const fetchData = async () => {
       try {
-        const tripData = await fetchTripDetails(id);
-        setTripDetails(tripData);
+        const data = await tripUserById(id);
+        const vehicleId = setVehicleId(data.result.vehicleId);
+        const ticketPrice = setTicketPrice(data.result.ticketPrice);
+        const departurePoint = setDeparturePoint(data.result.route.departurePoint);
+        // Check if data.result exists and is an object (based on your API response)
+        if (data?.result) {
+          setTripDetails(data.result); // Store the result directly
+        } else {
+          console.error('Unexpected response format:', data);
+          setTripDetails(null); // Set to null if the structure is not as expected
+        }
       } catch (error) {
-        console.error('Có vấn đề khi lấy thông tin chuyến:', error);
+        console.error('Error fetching trips:', error);
       }
     };
 
-    getTripDetails();
-  }, [id]);
+    fetchData();
+  }, [id]); // Adding id as a dependency to fetch data if the id changes
 
   // Hàm để chọn hoặc bỏ chọn ghế
   const handleSeatSelection = (seat) => {
@@ -86,17 +70,18 @@ const BuyTicketDetailPage = () => {
           <FormGuestInformation
             selectedSeats={selectedSeats}
             onGuestInfoChange={handleGuestInfoChange}
+            tripDetails={tripDetails}
           />
 
           {/* Truyền selectedSeats và handleSeatSelection vào ChooseChair */}
           <ChooseChair
             selectedSeats={selectedSeats}
             onSeatSelect={handleSeatSelection}
-            vehicleId="1"
+            vehicleId={vehicleId}
           />
 
           {/* Hiển thị thông tin chuyến nếu có */}
-        <TripInfo tripDetails={tripDetails} />
+          <TripInfo tripDetails={tripDetails} />
         </div>
       </div>
     </DefaultComponent>

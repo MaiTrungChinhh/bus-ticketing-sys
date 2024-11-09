@@ -11,6 +11,17 @@ export const fetchVehicles = async () => {
   }
 };
 
+export const fetchVehicleById = async (vehicleId) => {
+  try {
+    const response = await axiosInstance.get(`/vehicles/${vehicleId}`);
+    return response.data;
+  } catch (error) {
+    console.error('Error fetching vehicle by ID:', error);
+    throw error;
+  }
+};
+
+
 export const createVehicle = async (vehicleData) => {
   try {
     const response = await axiosInstance.post('/vehicles', vehicleData);
