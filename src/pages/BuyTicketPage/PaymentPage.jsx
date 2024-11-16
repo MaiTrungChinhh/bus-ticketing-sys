@@ -1,13 +1,12 @@
-import React, { useState, useEffect, useCallback } from 'react';
-import { useLocation } from 'react-router-dom';
-import DefaultComponent from '../../components/DefaultComponent/DefaultComponent';
-import Breadcrumb from '../../components/Breadcrumb/Breadcrumb';
-import StepProgress from '../../components/StepProgress/StepProgress';
+import React, { useCallback, useEffect, useState } from 'react';
 import { FaArrowRight } from 'react-icons/fa';
+import { useLocation } from 'react-router-dom';
+import Breadcrumb from '../../components/Breadcrumb/Breadcrumb';
+import DefaultComponent from '../../components/DefaultComponent/DefaultComponent';
+import StepProgress from '../../components/StepProgress/StepProgress';
 import {
   processMomoPayment,
-  processZaloPayPayment,
-  processVNPayPayment,
+  processZaloPayPayment
 } from '../../services/paymentService';
 
 // Import thư viện base-x
@@ -34,11 +33,10 @@ const PaymentMethods = ({ selectedPayment, handlePaymentChange }) => {
       </h2>
       <div className="space-y-4 text-2xl">
         <div
-          className={`p-4 border rounded-lg cursor-pointer ${
-            selectedPayment === 'momo'
+          className={`p-4 border rounded-lg cursor-pointer ${selectedPayment === 'momo'
               ? 'border-blue-500 bg-blue-50'
               : 'border-gray-300'
-          }`}
+            }`}
           onClick={() => handlePaymentChange('momo')}
         >
           <input
@@ -56,11 +54,10 @@ const PaymentMethods = ({ selectedPayment, handlePaymentChange }) => {
         </div>
 
         <div
-          className={`p-4 border rounded-lg cursor-pointer ${
-            selectedPayment === 'zalopay'
+          className={`p-4 border rounded-lg cursor-pointer ${selectedPayment === 'zalopay'
               ? 'border-blue-500 bg-blue-50'
               : 'border-gray-300'
-          }`}
+            }`}
           onClick={() => handlePaymentChange('zalopay')}
         >
           <input
@@ -78,11 +75,10 @@ const PaymentMethods = ({ selectedPayment, handlePaymentChange }) => {
         </div>
 
         <div
-          className={`p-4 border rounded-lg cursor-pointer ${
-            selectedPayment === 'vnpay'
+          className={`p-4 border rounded-lg cursor-pointer ${selectedPayment === 'vnpay'
               ? 'border-blue-500 bg-blue-50'
               : 'border-gray-300'
-          }`}
+            }`}
           onClick={() => handlePaymentChange('vnpay')}
         >
           <input

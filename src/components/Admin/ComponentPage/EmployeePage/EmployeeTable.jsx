@@ -1,47 +1,45 @@
 import axios from 'axios';
 import React, { useEffect, useState } from 'react';
-import { FaEdit , FaPlus } from 'react-icons/fa';
+import { FaEdit, FaPlus } from 'react-icons/fa';
 import { MdDelete } from 'react-icons/md';
 import { useNavigate } from 'react-router-dom';
 
-const EmployeeTable = ({ onDelete }) => {
-  const [accounts, setAccounts] = useState([]);
+const EmployeeTable = () => {
+  const [employees, setEmployees] = useState([]);
   const [currentPage, setCurrentPage] = useState(1);
   const [totalPages, setTotalPages] = useState(1);
   const [loading, setLoading] = useState(false);
   const navigate = useNavigate();
 
-  const handleEdit = (user) => {
-    navigate(`/admin/employees/edit/${user.id}`, { state: { account: user } });
-  };
-
   useEffect(() => {
-    fetchUsers(currentPage);
+    fetchEmployees(currentPage);
   }, [currentPage]);
 
-  const fetchUsers = async (page) => {
+  const fetchEmployees = async (page) => {
     setLoading(true);
     const token = localStorage.getItem('token');
+
+    if (!token) {
+      console.error('Token không tồn tại hoặc đã hết hạn.');
+      return;
+    }
+
     try {
-      const response = await axios.get('http://localhost:8080/api/accounts', {
-        headers: {
-          Authorization: `Bearer ${token}`
-        },
-        params: { page: page, pageSize: 4, sort: 'username' }
+      const response = await axios.get('http://localhost:8080/api/employees', {
+        headers: { Authorization: `Bearer ${token}` },
+        params: { page: page, pageSize: 10 },
       });
 
+      console.log('Phản hồi từ API:', response.data);
+
       if (response.data.result && Array.isArray(response.data.result.contents)) {
-        setAccounts(response.data.result.contents);
+        setEmployees(response.data.result.contents);
         setTotalPages(response.data.result.totalPages);
-        // If current page exceeds total pages after deletion, set current page to the last available page
-        if (page > response.data.result.totalPages && response.data.result.totalPages > 0) {
-          setCurrentPage(response.data.result.totalPages);
-        }
       } else {
-        console.error("Dữ liệu không đúng định dạng mong đợi:", response.data);
+        console.error('Dữ liệu không đúng định dạng:', response.data);
       }
     } catch (error) {
-      console.error('Lỗi khi lấy danh sách người dùng:', error);
+      console.error('Lỗi khi lấy danh sách nhân viên:', error);
     } finally {
       setLoading(false);
     }
@@ -53,111 +51,101 @@ const EmployeeTable = ({ onDelete }) => {
     }
   };
 
-  const renderPagination = () => {
-    const pageNumbers = [];
-    const totalNumberPagesToShow = 5;
-    let startPage = Math.max(1, currentPage - 2);
-    let endPage = Math.min(totalPages, currentPage + 2);
-
-    if (currentPage <= 3) {
-      startPage = 1;
-      endPage = Math.min(totalPages, totalNumberPagesToShow);
-    } else if (currentPage >= totalPages - 2) {
-      startPage = Math.max(1, totalPages - totalNumberPagesToShow + 1);
-      endPage = totalPages;
-    }
-
-    for (let i = startPage; i <= endPage; i++) {
-      pageNumbers.push(i);
-    }
-
-    return (
-      <div className="flex justify-center items-center space-x-2 mt-4">
-        <button
-          onClick={() => handlePageChange(currentPage - 1)}
-          disabled={currentPage === 1}
-          className="bg-gray-500 text-white px-4 py-2 rounded disabled:opacity-50"
-        >
-          &lt;
-        </button>
-        {pageNumbers.map((number) => (
-          <button
-            key={number}
-            onClick={() => handlePageChange(number)}
-            className={`px-4 py-2 rounded ${currentPage === number ? 'bg-blue-500 text-white' : 'bg-gray-300 text-black'}`}
-          >
-            {number}
-          </button>
-        ))}
-        <button
-          onClick={() => handlePageChange(currentPage + 1)}
-          disabled={currentPage === totalPages}
-          className="bg-gray-500 text-white px-4 py-2 rounded disabled:opacity-50"
-        >
-          &gt;
-        </button>
-      </div>
-    );
+  const handleEdit = (employee) => {
+    // Điều hướng đến trang chỉnh sửa, truyền state với dữ liệu nhân viên
+    navigate(`/dashboard/employee/edit/${employee.id}`, { state: { employee } });
   };
+
+  const handleDelete = async (id) => {
+    const token = localStorage.getItem('token');
+    if (!token) {
+      console.error('Token không tồn tại hoặc đã hết hạn.');
+      return;
+    }
+
+    try {
+      await axios.delete(`http://localhost:8080/api/employees/${id}`, {
+        headers: { Authorization: `Bearer ${token}` },
+      });
+      fetchEmployees(currentPage); // Refresh after deletion
+    } catch (error) {
+      console.error('Lỗi khi xóa nhân viên:', error);
+    }
+  };
+
 
   return (
     <div>
+      <button
+        onClick={() => navigate('/dashboard/employee/add')}
+        className="bg-blue-500 text-white w-20 h-20 rounded-full flex items-center justify-center fixed right-4 bottom-4"
+      >
+        <div className="flex items-center justify-center w-full h-full">
+          <FaPlus className="text-3xl" />
+        </div>
+      </button>
       <table className="table-auto w-full border border-gray-300">
         <thead>
           <tr className="bg-gray-200 text-center">
-            <th className="px-6 py-4 border">Tên tài khoản</th>
-            <th className="px-6 py-4 border">Quyền</th>
-            <th className="px-6 py-4 border">Quản lý</th>
+            <th className="px-4 py-2 border">Tên nhân viên</th>
+            <th className="px-4 py-2 border">Giới tính</th>
+            <th className="px-4 py-2 border">Địa chỉ</th>
+            <th className="px-4 py-2 border">Số điện thoại</th>
+            <th className="px-4 py-2 border">Email</th>
+            <th className="px-4 py-2 border">Ngày sinh</th>
+            <th className="px-4 py-2 border">CMND</th>
+            <th className="px-4 py-2 border">Trạng thái</th>
+            <th className="px-4 py-2 border">Loại nhân viên</th>
+            <th className="px-4 py-2 border">Ngày tạo</th>
+            <th className="px-4 py-2 border">Hành động</th>
           </tr>
         </thead>
         <tbody>
           {loading ? (
             <tr>
-              <td colSpan="3" className="text-center py-4">Đang tải...</td>
+              <td colSpan="12" className="text-center py-4">
+                Đang tải...
+              </td>
             </tr>
-          ) : (
-            Array.isArray(accounts) && accounts.length > 0 ? accounts.map((account) => (
-              <tr key={account.id} className="text-center">
-                <td className="px-6 py-4 border">{account.username}</td>
-                <td className="px-6 py-4 border">{account.roles.join(", ")}</td>
-                <td className="px-6 py-4 border flex items-center justify-center">
+          ) : employees.length > 0 ? (
+            employees.map((employee) => (
+              <tr key={employee.id} className="text-center">
+                <td className="px-4 py-2 border">{employee.employeeName}</td>
+                <td className="px-4 py-2 border">{employee.gender}</td>
+                <td className="px-4 py-2 border">{employee.address}</td>
+                <td className="px-4 py-2 border">{employee.phone}</td>
+                <td className="px-4 py-2 border">{employee.email}</td>
+                <td className="px-4 py-2 border">{employee.dob}</td>
+                <td className="px-4 py-2 border">{employee.nationalIDNumber}</td>
+                <td className="px-4 py-2 border">{employee.status}</td>
+                <td className="px-4 py-2 border">{employee.employeeType ? employee.employeeType.nameEmployeeType : 'Không xác định'}</td>
+
+                <td className="px-4 py-2 border">{new Date(employee.createdAt).toLocaleDateString()}</td>
+                <td className="px-4 py-2 border flex items-center justify-center gap-2">
                   <button
-                    onClick={() => handleEdit(account)}
-                    className="bg-blue-500 text-white px-3 py-2 rounded flex items-center"
+                    className="bg-blue-500 text-white px-3 py-1 rounded"
+                    onClick={() => handleEdit(employee)}
                   >
-                    <FaEdit className="mr-1" />
-                  </button>
-                  <span className="mx-2">|</span>
-                  <button
-                    onClick={async () => {
-                      if (window.confirm("Bạn chắc chắn xóa chứ?")) {
-                        await onDelete(account.id);
-                        fetchUsers(currentPage);
-                      }
-                    }}
-                    className="bg-red-500 text-white px-3 py-2 rounded flex items-center"
-                  >
-                    <MdDelete className="mr-1" />
+                    <FaEdit />
                   </button>
                   <button
-                    onClick={() => onEdit(null)}
-                    className="bg-blue-500 text-white w-20 h-20 rounded-full flex items-center justify-center fixed right-4 bottom-4"
+                    className="bg-red-500 text-white px-3 py-1 rounded"
+                    onClick={() => handleDelete(employee.id)}
                   >
-                    <div className="flex items-center justify-center w-full h-full">
-                      <FaPlus className="text-3xl" />
-                    </div>
+                    <MdDelete />
                   </button>
                 </td>
               </tr>
-            )) : (
-              <tr>
-                <td colSpan="3" className="text-center py-4">Không có tài khoản nào</td>
-              </tr>
-            )
+            ))
+          ) : (
+            <tr>
+              <td colSpan="12" className="text-center py-4">
+                Không có dữ liệu
+              </td>
+            </tr>
           )}
         </tbody>
       </table>
-      {totalPages > 1 && renderPagination()}
     </div>
   );
 };

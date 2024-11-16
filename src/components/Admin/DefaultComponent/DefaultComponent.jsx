@@ -1,6 +1,6 @@
 import React from 'react';
-import SidebarMenu from '../../Admin/Menu/Sidebar';
 import HeaderAdmin from '../../Admin/Header/HeaderAdmin';
+import SidebarMenu from '../../Admin/Menu/Sidebar';
 
 const DefaultComponent = ({ children, title }) => {
   return (

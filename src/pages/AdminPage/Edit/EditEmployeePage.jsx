@@ -1,48 +1,72 @@
 import axios from 'axios';
 import React, { useEffect, useState } from 'react';
-import { useLocation, useNavigate, useParams } from 'react-router-dom';
+import { useNavigate, useParams } from 'react-router-dom';
 import EmployeeForm from '../../../components/Admin/ComponentPage/EmployeePage/EmployeeForm';
 import DefaultComponent from '../../../components/Admin/DefaultComponent/DefaultComponent';
 
 const EditEmployeePage = () => {
     const { id } = useParams();
-    const location = useLocation();
     const navigate = useNavigate();
-    const [account, setAccount] = useState(location.state?.account || null);
-    const [loading, setLoading] = useState(!account);
+    const [employee, setEmployee] = useState(null);
+    const [loading, setLoading] = useState(true);
     const [error, setError] = useState('');
 
     useEffect(() => {
-        if (!account) {
+        const fetchEmployee = async () => {
             const token = localStorage.getItem('token');
 
             if (!token) {
                 setError('Token không tồn tại hoặc đã hết hạn');
-                setLoading(false);
+                navigate('/login'); // Redirect to login if token is missing
                 return;
             }
 
-            axios.get(`http://localhost:8080/api/accounts/${id}`, {
-                headers: {
-                    Authorization: `Bearer ${token}`,
-                },
-            })
-                .then(response => {
-                    console.log("Dữ liệu từ API:", response.data);
-                    if (response.data && response.data.username) {
-                        setAccount(response.data);
-                    } else {
-                        setError('Dữ liệu không hợp lệ. Không tìm thấy thông tin tài khoản.');
-                    }
-                    setLoading(false);
-                })
-                .catch(error => {
-                    console.error('Lỗi khi lấy thông tin tài khoản:', error);
-                    setError('Không thể tải thông tin tài khoản');
-                    setLoading(false);
+            try {
+                const response = await axios.get(`http://localhost:8080/api/employees/${id}`, {
+                    headers: { Authorization: `Bearer ${token}` },
                 });
+
+                console.log('Dữ liệu từ API:', response.data);
+
+                if (response.data) {
+                    setEmployee(response.data);
+                } else {
+                    setError('Không tìm thấy thông tin nhân viên');
+                }
+            } catch (error) {
+                console.error('Lỗi khi lấy thông tin nhân viên:', error);
+                setError('Không thể tải thông tin nhân viên');
+            } finally {
+                setLoading(false);
+            }
+        };
+
+        fetchEmployee();
+    }, [id, navigate]);
+
+    const handleFormSubmit = async (data) => {
+        const token = localStorage.getItem('token');
+
+        if (!token) {
+            alert('Token không tồn tại hoặc đã hết hạn');
+            navigate('/login');
+            return;
         }
-    }, [id, account]);
+
+        try {
+            console.log("Dữ liệu gửi lên:", data);
+
+            await axios.put(`http://localhost:8080/api/employees/${id}`, data, {
+                headers: { Authorization: `Bearer ${token}` },
+            });
+
+            console.log('Cập nhật nhân viên thành công');
+            navigate('/dashboard/employees/list');
+        } catch (error) {
+            console.error('Lỗi khi cập nhật nhân viên:', error);
+            alert('Không thể cập nhật nhân viên');
+        }
+    };
 
     if (loading) {
         return <p>Đang tải...</p>;
@@ -55,14 +79,14 @@ const EditEmployeePage = () => {
     return (
         <DefaultComponent>
             <div>
-                {account ? (
+                {employee ? (
                     <EmployeeForm
-                        initialData={account}
-                        onSubmit={() => navigate('/dashboard/employees/list')}
+                        initialData={employee}
+                        onSubmit={handleFormSubmit}
                         onCancel={() => navigate('/dashboard/employees/list')}
                     />
                 ) : (
-                    <p>Không tìm thấy thông tin tài khoản</p>
+                    <p>Không tìm thấy thông tin nhân viên</p>
                 )}
             </div>
         </DefaultComponent>

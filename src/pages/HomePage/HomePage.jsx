@@ -39,7 +39,6 @@ const HomePage = () => {
       <div className="flex justify-center items-center h-full mt-[-40px]">
         <FindTicketComponent />
       </div>
-      <FooterComponent />
       <BackgroundChanger setBackgroundImage={setBackgroundImage} />
       <FooterComponent />
     </div>

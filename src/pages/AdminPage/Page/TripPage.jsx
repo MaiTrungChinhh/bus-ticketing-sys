@@ -1,9 +1,9 @@
 import React, { useState, useEffect } from 'react';
-import DefaultComponent from '../../components/Admin/DefaultComponent/DefaultComponent';
-import AdvancedFilter from '../../components/Admin/DefaultComponent/AdvancedFilter';
-import Pagination from '../../components/Admin/DefaultComponent/Pagination';
-import ContentVehicle from '../../components/Admin/ComponentPage/VehiclePage/ContentVehiclePage';
-import { fetchVehicles } from './../../services/vehicleService';
+import DefaultComponent from '../../../components/Admin/DefaultComponent/DefaultComponent';
+import AdvancedFilter from '../../../components/Admin/DefaultComponent/AdvancedFilter';
+import Pagination from '../../../components/Admin/DefaultComponent/Pagination';
+import ContentTrip from '../../../components/Admin/ComponentPage/TripPage/ContentTripPage';
+import { fetchTrips } from '../../../services/tripService';
 
 const filtersPage1 = [
   {
@@ -28,7 +28,7 @@ const filtersPage1 = [
   },
 ];
 
-const ListVehiclePage = () => {
+const ListTripPage = () => {
   const [bookings, setBookings] = useState([]);
   const [selectedFilters, setSelectedFilters] = useState({
     vehicleName: [],
@@ -42,7 +42,7 @@ const ListVehiclePage = () => {
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const data = await fetchVehicles();
+        const data = await fetchTrips();
         if (Array.isArray(data)) {
           setBookings(data);
           setTotalResults(data.length);
@@ -52,7 +52,7 @@ const ListVehiclePage = () => {
           setTotalResults(0);
         }
       } catch (error) {
-        console.error('Error fetching vehicles:', error);
+        console.error('Error fetching trips:', error);
       }
     };
 
@@ -93,26 +93,26 @@ const ListVehiclePage = () => {
   };
 
   const getFilteredResults = () => {
-    return bookings.filter((vehicle) => {
+    return bookings.filter((trip) => {
       // Filter by vehicle name
       const vehicleNameMatch =
         selectedFilters.vehicleName.length === 0 ||
-        selectedFilters.vehicleName.includes(vehicle.vehicle?.vehicleName);
+        selectedFilters.vehicleName.includes(trip.vehicle?.vehicleName);
 
       // Filter by vehicle type
       const vehicleTypeMatch =
         selectedFilters.vehicleType.length === 0 ||
         selectedFilters.vehicleType.includes(
-          vehicle.vehicle.vehicleType?.vehicleTypeName
+          trip.vehicle.vehicleType?.vehicleTypeName
         );
 
       // Filter by search term
       const searchMatch =
         searchTerm === '' ||
-        (vehicle.route?.departureLocation &&
-          vehicle.route.departureLocation.toLowerCase().includes(searchTerm)) ||
-        (vehicle.route?.arrivalLocation &&
-          vehicle.route.arrivalLocation.toLowerCase().includes(searchTerm));
+        (trip.route?.departureLocation &&
+          trip.route.departureLocation.toLowerCase().includes(searchTerm)) ||
+        (trip.route?.arrivalLocation &&
+          trip.route.arrivalLocation.toLowerCase().includes(searchTerm));
 
       return vehicleNameMatch && vehicleTypeMatch && searchMatch;
     });
@@ -134,7 +134,7 @@ const ListVehiclePage = () => {
   };
 
   return (
-    <DefaultComponent title="List Vehicles">
+    <DefaultComponent title="List Trips">
       <div className="flex">
         <div className="w-1/5">
           <AdvancedFilter
@@ -152,7 +152,7 @@ const ListVehiclePage = () => {
           />
         </div>
         <div className="w-4/5 px-5">
-          <ContentVehicle bookings={currentResults} totalResults={totalResults} />
+          <ContentTrip bookings={currentResults} totalResults={totalResults} />
           <Pagination
             currentPage={currentPage}
             totalPages={totalPages}
@@ -166,4 +166,4 @@ const ListVehiclePage = () => {
   );
 };
 
-export default ListVehiclePage;
+export default ListTripPage;

@@ -87,33 +87,13 @@ const SidebarMenu = () => {
                 icon: <FaList />,
               },
               {
-                label: 'Danh sách nhân viên', // Thêm danh sách nhân viên
-                to: '/dashboard/employees/list',
-                icon: <FaList />,
-              },
-              {
-                label: 'Thêm nhân viên', // Thêm nhân viên
-                to: '/dashboard/employee/add',
-                icon: <FaPlus />,
-              },
-              {
                 label: 'Quản lý người dùng',
-                to: '/dashboard/users',
+                to: '/dashboard/customers/list',
                 icon: <FaList />,
-              },
-              {
-                label: 'Quản lý người dùng',
-                to: '/dashboard/users/list',
-                icon: <FaList />,
-              },
-              {
-                label: 'Thêm người dùng',
-                to: '/users/add',
-                icon: <FaPlus />,
               },
 
             ]}
-            onSubMenuToggle={() => handleSubMenuToggle('users')}
+            onSubMenuToggle={() => handleSubMenuToggle('customers')}
             isOpen={isOpen}
           />
 

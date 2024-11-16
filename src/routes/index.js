@@ -1,12 +1,15 @@
+import AddCustomerPage from '../pages/AdminPage/Add/AddCustomerPage.jsx';
 import AddEmployeePage from '../pages/AdminPage/Add/AddEmployeePage.jsx'; // Thêm trang thêm nhân viên
 import AddEmployeeTypePage from '../pages/AdminPage/Add/AddEmployeeTypePage.jsx';
 import AddTrip from '../pages/AdminPage/Add/AddTripPage';
-import Dashboard from '../pages/AdminPage/DashboardPage';
+import EditEmployeePage from '../pages/AdminPage/Edit/EditEmployeePage.jsx';
 import EditEmployeeTypePage from '../pages/AdminPage/Edit/EditEmployeeTypePage';
-import EmployeeTypePage from '../pages/AdminPage/EmployeeTypePage.jsx';
-import ListEmployeePage from '../pages/AdminPage/ListEmployeePage.jsx';
-import ListTrip from '../pages/AdminPage/TripPage';
-import ListVehicle from '../pages/AdminPage/VehiclePage';
+import CustomerListPage from '../pages/AdminPage/Page/CustomerListPage.jsx';
+import Dashboard from '../pages/AdminPage/Page/DashboardPage';
+import EmployeeTypePage from '../pages/AdminPage/Page/EmployeeTypePage.jsx';
+import ListEmployeePage from '../pages/AdminPage/Page/ListEmployeePage.jsx';
+import ListTrip from '../pages/AdminPage/Page/TripPage';
+import ListVehicle from '../pages/AdminPage/Page/VehiclePage';
 import BuyTicketDetailPage from '../pages/BuyTicketPage/BuyTicketDetailPage';
 import BuyTicketPage from '../pages/BuyTicketPage/BuyTicketPage';
 import PaymentPage from '../pages/BuyTicketPage/PaymentPage';
@@ -51,6 +54,17 @@ export const routes = [
     page: Dashboard, // Cập nhật để trang /admin chuyển trực tiếp đến Dashboard
   },
   {
+    path: '/dashboard/customers/list',
+    page: CustomerListPage, 
+  },
+  {
+    path: '/dashboard/customer/add',
+    page: AddCustomerPage, 
+  },
+
+
+
+  {
     path:'/dashboard/employees/type',
     page: EmployeeTypePage,
   },
@@ -70,6 +84,13 @@ export const routes = [
     path: '/dashboard/employee/add',
     page: AddEmployeePage,
   },
+  {
+    path: '/dashboard/employee/edit/:id',
+    page: EditEmployeePage,
+  },
+
+
+
   {
     path: '/dashboard/trip/list',
     page: ListTrip,

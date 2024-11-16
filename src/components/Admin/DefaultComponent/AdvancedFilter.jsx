@@ -1,5 +1,5 @@
-import React, { useState, useEffect } from 'react';
-import { MdExpandMore, MdExpandLess } from 'react-icons/md';
+import React, { useEffect, useState } from 'react';
+import { MdExpandLess, MdExpandMore } from 'react-icons/md';
 
 const AdvancedFilter = ({ filters, onApply, onSearch, selectedFilters }) => {
   const [customPriceRange, setCustomPriceRange] = useState({
@@ -7,10 +7,9 @@ const AdvancedFilter = ({ filters, onApply, onSearch, selectedFilters }) => {
     max: selectedFilters?.priceRange?.max || 1000,
   });
   const [selectedOptions, setSelectedOptions] = useState({});
-
   const [searchInput, setSearchInput] = useState('');
+  const [isOpen, setIsOpen] = useState(false);
 
-  // Initialize selectedOptions based on filters and selectedFilters
   useEffect(() => {
     const initialOptions = {};
     filters.forEach((filter) => {
@@ -31,14 +30,6 @@ const AdvancedFilter = ({ filters, onApply, onSearch, selectedFilters }) => {
     }));
   };
 
-  const handleCustomRangeChange = (e) => {
-    const { name, value } = e.target;
-    setCustomPriceRange((prev) => ({
-      ...prev,
-      [name]: value,
-    }));
-  };
-
   const handleSearchChange = (e) => {
     const value = e.target.value;
     setSearchInput(value);
@@ -48,127 +39,73 @@ const AdvancedFilter = ({ filters, onApply, onSearch, selectedFilters }) => {
   const handleApply = () => {
     const appliedFilters = {
       selectedOptions,
-      customPriceRange,
     };
     onApply(appliedFilters);
   };
-
-  return (
-    <div className="AdvancedFilter">
-      <div className="card-header bg-white shadow-md rounded-3xl overflow-hidden p-4 mb-4 flex items-center">
-        <div className="search-bar flex items-center w-full">
-          <span className="text-gray-500 mr-2">
-            <i className="bx bx-search-alt text-2xl"></i>
-          </span>
-          <input
-            type="search"
-            className="form-control w-full rounded-lg px-3 py-2 border border-gray-300 shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
-            value={searchInput}
-            onChange={handleSearchChange}
-            placeholder="Search ..."
-          />
-        </div>
-      </div>
-      <div className="card bg-white shadow-md rounded-3xl overflow-hidden">
-        <div className="card-body border-light p-6">
-          {filters.map((filter, index) => (
-            <FilterSection
-              key={index}
-              title={filter.title}
-              items={filter.items}
-              customRange={filter.customRange}
-              extraContent={filter.extraContent}
-              selectedOptions={selectedOptions}
-              onCheckboxChange={handleCheckboxChange}
-              customPriceRange={customPriceRange}
-              onCustomRangeChange={handleCustomRangeChange}
-            />
-          ))}
-        </div>
-        <div className="card-footer p-4">
-          <button
-            onClick={handleApply}
-            className="btn btn-primary w-full text-blue-500 hover:text-blue-600 p-2 m-2 bg-blue-100 hover:bg-blue-200 rounded-xl"
-          >
-            Apply
-          </button>
-        </div>
-      </div>
-    </div>
-  );
-};
-
-const FilterSection = ({
-  title,
-  items,
-  customRange,
-  extraContent,
-  selectedOptions,
-  onCheckboxChange,
-  customPriceRange,
-  onCustomRangeChange,
-}) => {
-  const [isOpen, setIsOpen] = useState(false);
 
   const toggleCollapse = () => {
     setIsOpen(!isOpen);
   };
 
   return (
-    <div className="mt-4">
-      <button
-        type="button"
-        onClick={toggleCollapse}
-        className="flex items-center text-gray-800 bg-gray-200 p-2 rounded-md font-medium text-xl w-full text-left"
-      >
-        {title}
-        {isOpen ? (
-          <MdExpandLess className="ml-auto text-3xl" />
-        ) : (
-          <MdExpandMore className="ml-auto text-3xl" />
-        )}
-      </button>
-      {isOpen && (
-        <div className="categories-list flex flex-col gap-2 mt-2">
-          {items.map(({ id, label, type = 'checkbox' }) => (
-            <div className="form-check text-lg" key={id}>
-              <input
-                type={type}
-                className="form-check-input"
-                id={id}
-                checked={selectedOptions[id]}
-                onChange={() => onCheckboxChange(id)}
-              />
-              <label
-                className="form-check-label text-gray-700 pl-2"
-                htmlFor={id}
-              >
-                {label}
-              </label>
-            </div>
-          ))}
-          {customRange && (
-            <div className="formCost flex gap-1 items-center mt-2">
-              <input
-                className="form-control text-center border border-gray-300 rounded-md w-1/2"
-                type="text"
-                name="min"
-                value={customPriceRange.min}
-                onChange={onCustomRangeChange}
-              />
-              <span className="font-semibold text-gray-500">to</span>
-              <input
-                className="form-control text-center border border-gray-300 rounded-md w-1/2"
-                type="text"
-                name="max"
-                value={customPriceRange.max}
-                onChange={onCustomRangeChange}
-              />
-            </div>
+    <div className="flex items-center gap-4 p-4 bg-gray-100 rounded-lg shadow-lg">
+      {/* Tìm kiếm */}
+      <div className="flex-1">
+        <input
+          type="search"
+          className="w-full h-12 rounded-lg px-4 py-2 border border-gray-300 focus:outline-none focus:ring-2 focus:ring-blue-500 shadow-sm text-lg"
+          value={searchInput}
+          onChange={handleSearchChange}
+          placeholder="Tìm kiếm ..."
+        />
+      </div>
+
+      {/* Bộ lọc */}
+      <div className="flex items-center">
+        <button
+          type="button"
+          onClick={toggleCollapse}
+          className="flex items-center justify-center h-12 px-4 py-2 bg-blue-100 rounded-lg font-medium text-lg hover:bg-blue-200 transition duration-300"
+          style={{ minWidth: '120px' }} // Cân đối chiều dài nút
+        >
+          Bộ lọc
+          {isOpen ? (
+            <MdExpandLess className="ml-2 text-xl" />
+          ) : (
+            <MdExpandMore className="ml-2 text-xl" />
           )}
-          {extraContent}
-        </div>
-      )}
+        </button>
+
+        {isOpen && (
+          <div className="absolute right-0 top-16 bg-white shadow-lg rounded-lg p-4 w-80 z-50">
+            {filters.map((filter, index) => (
+              <div key={index} className="mb-4">
+                <h3 className="font-medium text-gray-700 mb-2">{filter.title}</h3>
+                <div className="flex flex-wrap gap-4 items-center">
+                  {filter.items.map(({ id, label }) => (
+                    <label key={id} className="flex items-center text-lg">
+                      <input
+                        type="checkbox"
+                        id={id}
+                        className="w-5 h-5 mr-2"
+                        checked={selectedOptions[id]}
+                        onChange={() => handleCheckboxChange(id)}
+                      />
+                      {label}
+                    </label>
+                  ))}
+                </div>
+              </div>
+            ))}
+            <button
+              onClick={handleApply}
+              className="bg-blue-500 text-white px-4 py-2 rounded-lg w-full hover:bg-blue-600 transition duration-300"
+            >
+              Áp dụng
+            </button>
+          </div>
+        )}
+      </div>
     </div>
   );
 };

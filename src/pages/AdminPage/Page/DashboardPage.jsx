@@ -1,5 +1,5 @@
 import React from 'react';
-import DefaultComponent from '../../components/Admin/DefaultComponent/DefaultComponent';
+import DefaultComponent from '../../../components/Admin/DefaultComponent/DefaultComponent';
 
 const DashboardPage = () => {
   return (
