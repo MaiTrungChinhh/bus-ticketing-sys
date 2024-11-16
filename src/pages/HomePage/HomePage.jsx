@@ -3,11 +3,14 @@ import React, { useEffect, useState } from 'react';
 import FindTicketComponent from '../../components/FindTicketComponent/FindTicketComponent';
 import FooterComponent from '../../components/Footer/FooterComponent';
 import HeaderComponent from '../../components/Header/HeaderComponent';
+<<<<<<< HEAD
 
 
 
 // Component riêng để xử lý việc thay đổi hình nền
 
+=======
+>>>>>>> b7a0632556f7f2f6b649df6b35164d378efcfcbc
 const BackgroundChanger = ({ setBackgroundImage }) => {
   useEffect(() => {
     const images = Object.values(BACKGROUND_IMAGE_URLS);

@@ -21,7 +21,6 @@ export const fetchVehicleById = async (vehicleId) => {
   }
 };
 
-
 export const createVehicle = async (vehicleData) => {
   try {
     const response = await axiosInstance.post('/vehicles', vehicleData);

@@ -58,7 +58,6 @@ export const tripUserById = async (tripId) => {
   }
 };
 
-
 export const createTrip = async (tripData) => {
   try {
     const response = await axiosInstance.post('/trips', tripData);

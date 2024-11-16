@@ -49,7 +49,7 @@ const PaymentMethods = ({ selectedPayment, handlePaymentChange }) => {
             className="mr-2"
           />
           <label htmlFor="momo" className="cursor-pointer">
-            MoMo (<span className="text-red-500">+0đ</span>)
+            MoMo
           </label>
         </div>
 
@@ -70,7 +70,7 @@ const PaymentMethods = ({ selectedPayment, handlePaymentChange }) => {
             className="mr-2"
           />
           <label htmlFor="zalopay" className="cursor-pointer">
-            ZaloPay (<span className="text-red-500">+7,000đ</span>)
+            ZaloPay
           </label>
         </div>
 
@@ -91,7 +91,7 @@ const PaymentMethods = ({ selectedPayment, handlePaymentChange }) => {
             className="mr-2"
           />
           <label htmlFor="vnpay" className="cursor-pointer">
-            VNPay (<span className="text-red-500">+21,000đ</span>)
+            VNPay
           </label>
         </div>
       </div>
@@ -130,9 +130,9 @@ const PaymentPage = () => {
   }, [timeLeft]);
 
   const breadcrumbItems = [
-    { label: 'Trang nhất', link: '/' },
-    { label: 'Mua vé online', link: '/muave' },
-    { label: 'Chọn chuyến' },
+    { label: 'Trang nhất', link: '/', className: 'text-2xl' },
+    { label: 'Mua vé online', link: '/muave', className: 'text-2xl' },
+    { label: 'Chọn chuyến', className: 'text-2xl' },
   ];
 
   const handlePaymentChange = useCallback(
@@ -275,7 +275,7 @@ const PaymentPage = () => {
                     <tr>
                       <td className="px-4 py-2 font-semibold">Tổng tiền vé:</td>
                       <td className="px-4 py-2 text-money font-bold text-red-500">
-                        {totalAmount} VND
+                        {parseInt(totalAmount).toLocaleString('vi-VN')} VND
                       </td>
                     </tr>
                   </tbody>

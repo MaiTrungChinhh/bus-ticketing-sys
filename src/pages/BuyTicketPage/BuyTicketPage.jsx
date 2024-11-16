@@ -7,9 +7,9 @@ import TableTrip from '../../components/FindTicketComponent/TableTrip';
 
 const BuyTicketPage = () => {
   const breadcrumbItems = [
-    { label: 'Trang nhất', link: '/' },
-    { label: 'Mua vé online', link: '/muave' },
-    { label: 'Chọn chuyến' },
+    { label: 'Trang nhất', link: '/', className: 'text-2xl' },
+    { label: 'Mua vé online', link: '/muave', className: 'text-2xl' },
+    { label: 'Chọn chuyến', className: 'text-2xl' },
   ];
 
   return (

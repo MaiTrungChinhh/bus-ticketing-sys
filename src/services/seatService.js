@@ -9,3 +9,17 @@ export const getSeatByVehicleId = async (vehicaleId) => {
     throw error;
   }
 };
+
+export const lockSeats = async (seatId) => {
+  try {
+    const lockDuration = 5;
+    const response = await axiosInstance.post('/seats/lock', {
+      seatId,
+      lockDuration,
+    });
+    return response.data;
+  } catch (error) {
+    console.error('Error locking seats:', error);
+    throw error;
+  }
+};
