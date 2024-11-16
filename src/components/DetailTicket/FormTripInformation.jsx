@@ -86,7 +86,9 @@ const TripInfo = ({ tripDetails }) => {
                     <td>
                       <strong className="text-red-500">
                         {' '}
-                        {tripDetails?.ticketPrice || 'N/A'}
+                        {parseInt(tripDetails?.ticketPrice).toLocaleString(
+                          'vi-VN'
+                        ) || 'N/A'}
                       </strong>{' '}
                       VND
                     </td>

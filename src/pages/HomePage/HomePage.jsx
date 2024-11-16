@@ -3,7 +3,6 @@ import React, { useEffect, useState } from 'react';
 import FindTicketComponent from '../../components/FindTicketComponent/FindTicketComponent';
 import FooterComponent from '../../components/Footer/FooterComponent';
 import HeaderComponent from '../../components/Header/HeaderComponent';
-import FooterComponent from '../../components/Footer/FooterComponent';
 const BackgroundChanger = ({ setBackgroundImage }) => {
   useEffect(() => {
     const images = Object.values(BACKGROUND_IMAGE_URLS);

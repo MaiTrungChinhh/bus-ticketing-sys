@@ -6,7 +6,6 @@ import ListEmployeePage from '../pages/AdminPage/ListEmployeePage.jsx';
 import ListTrip from '../pages/AdminPage/TripPage';
 import ListVehicle from '../pages/AdminPage/VehiclePage';
 import BuyTicketDetailPage from '../pages/BuyTicketPage/BuyTicketDetailPage';
-import BuyTicketPage from '../pages/BuyTicketPage/BuyTicketPage';
 import PaymentPage from '../pages/BuyTicketPage/PaymentPage';
 import FooterPage from '../pages/FooterPage/FooterPage';
 import HomePage from '../pages/HomePage/HomePage';
@@ -15,16 +14,9 @@ import LoginPage from '../pages/LoginLogout/LoginPage';
 import RegisterPage from '../pages/LoginLogout/RegisterPage';
 import NotFoundPage from '../pages/NotFoundPage/NotFoundPage';
 import OrderPage from '../pages/OrderPage/OrderPage';
-import AddEmployeeTypePage from '../pages/AdminPage/Add/AddEmployeeTypePage.jsx'
+import AddEmployeeTypePage from '../pages/AdminPage/Add/AddEmployeeTypePage.jsx';
 import EditEmployeeTypePage from '../pages/AdminPage/Edit/EditEmployeeTypePage';
 import BuyTicketPage from '../pages/BuyTicketPage/BuyTicketPage';
-import BuyTicketDetailPage from '../pages/BuyTicketPage/BuyTicketDetailPage';
-import PaymentPage from '../pages/BuyTicketPage/PaymentPage';
-import Dashboard from '../pages/AdminPage/DashboardPage';
-import ListUser from '../pages/AdminPage/ListUserPage';
-import ListTrip from '../pages/AdminPage/TripPage';
-import AddTrip from '../pages/AdminPage/Add/AddTripPage';
-import ListVehicle from '../pages/AdminPage/VehiclePage';
 
 export const routes = [
   {
@@ -52,13 +44,12 @@ export const routes = [
     page: Dashboard,
   },
 
-
   {
     path: '/admin',
     page: Dashboard, // Cập nhật để trang /admin chuyển trực tiếp đến Dashboard
   },
   {
-    path:'/dashboard/employees/type',
+    path: '/dashboard/employees/type',
     page: EmployeeTypePage,
   },
   {
@@ -68,7 +59,7 @@ export const routes = [
   {
     path: '/dashboard/employees/type/edit',
     page: EditEmployeeTypePage,
-},
+  },
   {
     path: '/dashboard/employees/list',
     page: ListEmployeePage,

@@ -13,14 +13,16 @@ export const fetchVehicleDetails = async (vehicleId) => {
         vehicleType: vehicleInfo.vehicleName,
         reservedSeats: seats
           .filter((seat) => seat.status !== 'AVAILABLE')
-          .map((seat) => seat.position),
+          .map((seat) => ({ id: seat.id, position: seat.position })),
         totalSeats: vehicleInfo.seatCount,
+        seats,
       };
     }
     return {
       vehicleType: '',
       reservedSeats: [],
       totalSeats: 0,
+      seats: [],
     };
   } catch (error) {
     console.error('Có lỗi khi lấy thông tin xe:', error);
@@ -32,6 +34,7 @@ const ChooseChair = ({ selectedSeats, onSeatSelect, vehicleId }) => {
   const [vehicleType, setVehicleType] = useState('');
   const [reservedSeats, setReservedSeats] = useState([]);
   const [totalSeats, setTotalSeats] = useState(0);
+  const [seats, setSeats] = useState([]);
 
   // Hàm gọi API khi `vehicleId` thay đổi
   useEffect(() => {
@@ -40,8 +43,9 @@ const ChooseChair = ({ selectedSeats, onSeatSelect, vehicleId }) => {
         const data = await fetchVehicleDetails(vehicleId);
         if (data) {
           setVehicleType(data.vehicleType);
-          setReservedSeats(data.reservedSeats);
+          setReservedSeats(data.reservedSeats.map((seat) => seat.position));
           setTotalSeats(data.totalSeats);
+          setSeats(data.seats);
         }
       } catch (error) {
         console.error('Có vấn đề khi lấy thông tin xe:', error);
@@ -55,11 +59,16 @@ const ChooseChair = ({ selectedSeats, onSeatSelect, vehicleId }) => {
   const isSeatValid = (currentSeatNumber) => currentSeatNumber < totalSeats;
 
   // Hàm để chọn hoặc hủy chọn ghế
-  const toggleSeatSelection = (seat) => {
-    if (selectedSeats.includes(seat)) {
-      onSeatSelect(seat); // Bỏ chọn ghế
+  const toggleSeatSelection = (seatNumber) => {
+    // Tìm ID ghế dựa trên vị trí
+    const selectedSeat = seats.find(
+      (seat) => seat.position.toString() === seatNumber.toString()
+    );
+
+    if (selectedSeats.includes(seatNumber)) {
+      onSeatSelect(seatNumber, selectedSeat?.id, selectedSeat?.position, false); // Truyền thêm id và position (false là hủy chọn)
     } else if (selectedSeats.length < 4) {
-      onSeatSelect(seat); // Chọn ghế nếu chưa đủ 4 ghế
+      onSeatSelect(seatNumber, selectedSeat?.id, selectedSeat?.position, true); // Truyền thêm id và position (true là chọn ghế)
     } else {
       alert('Bạn chỉ có thể chọn tối đa 4 ghế!'); // Thông báo cho người dùng
     }
