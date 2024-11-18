@@ -1,38 +1,9 @@
-import React, { useState } from 'react';
+import React from 'react';
 import { FaEdit, FaPlus, FaTrash } from 'react-icons/fa';
 import { useNavigate } from 'react-router-dom';
 
-const EmployeeTypeTable = ({ onEdit, onDelete, employeeTypes, fetchEmployeeTypes, loading }) => {
-    const [searchTerm, setSearchTerm] = useState('');
-    const [submittedSearchTerm, setSubmittedSearchTerm] = useState('');
+const EmployeeTypeTable = ({ onEdit, onDelete, employeeTypes, loading, onPageChange, currentPage }) => {
     const navigate = useNavigate();
-
-
-
-    const handleSearchChange = (e) => {
-        setSearchTerm(e.target.value);
-    };
-
-    const handleSearchSubmit = (e) => {
-        e.preventDefault();
-        setSubmittedSearchTerm(searchTerm);
-        onPageChange(1); // Reset page to 1 when searching
-        if (typeof fetchEmployeeTypes === 'function') {
-            fetchEmployeeTypes(1);
-        }
-    };
-
-    const removeVietnameseTones = (str) => {
-        return str
-            .normalize("NFD")
-            .replace(/\p{Diacritic}/gu, "")
-            .replace(/đ/g, "d")
-            .replace(/Đ/g, "D");
-    };
-
-    const filteredEmployeeTypes = employeeTypes.filter((type) =>
-        removeVietnameseTones(type.nameEmployeeType).toLowerCase().includes(removeVietnameseTones(submittedSearchTerm).toLowerCase())
-    );
 
     return (
         <div className="p-4">
@@ -59,8 +30,8 @@ const EmployeeTypeTable = ({ onEdit, onDelete, employeeTypes, fetchEmployeeTypes
                             <td colSpan="2" className="text-center py-4">Đang tải...</td>
                         </tr>
                     ) : (
-                        filteredEmployeeTypes.length > 0 ? (
-                            filteredEmployeeTypes.map((type) => (
+                        employeeTypes.length > 0 ? (
+                            employeeTypes.map((type) => (
                                 <tr key={type.id} className="text-center">
                                     <td className="px-6 py-4 border">{type.nameEmployeeType}</td>
                                     <td className="px-6 py-4 border">
@@ -75,7 +46,9 @@ const EmployeeTypeTable = ({ onEdit, onDelete, employeeTypes, fetchEmployeeTypes
                                             onClick={async () => {
                                                 if (window.confirm("Bạn chắc chắn xóa chứ?")) {
                                                     await onDelete(type.id);
-                                                    onPageChange(currentPage); // Re-fetch the updated data by calling onPageChange
+                                                    if (typeof onPageChange === 'function') {
+                                                        onPageChange(currentPage);
+                                                    }
                                                 }
                                             }}
                                             className="bg-red-500 text-white px-3 py-2 rounded"

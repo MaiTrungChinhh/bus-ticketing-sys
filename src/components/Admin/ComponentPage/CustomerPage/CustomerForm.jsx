@@ -8,6 +8,7 @@ const CustomerForm = ({ customer, onCancel, onSave, usePatch = false }) => {
   const [phone, setPhone] = useState(customer?.phone || '');
   const [email, setEmail] = useState(customer?.email || '');
   const [dob, setDob] = useState(customer?.dob || '');
+  const [roles, setRoles] = useState(customer?.account.roles || '');
   const [message, setMessage] = useState('');
 
   const handleSubmit = (e) => {
@@ -31,7 +32,7 @@ const CustomerForm = ({ customer, onCancel, onSave, usePatch = false }) => {
   const patchCustomerInfo = async () => {
     const url = `http://localhost:8080/api/customers/${customer.id}`;
     const method = 'patch';
-
+    const [availableRoles, setAvailableRoles] = useState([]);
     const requestData = {};
     if (customerName !== customer.customerName) requestData.customerName = customerName;
     if (gender !== customer.gender) requestData.gender = gender;
@@ -39,6 +40,7 @@ const CustomerForm = ({ customer, onCancel, onSave, usePatch = false }) => {
     if (phone !== customer.phone) requestData.phone = phone;
     if (email !== customer.email) requestData.email = email;
     if (dob !== customer.dob) requestData.dob = dob;
+    if (roles !== customer.account.roles) requestData.dob = roles;
 
     if (Object.keys(requestData).length === 0) {
       setMessage('Không có thay đổi nào để cập nhật.');
@@ -77,6 +79,7 @@ const CustomerForm = ({ customer, onCancel, onSave, usePatch = false }) => {
       phone,
       email,
       dob,
+      roles,
     };
 
     try {
@@ -160,6 +163,16 @@ const CustomerForm = ({ customer, onCancel, onSave, usePatch = false }) => {
           type="date"
           value={dob}
           onChange={(e) => setDob(e.target.value)}
+          className="w-full p-2 border rounded"
+          required
+        />
+      </div>
+      <div className="mb-4">
+        <label className="block mb-2">Quyền</label>
+        <input
+          type="roles"
+          value={roles}
+          onChange={(e) => setRoles(e.target.value)}
           className="w-full p-2 border rounded"
           required
         />

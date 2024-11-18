@@ -8,63 +8,62 @@ const EditEmployeePage = () => {
     const { id } = useParams();
     const navigate = useNavigate();
     const [employee, setEmployee] = useState(null);
+    const [employeeTypes, setEmployeeTypes] = useState([]);
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState('');
 
     useEffect(() => {
-        const fetchEmployee = async () => {
-            const token = localStorage.getItem('token');
-
-            if (!token) {
-                setError('Token không tồn tại hoặc đã hết hạn');
-                navigate('/login'); // Redirect to login if token is missing
-                return;
-            }
-
+        const fetchData = async () => {
             try {
-                const response = await axios.get(`http://localhost:8080/api/employees/${id}`, {
-                    headers: { Authorization: `Bearer ${token}` },
-                });
-
-                console.log('Dữ liệu từ API:', response.data);
-
-                if (response.data) {
-                    setEmployee(response.data);
-                } else {
-                    setError('Không tìm thấy thông tin nhân viên');
+                const token = localStorage.getItem('token');
+                if (!token) {
+                    throw new Error('Token không tồn tại.');
                 }
+
+                const [employeeResponse, typesResponse] = await Promise.all([
+                    axios.get(`http://localhost:8080/api/employees/${id}`, {
+                        headers: { Authorization: `Bearer ${token}` },
+                    }),
+                    axios.get('http://localhost:8080/api/employeeTypes', {
+                        headers: { Authorization: `Bearer ${token}` },
+                    }),
+                ]);
+
+                const employeeData = employeeResponse.data;
+
+                // Gán dữ liệu employee và danh sách employeeTypes
+                setEmployee({
+                    ...employeeData,
+                    username: employeeData.account?.username || '', // Lấy tên đăng nhập
+                });
+                setEmployeeTypes(typesResponse.data.result.contents); // Lấy danh sách loại nhân viên
             } catch (error) {
-                console.error('Lỗi khi lấy thông tin nhân viên:', error);
-                setError('Không thể tải thông tin nhân viên');
+                console.error('Lỗi khi tải dữ liệu:', error);
+                setError('Không thể tải dữ liệu.');
             } finally {
                 setLoading(false);
             }
         };
 
-        fetchEmployee();
-    }, [id, navigate]);
+        fetchData();
+    }, [id]);
 
     const handleFormSubmit = async (data) => {
-        const token = localStorage.getItem('token');
-
-        if (!token) {
-            alert('Token không tồn tại hoặc đã hết hạn');
-            navigate('/login');
-            return;
-        }
-
         try {
-            console.log("Dữ liệu gửi lên:", data);
+            const token = localStorage.getItem('token');
+            if (!token) {
+                throw new Error('Token không tồn tại.');
+            }
 
             await axios.put(`http://localhost:8080/api/employees/${id}`, data, {
                 headers: { Authorization: `Bearer ${token}` },
             });
 
-            console.log('Cập nhật nhân viên thành công');
+            alert('Cập nhật nhân viên thành công.');
             navigate('/dashboard/employees/list');
         } catch (error) {
             console.error('Lỗi khi cập nhật nhân viên:', error);
-            alert('Không thể cập nhật nhân viên');
+            alert(`Không thể cập nhật nhân viên: ${error.response?.data?.message || 'Lỗi không xác định'}`);
         }
     };
 
@@ -78,17 +77,18 @@ const EditEmployeePage = () => {
 
     return (
         <DefaultComponent>
-            <div>
-                {employee ? (
-                    <EmployeeForm
-                        initialData={employee}
-                        onSubmit={handleFormSubmit}
-                        onCancel={() => navigate('/dashboard/employees/list')}
-                    />
-                ) : (
-                    <p>Không tìm thấy thông tin nhân viên</p>
-                )}
-            </div>
+            <EmployeeForm
+                initialData={{
+                    ...employee, // Dữ liệu của nhân viên
+                    employeeTypeId: employee.employeeType?.id, // Loại nhân viên từ API
+                    username: employee.username || '', // Tên đăng nhập
+                }}
+                employeeTypes={employeeTypes} // Danh sách loại nhân viên
+                onSubmit={handleFormSubmit} // Hàm xử lý submit
+                onCancel={() => navigate('/dashboard/employees/list')} // Hàm hủy
+            />
+
+
         </DefaultComponent>
     );
 };

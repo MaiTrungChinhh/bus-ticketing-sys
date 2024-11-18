@@ -4,7 +4,6 @@ import { FaEdit } from 'react-icons/fa';
 import DefaultComponent from '../../../components/Admin/DefaultComponent/DefaultComponent';
 
 const AddCustomerPage = () => {
-    // State để lưu thông tin khách hàng
     const [customerName, setCustomerName] = useState('');
     const [gender, setGender] = useState('Male');
     const [address, setAddress] = useState('');
@@ -12,22 +11,19 @@ const AddCustomerPage = () => {
     const [email, setEmail] = useState('');
     const [dob, setDob] = useState('');
     const [username, setUsername] = useState('');
-    const [password, setPassword] = useState('12345678'); // Đặt giá trị mặc định cho mật khẩu
+    const [password, setPassword] = useState('12345678'); // Mật khẩu mặc định
     const [message, setMessage] = useState('');
-
-    // Trạng thái để kiểm soát việc chỉnh sửa input
     const [isUsernameEditable, setIsUsernameEditable] = useState(false);
     const [isPasswordEditable, setIsPasswordEditable] = useState(false);
 
     useEffect(() => {
-        // Cập nhật tên đăng nhập khi tên khách hàng thay đổi
         const generateUsername = (name) => {
             if (!name) return '';
             return name
-                .normalize("NFD") // Loại bỏ dấu từ các ký tự có dấu
-                .replace(/[\u0300-\u036f]/g, "") // Loại bỏ dấu từ các ký tự có dấu
-                .replace(/\s+/g, '') // Xóa tất cả khoảng trắng
-                .toLowerCase(); // Chuyển thành chữ thường
+                .normalize("NFD")
+                .replace(/[\u0300-\u036f]/g, "")
+                .replace(/\s+/g, '')
+                .toLowerCase();
         };
         setUsername(generateUsername(customerName));
     }, [customerName]);
@@ -42,40 +38,27 @@ const AddCustomerPage = () => {
             return;
         }
 
-        const url = 'http://localhost:8080/api/customers';
-        const method = 'post';
-
-        const requestData = {
-            customerName,
-            gender,
-            address,
-            phone,
-            email,
-            dob,
-            username,
-            password
-        };
-
         try {
-            const response = await axios({
-                method,
-                url,
-                data: requestData,
-                headers: {
-                    Authorization: `Bearer ${token}`
-                }
+            // Tạo khách hàng với vai trò mặc định là GUEST
+            const response = await axios.post('http://localhost:8080/api/customers', {
+                customerName,
+                gender,
+                address,
+                phone,
+                email,
+                dob,
+                username,
+                password,
+                roles: ['GUEST'], // Vai trò mặc định là GUEST
+            }, {
+                headers: { Authorization: `Bearer ${token}` },
             });
+
             setMessage('Tạo khách hàng thành công');
-            // Điều hướng hoặc làm gì đó sau khi thêm thành công
             window.location.href = '/dashboard/customers/list';
         } catch (error) {
             console.error('Lỗi khi tạo khách hàng:', error);
-            if (error.response) {
-                console.error('Lỗi từ server:', error.response.data);
-                setMessage(`Tạo không thành công: ${error.response.data.message || 'Lỗi không xác định'}`);
-            } else {
-                setMessage('Tạo không thành công');
-            }
+            setMessage(`Tạo không thành công: ${error.response?.data?.message || 'Lỗi không xác định'}`);
         }
     };
 
@@ -155,7 +138,7 @@ const AddCustomerPage = () => {
                         value={username}
                         onChange={(e) => setUsername(e.target.value)}
                         className="w-full p-2 border rounded pr-10"
-                        readOnly={!isUsernameEditable} // Nếu không click vào icon, sẽ là read-only
+                        readOnly={!isUsernameEditable}
                     />
                     <button
                         type="button"
@@ -172,7 +155,7 @@ const AddCustomerPage = () => {
                         value={password}
                         onChange={(e) => setPassword(e.target.value)}
                         className="w-full p-2 border rounded pr-10"
-                        readOnly={!isPasswordEditable} // Nếu không click vào icon, sẽ là read-only
+                        readOnly={!isPasswordEditable}
                     />
                     <button
                         type="button"
@@ -181,8 +164,12 @@ const AddCustomerPage = () => {
                     >
                         <FaEdit />
                     </button>
-                    <p className="text-sm text-gray-500 mt-1">Mật khẩu mặc định: 12345678</p>
+                    {!isPasswordEditable && (
+                        <p className="text-red-500 text-sm mt-2">Mật khẩu mặc định: 12345678</p>
+                    )}
                 </div>
+
+
                 {message && <p className="text-red-500 mb-4">{message}</p>}
                 <div className="flex justify-end">
                     <button type="button" onClick={handleCancel} className="mr-2 bg-gray-500 text-white px-4 py-2 rounded">

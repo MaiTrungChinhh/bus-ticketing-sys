@@ -1,9 +1,9 @@
 import axios from 'axios';
-import React, { useState, useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
+import { FaEdit } from 'react-icons/fa';
 import DefaultComponent from '../../../components/Admin/DefaultComponent/DefaultComponent';
 
 const AddEmployeePage = () => {
-
     const [employeeName, setEmployeeName] = useState('');
     const [gender, setGender] = useState('Male');
     const [address, setAddress] = useState('');
@@ -13,12 +13,19 @@ const AddEmployeePage = () => {
     const [nationalIDNumber, setNationalIDNumber] = useState('');
     const [employeeType, setEmployeeType] = useState('');
     const [employeeTypes, setEmployeeTypes] = useState([]);
-    const [status, setStatus] = useState('ACTIVE'); // Giá trị mặc định cho trạng thái
+    const [status, setStatus] = useState('ACTIVE'); // Trạng thái mặc định
     const [message, setMessage] = useState('');
+    const [username, setUsername] = useState('');
+    const [password, setPassword] = useState('12345678');
+    const [isUsernameEditable, setIsUsernameEditable] = useState(false);
+    const [isPasswordEditable, setIsPasswordEditable] = useState(false);
 
     useEffect(() => {
         fetchEmployeeTypes();
     }, []);
+    const generatePassword = () => {
+        return Math.random().toString(36).slice(-8); // Tạo mật khẩu ngẫu nhiên 8 ký tự
+    };
 
     const fetchEmployeeTypes = async () => {
         const token = localStorage.getItem('token');
@@ -31,8 +38,8 @@ const AddEmployeePage = () => {
         try {
             const response = await axios.get('http://localhost:8080/api/employeeTypes', {
                 headers: {
-                    Authorization: `Bearer ${token}`
-                }
+                    Authorization: `Bearer ${token}`,
+                },
             });
             if (response.data.result && Array.isArray(response.data.result.contents)) {
                 setEmployeeTypes(response.data.result.contents);
@@ -45,6 +52,17 @@ const AddEmployeePage = () => {
             setMessage('Lỗi khi lấy danh sách loại nhân viên.');
         }
     };
+    useEffect(() => {
+        const generateUsername = (name) => {
+            if (!name) return '';
+            return name
+                .normalize("NFD")
+                .replace(/[\u0300-\u036f]/g, "") // Loại bỏ dấu tiếng Việt
+                .replace(/\s+/g, '') // Loại bỏ khoảng trắng
+                .toLowerCase();
+        };
+        setUsername(generateUsername(employeeName)); // Cập nhật username từ employeeName
+    }, [employeeName]);
 
     const handleSubmit = async (e) => {
         e.preventDefault();
@@ -61,43 +79,52 @@ const AddEmployeePage = () => {
             return;
         }
 
-        const url = 'http://localhost:8080/api/employees';
-        const method = 'post';
-
-        // Chỉnh sửa requestData cho đúng với yêu cầu API
-        const requestData = {
-            employeeName,       // Đổi "name" thành "employeeName"
-            gender,
-            address,
-            phone,
-            email,
-            dob,
-            nationalIDNumber,   // Đổi "idCard" thành "nationalIDNumber"
-            employeeTypeId: employeeType,
-            status
-        };
-
         try {
-            const response = await axios({
-                method,
-                url,
-                data: requestData,
-                headers: {
-                    Authorization: `Bearer ${token}`
-                }
+            // Bước 1: Gửi yêu cầu tạo nhân viên
+            const employeeResponse = await axios.post('http://localhost:8080/api/employees', {
+                employeeName,
+                gender,
+                address,
+                phone,
+                email,
+                dob,
+                nationalIDNumber,
+                employeeTypeId: employeeType,
+                status,
+                username,
+                password,
+            }, {
+                headers: { Authorization: `Bearer ${token}` },
             });
-            setMessage('Lưu thành công');
+
+            const employeeId = employeeResponse.data.result.id;
+
+            // Bước 2: Gửi yêu cầu tạo tài khoản
+            const accountResponse = await axios.post('http://localhost:8080/api/accounts', {
+                username,
+                password, // Mật khẩu ngẫu nhiên
+                roles: ['EMPLOYEE'],
+            }, {
+                headers: { Authorization: `Bearer ${token}` },
+            });
+
+            const accountId = accountResponse.data.result.id;
+
+            // Bước 3: Liên kết tài khoản với nhân viên
+            await axios.patch(`http://localhost:8080/api/employees/${employeeId}`, {
+                accountId,
+            }, {
+                headers: { Authorization: `Bearer ${token}` },
+            });
+
+            setMessage('Tạo nhân viên và tài khoản thành công');
             window.location.href = '/dashboard/employees/list';
         } catch (error) {
             console.error('Lỗi khi lưu nhân viên:', error);
-            if (error.response) {
-                console.error('Lỗi từ server:', error.response.data);
-                setMessage(`Lưu không thành công: ${error.response.data.message || 'Lỗi không xác định'}`);
-            } else {
-                setMessage('Lưu không thành công');
-            }
+            setMessage(`Lưu không thành công: ${error.response?.data?.message || 'Lỗi không xác định'}`);
         }
     };
+
 
     const handleCancel = () => {
         window.location.href = '/dashboard/employees/list';
@@ -194,6 +221,44 @@ const AddEmployeePage = () => {
                         ))}
                     </select>
                 </div>
+                <div className="mb-4 relative">
+                    <label className="block mb-2">Tên đăng nhập</label>
+                    <input
+                        type="text"
+                        value={username}
+                        onChange={(e) => setUsername(e.target.value)}
+                        className="w-full p-2 border rounded pr-10"
+                        readOnly={!isUsernameEditable}
+                    />
+                    <button
+                        type="button"
+                        onClick={() => setIsUsernameEditable(!isUsernameEditable)}
+                        className="absolute right-2 top-2 text-gray-500"
+                    >
+                        <FaEdit />
+                    </button>
+                </div>
+                <div className="mb-4 relative">
+                    <label className="block mb-2">Mật khẩu</label>
+                    <input
+                        type="password"
+                        value={password}
+                        onChange={(e) => setPassword(e.target.value)}
+                        className="w-full p-2 border rounded pr-10"
+                        readOnly={!isPasswordEditable}
+                    />
+                    <button
+                        type="button"
+                        onClick={() => setIsPasswordEditable(!isPasswordEditable)}
+                        className="absolute right-2 top-2 text-gray-500"
+                    >
+                        <FaEdit />
+                    </button>
+                    {!isPasswordEditable && (
+                        <p className="text-red-500 text-sm mt-2">Mật khẩu mặc định: 12345678</p>
+                    )}
+                </div>
+
                 <div className="mb-4">
                     <label className="block mb-2">Trạng thái</label>
                     <select

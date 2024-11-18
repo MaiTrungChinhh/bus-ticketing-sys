@@ -1,65 +1,48 @@
-import axios from 'axios';
-import React, { useEffect, useState } from 'react';
+import React, { useState } from 'react';
 
-const EmployeeForm = ({ initialData = {}, onSubmit, onCancel }) => {
+const EmployeeForm = ({ initialData = {}, onSubmit, onCancel, employeeTypes = [] }) => {
+  // Khởi tạo state cho các trường dữ liệu
   const [address, setAddress] = useState(initialData.address || '');
   const [phone, setPhone] = useState(initialData.phone || '');
   const [email, setEmail] = useState(initialData.email || '');
   const [nationalIDNumber, setNationalIDNumber] = useState(initialData.nationalIDNumber || '');
-  const [employeeType, setEmployeeType] = useState(initialData.employeeTypeId || '');
-  const [employeeTypes, setEmployeeTypes] = useState([]);
+  const [employeeTypeId, setEmployeeTypeId] = useState(initialData.employeeTypeId || '');
+  const [dob, setDob] = useState(initialData.dob || '');
+  const [roles, setRoles] = useState(initialData.roles || []);
+  const [username, setUsername] = useState(initialData.username || '');
+  const [password, setPassword] = useState(initialData.password || '12345678');
+  const [isUsernameEditable, setIsUsernameEditable] = useState(false);
+  const [isPasswordEditable, setIsPasswordEditable] = useState(false);
 
-  useEffect(() => {
-    const fetchEmployeeTypes = async () => {
-      try {
-        const token = localStorage.getItem('token');
-        if (!token) {
-          console.error('Token không tồn tại hoặc đã hết hạn.');
-          return;
-        }
+  const availableRoles = ['ADMIN', 'EMPLOYEE', 'GUEST']; // Vai trò có sẵn
 
-        const response = await axios.get('http://localhost:8080/api/employeeTypes', {
-          headers: {
-            Authorization: `Bearer ${token}`,
-          },
-        });
-
-        // Kiểm tra cấu trúc dữ liệu trả về từ API
-        console.log('API response:', response.data);
-
-        if (response.data.result && Array.isArray(response.data.result.contents)) {
-          setEmployeeTypes(response.data.result.contents);
-        } else {
-          console.error('Dữ liệu không đúng định dạng mong đợi:', response.data);
-        }
-      } catch (error) {
-        console.error('Lỗi khi lấy danh sách loại nhân viên:', error);
-      }
-    };
-
-    fetchEmployeeTypes();
-  }, []);
-
-  useEffect(() => {
-    if (initialData.employeeTypeId && employeeTypes.length > 0) {
-      const selectedType = employeeTypes.find(type => type.id === initialData.employeeTypeId);
-      if (selectedType) {
-        setEmployeeType(selectedType.id);
-      }
-    }
-  }, [employeeTypes, initialData.employeeTypeId]);
-
-
+  // Hàm xử lý submit form
   const handleSubmit = (e) => {
     e.preventDefault();
-    onSubmit({ address, phone, email, nationalIDNumber, employeeTypeId: employeeType });
+
+    if (!address || !phone || !email || !nationalIDNumber || !employeeTypeId || !dob) {
+      alert('Vui lòng điền đầy đủ các thông tin bắt buộc.');
+      return;
+    }
+
+    onSubmit({
+      address,
+      phone,
+      email,
+      nationalIDNumber,
+      employeeTypeId,
+      dob,
+      roles,
+      username,
+      password,
+    });
   };
 
   return (
     <form onSubmit={handleSubmit} className="p-4 bg-white shadow rounded">
       <h2 className="text-2xl mb-4">{initialData.id ? 'Chỉnh Sửa Nhân Viên' : 'Thêm Nhân Viên'}</h2>
 
-      {/* Không cho phép chỉnh sửa tên nhân viên */}
+      {/* Tên nhân viên */}
       <div className="mb-4">
         <label className="block mb-2">Tên nhân viên</label>
         <input
@@ -70,16 +53,28 @@ const EmployeeForm = ({ initialData = {}, onSubmit, onCancel }) => {
         />
       </div>
 
-      {/* Không cho phép chỉnh sửa giới tính */}
+      {/* Giới tính */}
       <div className="mb-4">
         <label className="block mb-2">Giới tính</label>
-        <select value={initialData.gender || 'Nam'} className="w-full p-2 border rounded bg-gray-200" disabled>
-          <option value="Nam">Nam</option>
-          <option value="Nữ">Nữ</option>
+        <select value={initialData.gender || 'Male'} className="w-full p-2 border rounded bg-gray-200" disabled>
+          <option value="Male">Nam</option>
+          <option value="Female">Nữ</option>
         </select>
       </div>
 
-      {/* Cho phép chỉnh sửa Địa chỉ */}
+      {/* Ngày sinh */}
+      <div className="mb-4">
+        <label className="block mb-2">Ngày sinh</label>
+        <input
+          type="date"
+          value={dob}
+          onChange={(e) => setDob(e.target.value)}
+          className="w-full p-2 border rounded"
+          required
+        />
+      </div>
+
+      {/* Địa chỉ */}
       <div className="mb-4">
         <label className="block mb-2">Địa chỉ</label>
         <input
@@ -91,7 +86,7 @@ const EmployeeForm = ({ initialData = {}, onSubmit, onCancel }) => {
         />
       </div>
 
-      {/* Cho phép chỉnh sửa Số điện thoại */}
+      {/* Số điện thoại */}
       <div className="mb-4">
         <label className="block mb-2">Số điện thoại</label>
         <input
@@ -103,7 +98,7 @@ const EmployeeForm = ({ initialData = {}, onSubmit, onCancel }) => {
         />
       </div>
 
-      {/* Cho phép chỉnh sửa Email */}
+      {/* Email */}
       <div className="mb-4">
         <label className="block mb-2">Email</label>
         <input
@@ -115,7 +110,7 @@ const EmployeeForm = ({ initialData = {}, onSubmit, onCancel }) => {
         />
       </div>
 
-      {/* Cho phép chỉnh sửa CMND/CCCD */}
+      {/* CMND/CCCD */}
       <div className="mb-4">
         <label className="block mb-2">CMND/CCCD</label>
         <input
@@ -127,12 +122,12 @@ const EmployeeForm = ({ initialData = {}, onSubmit, onCancel }) => {
         />
       </div>
 
-      {/* Dropdown Loại nhân viên */}
+      {/* Loại nhân viên */}
       <div className="mb-4">
         <label className="block mb-2">Loại nhân viên</label>
         <select
-          value={employeeType}
-          onChange={(e) => setEmployeeType(e.target.value)}
+          value={employeeTypeId}
+          onChange={(e) => setEmployeeTypeId(e.target.value)}
           className="w-full p-2 border rounded"
           required
         >
@@ -145,6 +140,47 @@ const EmployeeForm = ({ initialData = {}, onSubmit, onCancel }) => {
         </select>
       </div>
 
+      {/* Vai trò */}
+      <div className="mb-4">
+        <label className="block mb-2">Vai trò</label>
+        <select
+          value={roles[0] || 'EMPLOYEE'}
+          onChange={(e) => setRoles([e.target.value])}
+          className="w-full p-2 border rounded"
+        >
+          {availableRoles.map((role) => (
+            <option key={role} value={role}>
+              {role}
+            </option>
+          ))}
+        </select>
+      </div>
+
+      {/* Tên đăng nhập */}
+      <div className="mb-4 relative">
+        <label className="block mb-2">Tên đăng nhập</label>
+        <input
+          type="text"
+          value={username}
+          onChange={(e) => setUsername(e.target.value)}
+          className="w-full p-2 border rounded pr-10"
+          readOnly={!isUsernameEditable}
+        />
+      </div>
+
+      {/* Mật khẩu */}
+      <div className="mb-4 relative">
+        <label className="block mb-2">Mật khẩu</label>
+        <input
+          type="password"
+          value={password}
+          onChange={(e) => setPassword(e.target.value)}
+          className="w-full p-2 border rounded pr-10"
+          readOnly={!isPasswordEditable}
+        />
+      </div>
+
+      {/* Nút hành động */}
       <div className="flex justify-end">
         <button type="button" onClick={onCancel} className="mr-2 bg-gray-500 text-white px-4 py-2 rounded">
           Hủy

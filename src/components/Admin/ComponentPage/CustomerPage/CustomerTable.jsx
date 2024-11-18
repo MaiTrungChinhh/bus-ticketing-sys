@@ -18,6 +18,7 @@ const CustomerTable = ({ customers, onEdit, onDelete }) => {
                         <th className="px-6 py-4 border">Email</th>
                         <th className="px-6 py-4 border">Ngày Sinh</th>
                         <th className="px-6 py-4 border">Tên Đăng Nhập</th>
+                        <th className="px-6 py-4 border">Vai trò</th>
                         <th className="px-6 py-4 border">Quản Lý</th>
                     </tr>
                 </thead>
@@ -33,6 +34,9 @@ const CustomerTable = ({ customers, onEdit, onDelete }) => {
                                 <td className="px-6 py-4 border">{customer.email}</td>
                                 <td className="px-6 py-4 border">{customer.dob}</td>
                                 <td className="px-6 py-4 border">{customer.account.username}</td> {/* Sửa thành customer.account.username */}
+                                <td className="px-6 py-4 border">
+                                    {customer.account.roles.join(', ')}
+                                </td>
                                 <td className="px-6 py-4 border flex justify-center items-center space-x-2">
                                     <button onClick={() => onEdit(customer)} className="text-blue-500">
                                         <FaEdit />
