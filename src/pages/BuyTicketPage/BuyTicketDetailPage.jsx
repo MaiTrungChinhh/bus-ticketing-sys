@@ -1,17 +1,18 @@
 import React, { useState, useEffect } from 'react';
-import { useParams } from 'react-router-dom'; // Import useParams
+import { useParams, useLocation } from 'react-router-dom';
 import DefaultComponent from '../../components/DefaultComponent/DefaultComponent';
 import Breadcrumb from '../../components/Breadcrumb/Breadcrumb';
 import StepProgress from '../../components/StepProgress/StepProgress';
 import FormGuestInformation from '../../components/DetailTicket/FormGuestInformation';
 import ChooseChair from '../../components/DetailTicket/ChooseChair';
 import TripInfo from '../../components/DetailTicket/FormTripInformation';
-import { TbRippleOff } from 'react-icons/tb';
-import { tripUserById, fetchTripById } from '../../services/tripService';
+import PaymentSuccess from '../../components/Notification/PaymentSuccess';
+import { tripUserById } from '../../services/tripService';
 import { lockSeats } from '../../services/seatService';
 
 const BuyTicketDetailPage = () => {
   const { id } = useParams();
+  const location = useLocation();
   const [selectedSeats, setSelectedSeats] = useState([]);
   const [selectedSeatIds, setSelectedSeatIds] = useState([]);
   const [guestInfo, setGuestInfo] = useState({});
@@ -19,6 +20,7 @@ const BuyTicketDetailPage = () => {
   const [vehicleId, setVehicleId] = useState(null);
   const [ticketPrice, setTicketPrice] = useState(0);
   const [departurePoint, setDeparturePoint] = useState('');
+  const [showPaymentSuccess, setShowPaymentSuccess] = useState(false);
 
   const breadcrumbItems = [
     { label: 'Trang nhất', link: '/', className: 'text-2xl' },
@@ -27,40 +29,44 @@ const BuyTicketDetailPage = () => {
   ];
 
   useEffect(() => {
-    const fetchData = async () => {
-      try {
-        const data = await tripUserById(id);
+    const queryParams = new URLSearchParams(location.search); // Lấy các tham số truy vấn từ URL
+    if (queryParams.toString()) {
+      // Nếu có tham số truy vấn
+      setShowPaymentSuccess(true); // Hiển thị PaymentSuccess
+    }
+  }, [location]); // Khi URL thay đổi, useEffect sẽ chạy lại
 
-        // Kiểm tra dữ liệu trả về
-        if (data?.result) {
-          const { vehicleId, ticketPrice, route } = data.result;
-          setVehicleId(vehicleId);
-          setTicketPrice(ticketPrice);
-          setDeparturePoint(route.departurePoint);
-          setTripDetails(data.result); // Lưu tripDetails vào state
-        } else {
-          console.error('Unexpected response format:', data);
-          setTripDetails(null); // Đảm bảo khi dữ liệu không hợp lệ sẽ không tiếp tục
-        }
-      } catch (error) {
-        console.error('Error fetching trips:', error);
+  const fetchData = async () => {
+    try {
+      const data = await tripUserById(id);
+      if (data?.result) {
+        const { vehicleId, ticketPrice, route } = data.result;
+        setVehicleId(vehicleId);
+        setTicketPrice(ticketPrice);
+        setDeparturePoint(route.departurePoint);
+        setTripDetails(data.result); // Lưu tripDetails vào state
+      } else {
+        console.error('Unexpected response format:', data);
+        setTripDetails(null); // Đảm bảo khi dữ liệu không hợp lệ sẽ không tiếp tục
       }
-    };
+    } catch (error) {
+      console.error('Error fetching trips:', error);
+    }
+  };
 
+  useEffect(() => {
     fetchData();
   }, [id]); // Phụ thuộc vào `id` để gọi lại API khi `id` thay đổi
 
   const handleSeatSelection = (seatNumber, seatId, seatPosition) => {
     setSelectedSeats((prevSeats) => {
-      // Kiểm tra xem ghế đã được chọn chưa
       const newSelectedSeats = prevSeats.includes(seatNumber)
-        ? prevSeats.filter((s) => s !== seatNumber) // Bỏ chọn ghế
-        : [...prevSeats, seatNumber]; // Chọn ghế
-
+        ? prevSeats.filter((s) => s !== seatNumber)
+        : [...prevSeats, seatNumber];
       setSelectedSeatIds((prevIds) => {
         const newSelectedSeatIds = prevIds.includes(seatId)
-          ? prevIds.filter((id) => id !== seatId) // Nếu ghế đã chọn thì bỏ chọn
-          : [...prevIds, seatId]; // Nếu chưa chọn thì thêm vào
+          ? prevIds.filter((id) => id !== seatId)
+          : [...prevIds, seatId];
         return newSelectedSeatIds;
       });
       return newSelectedSeats;
@@ -104,6 +110,9 @@ const BuyTicketDetailPage = () => {
           <TripInfo tripDetails={tripDetails} />
         </div>
       </div>
+
+      {/* Hiển thị PaymentSuccess nếu tham số URL có */}
+      {showPaymentSuccess && <PaymentSuccess />}
     </DefaultComponent>
   );
 };
