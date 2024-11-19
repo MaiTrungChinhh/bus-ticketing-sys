@@ -62,8 +62,6 @@ export const routes = [
     page: AddCustomerPage, 
   },
 
-
-
   {
     path:'/dashboard/employees/type',
     page: EmployeeTypePage,

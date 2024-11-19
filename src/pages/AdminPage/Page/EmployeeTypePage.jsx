@@ -3,7 +3,7 @@ import EmployeeType from '../../../components/Admin/ComponentPage/EmployeePage/E
 import DefaultComponent from '../../../components/Admin/DefaultComponent/DefaultComponent';
 export default function EmployeeTypePage() {
     return (
-        <DefaultComponent>
+        <DefaultComponent title={"Quản lý loại nhân viên"}>
             <EmployeeType />
         </DefaultComponent>
 

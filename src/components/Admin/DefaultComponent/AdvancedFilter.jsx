@@ -41,6 +41,7 @@ const AdvancedFilter = ({ filters, onApply, onSearch, selectedFilters }) => {
       selectedOptions,
     };
     onApply(appliedFilters);
+    setIsOpen(false);
   };
 
   const toggleCollapse = () => {

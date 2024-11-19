@@ -95,17 +95,14 @@ const Customer = () => {
 
         const newSelectedFilters = {
             customerType: Object.keys(selectedOptions)
-                .filter(
-                    (id) =>
-                        selectedOptions[id] &&
-                        filtersPage1[0].items.some((item) => item.id === id)
-                )
+                .filter((id) => selectedOptions[id])
                 .map((id) => filtersPage1[0].items.find((item) => item.id === id)?.label),
         };
 
         setSelectedFilters(newSelectedFilters);
-        setCurrentPage(1);
+        setCurrentPage(1); // Reset về trang đầu
     };
+
 
     const handleSearch = (term) => {
         setSearchTerm(term.toLowerCase());
@@ -118,7 +115,9 @@ const Customer = () => {
                 searchTerm === '' ||
                 customer.customerName.toLowerCase().includes(searchTerm) ||
                 customer.email.toLowerCase().includes(searchTerm) ||
+                customer.phone.toLowerCase().includes(searchTerm) ||
                 customer.account.username.toLowerCase().includes(searchTerm);
+
 
             const customerTypeMatch =
                 selectedFilters.customerType.length === 0 ||
@@ -142,7 +141,6 @@ const Customer = () => {
 
     return (
         <div className="flex flex-col gap-4">
-            {/* Chỉ hiển thị AdvancedFilter và Pagination khi không ở chế độ chỉnh sửa */}
             {!isEditMode && (
                 <AdvancedFilter
                     filters={filtersPage1}
@@ -153,7 +151,7 @@ const Customer = () => {
             )}
             <div className="w-full">
                 {isLoading ? (
-                    <div className="text-center text-xl text-gray-500">Đang tải...</div>
+                    <div className="text-center">Đang tải...</div>
                 ) : isEditMode ? (
                     <CustomerForm
                         customer={selectedCustomer}
@@ -170,21 +168,19 @@ const Customer = () => {
                             onEdit={handleEdit}
                             onDelete={handleDelete}
                         />
-                        {/* Chỉ hiển thị Pagination khi không ở chế độ chỉnh sửa */}
-                        {!isEditMode && (
-                            <Pagination
-                                currentPage={currentPage}
-                                totalPages={totalPages}
-                                onPageChange={setCurrentPage}
-                                onItemsPerPageChange={handleItemsPerPageChange}
-                                itemsPerPage={itemsPerPage}
-                            />
-                        )}
+                        <Pagination
+                            currentPage={currentPage}
+                            totalPages={totalPages}
+                            onPageChange={setCurrentPage}
+                            onItemsPerPageChange={handleItemsPerPageChange}
+                            itemsPerPage={itemsPerPage}
+                        />
                     </>
                 )}
             </div>
         </div>
     );
+
 };
 
 export default Customer;

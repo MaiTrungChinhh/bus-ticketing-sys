@@ -5,7 +5,6 @@ import FooterComponent from '../../components/Footer/FooterComponent';
 import HeaderComponent from '../../components/Header/HeaderComponent';
 
 
-
 // Component riêng để xử lý việc thay đổi hình nền
 
 const BackgroundChanger = ({ setBackgroundImage }) => {
