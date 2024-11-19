@@ -1,3 +1,5 @@
+
+import { jwtDecode } from 'jwt-decode';
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 
@@ -8,10 +10,11 @@ const Login = () => {
 
     const navigate = useNavigate();
 
-    const handleLogin = async e => {
+
+    const handleLogin = async (e) => {
         e.preventDefault();
         try {
-            const response = await fetch('http://localhost:8080/api/auth/token', {
+            const loginResponse = await fetch('http://localhost:8080/api/auth/token', {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
@@ -19,31 +22,36 @@ const Login = () => {
                 body: JSON.stringify({ username, password }),
             });
 
-            const data = await response.json(); // Lấy phản hồi từ server
+            const loginData = await loginResponse.json();
+            console.log('Phản hồi từ API login:', loginData);
 
-            // Ghi log phản hồi để kiểm tra cấu trúc phản hồi từ server
-            console.log('Phản hồi từ server:', data);
+            if (loginResponse.ok && loginData.result && loginData.result.token) {
+                const token = loginData.result.token;
+                localStorage.setItem('token', token);
+                localStorage.setItem('username', username);
 
-            // Kiểm tra phản hồi
-            if (response.ok && data.result && data.result.token) {
-                // Nếu thành công và có token
-                localStorage.setItem('token', data.result.token); // Lưu token vào localStorage
-                localStorage.setItem('username', username); // Lưu tên đăng nhập vào localStorage
-                setLoginStatus('Đăng nhập thành công!'); // Hiển thị thông báo thành công
+                // Giải mã token để lấy roles
+                const decodedToken = jwtDecode(token);
+                const roles = decodedToken.scope.split(',');
 
-                // Điều hướng tới trang dashboard
-                navigate('/dashboard');
+                console.log('Vai trò từ token:', roles);
+
+                // Điều hướng dựa trên vai trò
+                if (roles.includes('ADMIN') || roles.includes('EMPLOYEE')) {
+                    setLoginStatus('Đăng nhập thành công!');
+                    navigate('/dashboard');
+                } else if (roles.includes('GUEST')) {
+                    setLoginStatus('Đăng nhập thành công!');
+                    navigate('/');
+                } else {
+                    setLoginStatus('Vai trò của bạn không được hỗ trợ.');
+                }
             } else {
-                // Nếu không thành công
-                setLoginStatus(
-                    `Đăng nhập thất bại: ${data.message || 'Vui lòng kiểm tra lại thông tin đăng nhập.'
-                    }`
-                ); // Hiển thị lỗi nếu có
+                setLoginStatus(`Đăng nhập thất bại: ${loginData.message || 'Thông tin không hợp lệ.'}`);
             }
         } catch (error) {
-            // Trường hợp gặp lỗi khi gọi API
+            console.error('Lỗi khi đăng nhập:', error);
             setLoginStatus('Đăng nhập thất bại. Vui lòng thử lại.');
-            console.error('Error:', error);
         }
     };
 
@@ -62,7 +70,7 @@ const Login = () => {
                         placeholder='Tên đăng nhập'
                         className='w-full p-5 border border-gray-300 rounded-lg text-2xl focus:outline-none focus:ring-2 focus:ring-blue-500'
                         value={username}
-                        onChange={e => setUsername(e.target.value)}
+                        onChange={(e) => setUsername(e.target.value)}
                         required
                     />
                 </div>
@@ -74,7 +82,7 @@ const Login = () => {
                         placeholder='Mật khẩu'
                         className='w-full p-5 border border-gray-300 rounded-lg text-2xl focus:outline-none focus:ring-2 focus:ring-blue-500'
                         value={password}
-                        onChange={e => setPassword(e.target.value)}
+                        onChange={(e) => setPassword(e.target.value)}
                         required
                     />
                 </div>
@@ -108,4 +116,4 @@ const Login = () => {
     );
 };
 
-export default Login;   
+export default Login;

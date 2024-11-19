@@ -1,5 +1,5 @@
 import logo from 'frontend/src/assets/images/logo.png';
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { IoClose, IoHome } from 'react-icons/io5';
 import { LuClock3 } from 'react-icons/lu';
 import { PiUserCircleThin } from 'react-icons/pi';
@@ -12,7 +12,18 @@ const HeaderComponent = () => {
   const [isAccountDropdownOpen, setIsAccountDropdownOpen] = useState(false);
   const [showLogin, setShowLogin] = useState(false);
   const [showRegister, setRegister] = useState(false);
+  const [isLoggedIn, setIsLoggedIn] = useState(false);
+  const [username, setUsername] = useState('');
 
+
+  useEffect(() => {
+    const token = localStorage.getItem('token');
+    const storedUsername = localStorage.getItem('username'); // Lấy username từ localStorage
+    if (token && storedUsername) {
+      setIsLoggedIn(true);
+      setUsername(storedUsername);
+    }
+  }, []);
   const location = useLocation(); // Get the current location
 
   const toggleMenu = () => {
@@ -39,7 +50,11 @@ const HeaderComponent = () => {
   if (showRegister) {
     return <RegisterAccount />; // Nếu trạng thái là true, hiển thị component Register
   }
-
+  const handleLogout = () => {
+    localStorage.clear(); // Xóa toàn bộ dữ liệu trong localStorage
+    setIsLoggedIn(false);
+    setUsername('');
+  };
   const isHomePage = location.pathname === '/'; // Check if the current page is home
 
   return (
@@ -119,59 +134,70 @@ const HeaderComponent = () => {
           onMouseEnter={handleMouseEnter}
           onMouseLeave={handleMouseLeave}
         >
-          <div className="relative group account-menu">
-            <a
-              href="/users/login/"
-              className={`flex items-center text-2xl account-link ${isHomePage ? 'text-white' : 'text-blue-400'
-                }`}
-              title="Tài khoản"
-            >
-              <PiUserCircleThin className="text-2xl lg:text-4xl account-icon" />
-              <span className="hidden lg:inline-block ml-2 account-text">
-                Tài khoản <i className="fa fa-angle-down"></i>
-              </span>
-            </a>
-            <ul
-              className={`absolute left-0 w-fit bg-white border border-gray-300 mt-2 ${isAccountDropdownOpen ? 'block' : 'hidden'
-                }`}
-            >
-              <li>
-                <a
-                  className="block px-4 py-2 text-blue-500 hover:bg-gray-100 dropdown-item text-2xl whitespace-nowrap"
-                  href="/login"
-                  title="Đăng nhập"
-                >
-                  <button onClick={handleLoginClick} className="login-button">
-                    Đăng nhập
-                  </button>
-                </a>
-              </li>
-              <li>
-                <a
-                  className="block px-4 py-2 text-blue-500 hover:bg-gray-100 dropdown-item text-2xl whitespace-nowrap"
-                  href="/register"
-                  title="Đăng ký"
-                >
-                  <button
-                    onClick={handleLoginClick}
-                    className="register-button"
+          {isLoggedIn ? (
+            <div className="relative">
+              <span className="text-blue-500 text-2xl">Xin chào, {username}</span>
+              <button
+                onClick={handleLogout}
+                className="ml-4 px-4 py-2 bg-red-500 text-white rounded hover:bg-red-600"
+              >
+                Đăng xuất
+              </button>
+            </div>
+          ) : (
+            <div className="relative group account-menu">
+              <a
+                href="/users/login/"
+                className={`flex items-center text-2xl account-link ${isHomePage ? 'text-white' : 'text-blue-400'
+                  }`}
+                title="Tài khoản"
+              >
+                <PiUserCircleThin className="text-2xl lg:text-4xl account-icon" />
+                <span className="hidden lg:inline-block ml-2 account-text">
+                  Tài khoản <i className="fa fa-angle-down"></i>
+                </span>
+              </a>
+              <ul
+                className={`absolute left-0 w-fit bg-white border border-gray-300 mt-2 ${isAccountDropdownOpen ? 'block' : 'hidden'
+                  }`}
+              >
+                <li>
+                  <a
+                    className="block px-4 py-2 text-blue-500 hover:bg-gray-100 dropdown-item text-2xl whitespace-nowrap"
+                    href="/login"
+                    title="Đăng nhập"
                   >
-                    Đăng ký
-                  </button>
-                </a>
-              </li>
-              <li>
-                <a
-                  className="block px-4 py-2 text-blue-500 hover:bg-gray-100 dropdown-item text-2xl whitespace-nowrap"
-                  href="/users/lostpass/"
-                  title="Quên mật khẩu?"
-                >
-                  Quên mật khẩu?
-                </a>
-              </li>
-            </ul>
-          </div>
-
+                    <button onClick={handleLoginClick} className="login-button">
+                      Đăng nhập
+                    </button>
+                  </a>
+                </li>
+                <li>
+                  <a
+                    className="block px-4 py-2 text-blue-500 hover:bg-gray-100 dropdown-item text-2xl whitespace-nowrap"
+                    href="/register"
+                    title="Đăng ký"
+                  >
+                    <button
+                      onClick={handleLoginClick}
+                      className="register-button"
+                    >
+                      Đăng ký
+                    </button>
+                  </a>
+                </li>
+                <li>
+                  <a
+                    className="block px-4 py-2 text-blue-500 hover:bg-gray-100 dropdown-item text-2xl whitespace-nowrap"
+                    href="/users/lostpass/"
+                    title="Quên mật khẩu?"
+                  >
+                    Quên mật khẩu?
+                  </a>
+                </li>
+              </ul>
+            </div>
+          )}
           <div className="contact-info flex flex-col items-center text-white">
             <a
               href="tel:1900.636.636"

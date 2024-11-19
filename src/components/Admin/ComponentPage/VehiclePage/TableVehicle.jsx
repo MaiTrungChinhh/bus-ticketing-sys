@@ -1,6 +1,5 @@
 import React from 'react';
 import { useNavigate } from 'react-router-dom';
-import { FaPencilAlt, FaTrashAlt } from 'react-icons/fa';
 import { deleteVehicle } from '../../../../services/vehicleService';
 
 const TableVehicle = ({ bookings }) => {
@@ -13,23 +12,27 @@ const TableVehicle = ({ bookings }) => {
 
   const editBooking = (id) => {
     console.log(`Edit Booking ID: ${id}`);
-    // Thêm chức năng điều hướng hoặc chỉnh sửa ở đây
+    // Điều hướng đến trang chỉnh sửa xe
+    navigate(`/dashboard/vehicle/edit/${id}`);
   };
 
   const deleteBooking = async (id) => {
     const confirmDelete = window.confirm(
-      'Bạn có chắc chắn muốn xóa đặt chỗ này không?'
+      'Bạn có chắc chắn muốn xóa xe này không?'
     );
     if (confirmDelete) {
       try {
-        await deleteVehicle(id);
+        await deleteVehicle(id); // Gọi API xóa xe
         console.log(`Booking with ID: ${id} deleted successfully`);
-        // Tùy chọn, làm mới danh sách hoặc gọi một hàm để cập nhật dữ liệu
+
+        // Làm mới danh sách sau khi xóa
+        setBookings((prevBookings) => prevBookings.filter((item) => item.id !== id));
       } catch (error) {
         console.error('Failed to delete booking:', error);
       }
     }
   };
+
 
   return (
     <div className="overflow-x-auto mt-4">
@@ -44,62 +47,38 @@ const TableVehicle = ({ bookings }) => {
                 Biển số xe
               </th>
               <th className="px-6 py-3 text-2xl font-semibold text-gray-800 text-center">
-                Số lượng ghế
+                Loại xe
+              </th>
+              <th className="px-6 py-3 text-2xl font-semibold text-gray-800 text-center">
+                Số ghế
               </th>
               <th className="px-6 py-3 text-2xl font-semibold text-gray-800 text-center">
                 Màu sắc
               </th>
               <th className="px-6 py-3 text-2xl font-semibold text-gray-800 text-center">
-                Loại xe
-              </th>
-              <th className="px-6 py-3 text-2xl font-semibold text-gray-800 text-center">
-                Trạng thái xe
+                Trạng thái
               </th>
               <th className="px-6 py-3 text-2xl font-semibold text-gray-800 text-center">
                 Hành động
               </th>
             </tr>
           </thead>
-
           <tbody className="bg-white divide-y divide-gray-200">
-            {bookings.map((booking) => (
-              <tr
-                key={booking.id}
-                className="hover:bg-gray-100 transition-colors duration-200"
-              >
-                <td className="px-6 py-4 text-xl text-gray-700 whitespace-nowrap text-center">
-                  {booking.vehicleName || 'N/A'}
-                </td>
-                <td className="px-6 py-4 text-xl text-gray-700 whitespace-nowrap text-center">
-                  {booking.licensePlate || 'N/A'}
-                </td>
-                <td className="px-6 py-4 text-xl text-gray-700 whitespace-nowrap text-center">
-                  {booking.seatCount || 'N/A'}
-                </td>
-                <td className="px-6 py-4 text-xl text-gray-700 whitespace-nowrap text-center">
-                  {booking.color || 'N/A'}
-                </td>
-                <td className="px-6 py-4 text-xl text-gray-700 whitespace-nowrap text-center">
-                  {booking.vehicleType?.vehicleTypeName || 'N/A'}
-                </td>
-                <td className="px-6 py-4 text-xl text-gray-700 whitespace-nowrap text-center">
-                  {booking.status || 'N/A'}
-                </td>
-                <td className="px-6 py-4 whitespace-nowrap text-center">
-                  <div className="d-flex gap-2">
-                    <button
-                      className="text-blue-500 hover:text-blue-600 p-2 m-2 bg-blue-100 hover:bg-blue-200 rounded-xl"
-                      onClick={() => editBooking(booking.id)}
-                    >
-                      <FaPencilAlt size={15} />
-                    </button>
-                    <button
-                      className="text-red-500 hover:text-red-600 p-2 m-2 bg-blue-100 hover:bg-blue-200 rounded-xl"
-                      onClick={() => deleteBooking(booking.id)}
-                    >
-                      <FaTrashAlt size={15} />
-                    </button>
-                  </div>
+            {bookings.map((vehicle) => (
+              <tr key={vehicle.id} className="hover:bg-gray-100 transition-colors duration-200">
+                <td className="px-6 py-4 text-xl text-gray-700 text-center">{vehicle.vehicleName || 'N/A'}</td>
+                <td className="px-6 py-4 text-xl text-gray-700 text-center">{vehicle.licensePlate || 'N/A'}</td>
+                <td className="px-6 py-4 text-xl text-gray-700 text-center">{vehicle.vehicleType?.vehicleTypeName || 'N/A'}</td>
+                <td className="px-6 py-4 text-xl text-gray-700 text-center">{vehicle.seatCount || 'N/A'}</td>
+                <td className="px-6 py-4 text-xl text-gray-700 text-center">{vehicle.color || 'N/A'}</td>
+                <td className="px-6 py-4 text-xl text-gray-700 text-center">{vehicle.status || 'N/A'}</td>
+                <td className="px-6 py-4 text-center">
+                  <button className="text-blue-500 hover:text-blue-600 p-2 m-2 bg-blue-100 hover:bg-blue-200 rounded-xl">
+                    Edit
+                  </button>
+                  <button className="text-red-500 hover:text-red-600 p-2 m-2 bg-red-100 hover:bg-red-200 rounded-xl">
+                    Delete
+                  </button>
                 </td>
               </tr>
             ))}

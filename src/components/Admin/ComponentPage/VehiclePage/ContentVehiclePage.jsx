@@ -1,8 +1,8 @@
 import React from 'react';
-import TableVehicle from './TableVehicle';
+import { FaCog, FaPlus } from 'react-icons/fa'; // Import icons from react-icons
 import { Link } from 'react-router-dom';
 import Breadcrumb from '../../../Breadcrumb/Breadcrumb';
-import { FaCog, FaPlus } from 'react-icons/fa'; // Import icons from react-icons
+import TableVehicle from './TableVehicle';
 
 const breadcrumbItems = [
   {

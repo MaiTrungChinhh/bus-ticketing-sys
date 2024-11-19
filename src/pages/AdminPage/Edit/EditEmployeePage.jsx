@@ -20,6 +20,7 @@ const EditEmployeePage = () => {
                     throw new Error('Token không tồn tại.');
                 }
 
+                // Gọi API lấy thông tin nhân viên và loại nhân viên
                 const [employeeResponse, typesResponse] = await Promise.all([
                     axios.get(`http://localhost:8080/api/employees/${id}`, {
                         headers: { Authorization: `Bearer ${token}` },
@@ -31,12 +32,14 @@ const EditEmployeePage = () => {
 
                 const employeeData = employeeResponse.data;
 
-                // Gán dữ liệu employee và danh sách employeeTypes
+                // Gắn dữ liệu nhân viên và danh sách loại nhân viên
                 setEmployee({
                     ...employeeData,
-                    username: employeeData.account?.username || '', // Lấy tên đăng nhập
+                    username: employeeData?.account?.username || 'Không có tên đăng nhập', // Lấy username
+                    employeeTypeId: employeeData?.employeeType?.id || '', // Lấy loại nhân viên
                 });
-                setEmployeeTypes(typesResponse.data.result.contents); // Lấy danh sách loại nhân viên
+
+                setEmployeeTypes(typesResponse.data.result.contents || []);
             } catch (error) {
                 console.error('Lỗi khi tải dữ liệu:', error);
                 setError('Không thể tải dữ liệu.');
@@ -78,17 +81,11 @@ const EditEmployeePage = () => {
     return (
         <DefaultComponent>
             <EmployeeForm
-                initialData={{
-                    ...employee, // Dữ liệu của nhân viên
-                    employeeTypeId: employee.employeeType?.id, // Loại nhân viên từ API
-                    username: employee.username || '', // Tên đăng nhập
-                }}
-                employeeTypes={employeeTypes} // Danh sách loại nhân viên
-                onSubmit={handleFormSubmit} // Hàm xử lý submit
-                onCancel={() => navigate('/dashboard/employees/list')} // Hàm hủy
+                initialData={employee} // Truyền dữ liệu nhân viên
+                employeeTypes={employeeTypes} // Truyền danh sách loại nhân viên
+                onSubmit={handleFormSubmit}
+                onCancel={() => navigate('/dashboard/employees/list')}
             />
-
-
         </DefaultComponent>
     );
 };

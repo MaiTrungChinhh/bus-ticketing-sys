@@ -9,7 +9,7 @@ const EmployeeForm = ({ initialData = {}, onSubmit, onCancel, employeeTypes = []
   const [employeeTypeId, setEmployeeTypeId] = useState(initialData.employeeTypeId || '');
   const [dob, setDob] = useState(initialData.dob || '');
   const [roles, setRoles] = useState(initialData.roles || []);
-  const [username, setUsername] = useState(initialData.username || '');
+  const [username, setUsername] = useState(initialData.username || ''); // Gắn giá trị username
   const [password, setPassword] = useState(initialData.password || '12345678');
   const [isUsernameEditable, setIsUsernameEditable] = useState(false);
   const [isPasswordEditable, setIsPasswordEditable] = useState(false);
@@ -157,13 +157,13 @@ const EmployeeForm = ({ initialData = {}, onSubmit, onCancel, employeeTypes = []
       </div>
 
       {/* Tên đăng nhập */}
-      <div className="mb-4 relative">
+      <div className="mb-4">
         <label className="block mb-2">Tên đăng nhập</label>
         <input
           type="text"
           value={username}
           onChange={(e) => setUsername(e.target.value)}
-          className="w-full p-2 border rounded pr-10"
+          className="w-full p-2 border rounded"
           readOnly={!isUsernameEditable}
         />
       </div>
