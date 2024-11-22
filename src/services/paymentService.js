@@ -14,6 +14,20 @@ export const processMomoPayment = async (paymentData) => {
   }
 };
 
+// Hàm kiểm tra trạng thái thanh toán qua MoMo
+export const queryMomoPaymentStatus = async (requestId, orderId) => {
+  try {
+    const response = await axiosInstance.post('/momoPayment/query', {
+      requestId,
+      orderId,
+    });
+    return response.data;
+  } catch (error) {
+    console.error('Lỗi khi kiểm tra trạng thái thanh toán:', error);
+    throw error;
+  }
+};
+
 // Hàm xử lý thanh toán qua ZaloPay
 export const processZaloPayPayment = async (paymentData) => {
   try {

@@ -18,7 +18,6 @@ const FormGuestInformation = ({
   const ticketPrice = tripDetails?.ticketPrice;
   const departurePoint = tripDetails?.route.departurePoint;
   useEffect(() => {
-    // Gọi hàm onGuestInfoChange mỗi khi formData thay đổi
     onGuestInfoChange(formData);
   }, [formData, onGuestInfoChange]);
 
@@ -43,26 +42,25 @@ const FormGuestInformation = ({
     }
 
     try {
-      // Gọi hàm onContinue để khóa ghế
-      await onContinue(e);
+      const continueSuccess = await onContinue(e);
 
-      const totalAmount = selectedSeats.length * ticketPrice;
+      if (continueSuccess) {
+        const totalAmount = selectedSeats.length * ticketPrice;
 
-      // Mã hóa dữ liệu trước khi gửi qua URL
-      const encodedSeats = encodeURIComponent(selectedSeats.join(', '));
-      const encodedTotalAmount = encodeURIComponent(totalAmount);
-      const encodedFullName = encodeURIComponent(formData.hoten);
-      const encodedPhoneNumber = encodeURIComponent(formData.dienthoai);
-      const encodedEmail = encodeURIComponent(formData.email);
-      const encodedPickupPoint = encodeURIComponent(formData.kieudon);
-      const encodedTripDetails = encodeURIComponent(
-        JSON.stringify(tripDetails)
-      );
-
-      // Điều hướng tới trang thanh toán và truyền tham số
-      navigate(
-        `/payment?hoten=${encodedFullName}&dienthoai=${encodedPhoneNumber}&email=${encodedEmail}&kieudon=${encodedPickupPoint}&seats=${encodedSeats}&totalAmount=${encodedTotalAmount}&tripDetails=${encodedTripDetails}`
-      );
+        const encodedSeats = encodeURIComponent(selectedSeats.join(', '));
+        const encodedTotalAmount = encodeURIComponent(totalAmount);
+        const encodedFullName = encodeURIComponent(formData.hoten);
+        const encodedPhoneNumber = encodeURIComponent(formData.dienthoai);
+        const encodedEmail = encodeURIComponent(formData.email);
+        const encodedPickupPoint = encodeURIComponent(formData.kieudon);
+        const encodedTripDetails = encodeURIComponent(
+          JSON.stringify(tripDetails)
+        );
+        navigate(
+          `/payment?hoten=${encodedFullName}&dienthoai=${encodedPhoneNumber}&email=${encodedEmail}&kieudon=${encodedPickupPoint}&seats=${encodedSeats}&totalAmount=${encodedTotalAmount}&tripDetails=${encodedTripDetails}`
+        );
+      } else {
+      }
     } catch (error) {
       console.error('Có lỗi khi khóa ghế:', error);
       alert('Đã xảy ra lỗi khi khóa ghế, vui lòng thử lại!');

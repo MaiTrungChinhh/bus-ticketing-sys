@@ -6,24 +6,8 @@ import DefaultComponent from '../../components/DefaultComponent/DefaultComponent
 import StepProgress from '../../components/StepProgress/StepProgress';
 import {
   processMomoPayment,
-  processZaloPayPayment
+  processZaloPayPayment,
 } from '../../services/paymentService';
-
-// Import thư viện base-x
-import baseX from 'base-x';
-
-// Khai báo bảng mã Base62 (chứa các ký tự: 0-9, A-Z, a-z)
-const BASE62 = '0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz';
-
-// Khởi tạo mã hóa Base62 từ bảng mã
-const base62 = baseX(BASE62);
-
-// Mã hóa chuỗi thành Base62
-const base62Encode = (str) => {
-  const encoder = new TextEncoder();
-  const buffer = encoder.encode(str); // Sử dụng TextEncoder để tạo Uint8Array
-  return base62.encode(buffer); // Trả về chuỗi Base62
-};
 
 const PaymentMethods = ({ selectedPayment, handlePaymentChange }) => {
   return (
@@ -33,10 +17,11 @@ const PaymentMethods = ({ selectedPayment, handlePaymentChange }) => {
       </h2>
       <div className="space-y-4 text-2xl">
         <div
-          className={`p-4 border rounded-lg cursor-pointer ${selectedPayment === 'momo'
+          className={`p-4 border rounded-lg cursor-pointer ${
+            selectedPayment === 'momo'
               ? 'border-blue-500 bg-blue-50'
               : 'border-gray-300'
-            }`}
+          }`}
           onClick={() => handlePaymentChange('momo')}
         >
           <input
@@ -54,10 +39,11 @@ const PaymentMethods = ({ selectedPayment, handlePaymentChange }) => {
         </div>
 
         <div
-          className={`p-4 border rounded-lg cursor-pointer ${selectedPayment === 'zalopay'
+          className={`p-4 border rounded-lg cursor-pointer ${
+            selectedPayment === 'zalopay'
               ? 'border-blue-500 bg-blue-50'
               : 'border-gray-300'
-            }`}
+          }`}
           onClick={() => handlePaymentChange('zalopay')}
         >
           <input
@@ -75,10 +61,11 @@ const PaymentMethods = ({ selectedPayment, handlePaymentChange }) => {
         </div>
 
         <div
-          className={`p-4 border rounded-lg cursor-pointer ${selectedPayment === 'vnpay'
+          className={`p-4 border rounded-lg cursor-pointer ${
+            selectedPayment === 'vnpay'
               ? 'border-blue-500 bg-blue-50'
               : 'border-gray-300'
-            }`}
+          }`}
           onClick={() => handlePaymentChange('vnpay')}
         >
           <input
@@ -179,9 +166,7 @@ const PaymentPage = () => {
           break;
         case 'zalopay':
           const paymentZaloData = {
-            orderId: base62Encode(
-              `${tripDetails?.tripId}_${tripDetails?.departureDate}_${seats1}`
-            ),
+            orderId: `${tripDetails?.tripId}_${tripDetails?.departureDate}_${seats1}`,
             routeName: `${tripDetails?.route?.departureLocation} - ${tripDetails?.route?.arrivalLocation}`,
             departureTime: tripDetails?.departureTime,
             departureDate: tripDetails?.departureDate,

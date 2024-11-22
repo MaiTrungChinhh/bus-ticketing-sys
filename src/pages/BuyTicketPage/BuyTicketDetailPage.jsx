@@ -8,7 +8,7 @@ import ChooseChair from '../../components/DetailTicket/ChooseChair';
 import TripInfo from '../../components/DetailTicket/FormTripInformation';
 import PaymentSuccess from '../../components/Notification/PaymentSuccess';
 import { tripUserById } from '../../services/tripService';
-import { lockSeats } from '../../services/seatService';
+import { lockSeats, unlockSeats } from '../../services/seatService';
 
 const BuyTicketDetailPage = () => {
   const { id } = useParams();
@@ -21,6 +21,7 @@ const BuyTicketDetailPage = () => {
   const [ticketPrice, setTicketPrice] = useState(0);
   const [departurePoint, setDeparturePoint] = useState('');
   const [showPaymentSuccess, setShowPaymentSuccess] = useState(false);
+  const [refreshChooseChair, setRefreshChooseChair] = useState(false);
 
   const breadcrumbItems = [
     { label: 'Trang nhất', link: '/', className: 'text-2xl' },
@@ -77,12 +78,42 @@ const BuyTicketDetailPage = () => {
     setGuestInfo(info);
   };
 
-  const handleContinueClick = (e) => {
+  const handleContinueClick = async (e) => {
     e.preventDefault();
-    console.log('Thông tin ghế đã chọn (ID ghế):', selectedSeatIds);
-    selectedSeatIds.forEach((seatId) => {
-      lockSeats(seatId);
-    });
+    const lockedSeatIds = [];
+    const failedSeatIds = [];
+    try {
+      await Promise.all(
+        selectedSeatIds.map(async (seatId) => {
+          try {
+            await lockSeats(seatId);
+            lockedSeatIds.push(seatId);
+          } catch {
+            failedSeatIds.push(seatId);
+          }
+        })
+      );
+
+      if (lockedSeatIds.length !== selectedSeatIds.length) {
+        alert('Không thể khóa các ghế sau: ' + failedSeatIds.join(', '));
+        await Promise.all(
+          lockedSeatIds.map(async (seatId) => {
+            try {
+              await unlockSeats(seatId);
+            } catch {}
+          })
+        );
+        setRefreshChooseChair((prev) => !prev);
+        setSelectedSeats([]);
+        return false;
+      } else {
+        return true;
+      }
+    } catch {
+      alert('Đã xảy ra lỗi không mong muốn. Vui lòng thử lại.');
+      window.location.reload();
+      return false;
+    }
   };
 
   return (
@@ -104,6 +135,7 @@ const BuyTicketDetailPage = () => {
             selectedSeats={selectedSeats}
             onSeatSelect={handleSeatSelection}
             vehicleId={vehicleId}
+            key={refreshChooseChair}
           />
 
           {/* Hiển thị thông tin chuyến nếu có */}

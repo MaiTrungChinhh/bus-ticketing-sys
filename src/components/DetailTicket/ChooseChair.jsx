@@ -30,7 +30,12 @@ export const fetchVehicleDetails = async (vehicleId) => {
   }
 };
 
-const ChooseChair = ({ selectedSeats, onSeatSelect, vehicleId }) => {
+const ChooseChair = ({
+  selectedSeats,
+  onSeatSelect,
+  vehicleId,
+  shouldReload,
+}) => {
   const [vehicleType, setVehicleType] = useState('');
   const [reservedSeats, setReservedSeats] = useState([]);
   const [totalSeats, setTotalSeats] = useState(0);
@@ -53,24 +58,57 @@ const ChooseChair = ({ selectedSeats, onSeatSelect, vehicleId }) => {
     };
 
     getVehicleDetails();
-  }, [vehicleId]);
+  }, [vehicleId, shouldReload]);
 
   // Hàm kiểm tra ghế có hợp lệ không
   const isSeatValid = (currentSeatNumber) => currentSeatNumber < totalSeats;
 
-  // Hàm để chọn hoặc hủy chọn ghế
-  const toggleSeatSelection = (seatNumber) => {
-    // Tìm ID ghế dựa trên vị trí
-    const selectedSeat = seats.find(
-      (seat) => seat.position.toString() === seatNumber.toString()
-    );
+  const toggleSeatSelection = async (seatNumber) => {
+    try {
+      // Kiểm tra trạng thái ghế từ API
+      const response = await getSeatByVehicleId(vehicleId);
+      const latestSeats = response.result;
 
-    if (selectedSeats.includes(seatNumber)) {
-      onSeatSelect(seatNumber, selectedSeat?.id, selectedSeat?.position, false); // Truyền thêm id và position (false là hủy chọn)
-    } else if (selectedSeats.length < 4) {
-      onSeatSelect(seatNumber, selectedSeat?.id, selectedSeat?.position, true); // Truyền thêm id và position (true là chọn ghế)
-    } else {
-      alert('Bạn chỉ có thể chọn tối đa 4 ghế!'); // Thông báo cho người dùng
+      // Tìm trạng thái của ghế người dùng muốn chọn
+      const targetSeat = latestSeats.find(
+        (seat) => seat.position.toString() === seatNumber.toString()
+      );
+
+      if (targetSeat.status !== 'AVAILABLE') {
+        alert('Ghế này đã được khóa bởi người khác.');
+        const updatedData = await fetchVehicleDetails(vehicleId);
+        if (updatedData) {
+          setReservedSeats(
+            updatedData.reservedSeats.map((seat) => seat.position)
+          );
+          setSeats(updatedData.seats);
+        }
+        return;
+      }
+
+      const selectedSeat = seats.find(
+        (seat) => seat.position.toString() === seatNumber.toString()
+      );
+
+      if (selectedSeats.includes(seatNumber)) {
+        onSeatSelect(
+          seatNumber,
+          selectedSeat?.id,
+          selectedSeat?.position,
+          false
+        );
+      } else if (selectedSeats.length < 4) {
+        onSeatSelect(
+          seatNumber,
+          selectedSeat?.id,
+          selectedSeat?.position,
+          true
+        );
+      } else {
+        alert('Bạn chỉ có thể chọn tối đa 4 ghế!');
+      }
+    } catch (error) {
+      console.error('Lỗi khi kiểm tra trạng thái ghế:', error);
     }
   };
 
