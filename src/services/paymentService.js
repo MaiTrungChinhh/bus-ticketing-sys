@@ -42,17 +42,53 @@ export const processZaloPayPayment = async (paymentData) => {
   }
 };
 
-// Hàm xử lý thanh toán qua VNPay
-export const processVNPayPayment = async (paymentData) => {
+export const queryZaloPayPaymentStatus = async (app_trans_id) => {
   try {
-    const response = await axiosInstance.post(
-      `/api/vnpay/create`,
-      paymentData,
-      { params: { amount: paymentData.amount } } // Thêm các tham số vào URL nếu cần
-    );
+    const response = await axiosInstance.post('/zaloPayment/query', {
+      app_trans_id,
+    });
+    return response.data;
+  } catch (error) {
+    console.error('Lỗi khi kiểm tra trạng thái thanh toán:', error);
+    throw error;
+  }
+};
+
+// Hàm xử lý thanh toán qua VNPay
+export const processVNPayPayment = async (order_id, amount) => {
+  try {
+    const response = await axiosInstance.get(`/vnpay/create`, {
+      params: {
+        order_id: order_id,
+        amount: amount,
+      },
+    });
     return response.data;
   } catch (error) {
     console.error('Lỗi khi thanh toán qua VNPay:', error);
+    throw error;
+  }
+};
+
+export const queryVNPayPaymentStatus = async (order_id, trans_date) => {
+  try {
+    const response = await axiosInstance.post(`/vnpay/query`, {
+      order_id: order_id,
+      trans_date: trans_date,
+    });
+    return response.data;
+  } catch (error) {
+    console.error('Lỗi khi truy vấn trạng thái thanh toán VNPay:', error);
+    throw error;
+  }
+};
+
+export const fetchPaymentMethods = async () => {
+  try {
+    const response = await axiosInstance.get('/paymentMethods');
+    return response.data;
+  } catch (error) {
+    console.error('Error fetching payment methods:', error);
     throw error;
   }
 };

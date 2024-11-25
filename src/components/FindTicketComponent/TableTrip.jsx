@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { fetchTripsInDate } from '../../services/tripService';
+import Swal from 'sweetalert2';
 
 const BookingTable = () => {
   const [bookings, setBookings] = useState([]);
@@ -13,6 +14,27 @@ const BookingTable = () => {
   const returnDate = queryParams.get('returnDate');
 
   useEffect(() => {
+    const today = new Date();
+    today.setHours(0, 0, 0, 0); // Đặt giờ về 0:00 để chỉ so sánh ngày
+
+    // Kiểm tra ngày đi
+    if (date && new Date(date) < today) {
+      Swal.fire({
+        icon: 'error',
+        title: 'Ngày không hợp lệ',
+        text: 'Ngày khởi hành không được nhỏ hơn ngày hiện tại!',
+        confirmButtonText: 'OK',
+        confirmButtonColor: '#3085d6',
+        allowOutsideClick: false,
+        allowEscapeKey: false,
+      }).then((result) => {
+        if (result.isConfirmed) {
+          navigate('/');
+        }
+      });
+      return;
+    }
+
     const fetchData = async () => {
       try {
         const data = await fetchTripsInDate(
@@ -20,9 +42,17 @@ const BookingTable = () => {
           selectedDeparture,
           selectedArrival
         );
-
         if (Array.isArray(data)) {
-          setBookings(data);
+          const now = new Date();
+          const sixHoursAgo = new Date(now.getTime() + 6 * 60 * 60 * 1000);
+
+          const filteredData = data.filter((trip) => {
+            const departureDateTime = new Date(
+              `${trip.departureDate}T${trip.departureTime}`
+            );
+            return departureDateTime >= sixHoursAgo;
+          });
+          setBookings(filteredData);
         } else {
           console.error('Expected data to be an array, but got:', data);
           setBookings([]);

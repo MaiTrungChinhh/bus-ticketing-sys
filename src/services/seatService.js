@@ -35,3 +35,15 @@ export const unlockSeats = async (seatId) => {
     throw error;
   }
 };
+
+export const lockSeatsPayment = async (seatId) => {
+  try {
+    const response = await axiosInstance.patch(`/seats/${seatId}`, {
+      status: 'OCCUPIED',
+    });
+    return response.data;
+  } catch (error) {
+    console.error('Error unlocking seats:', error);
+    throw error;
+  }
+};

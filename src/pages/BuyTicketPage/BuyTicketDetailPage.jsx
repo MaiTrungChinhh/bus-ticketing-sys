@@ -80,6 +80,8 @@ const BuyTicketDetailPage = () => {
 
   const handleContinueClick = async (e) => {
     e.preventDefault();
+
+    localStorage.removeItem('lockedSeats');
     const lockedSeatIds = [];
     const failedSeatIds = [];
     try {
@@ -95,7 +97,6 @@ const BuyTicketDetailPage = () => {
       );
 
       if (lockedSeatIds.length !== selectedSeatIds.length) {
-        alert('Không thể khóa các ghế sau: ' + failedSeatIds.join(', '));
         await Promise.all(
           lockedSeatIds.map(async (seatId) => {
             try {
@@ -103,10 +104,18 @@ const BuyTicketDetailPage = () => {
             } catch {}
           })
         );
+        Swal.fire({
+          icon: 'error',
+          title: 'Đặt ghế thất bại!',
+          text: 'Ghế đã được đặt!',
+          confirmButtonText: 'OK',
+          confirmButtonColor: '#d33',
+        });
         setRefreshChooseChair((prev) => !prev);
         setSelectedSeats([]);
         return false;
       } else {
+        localStorage.setItem('lockedSeats', JSON.stringify(lockedSeatIds));
         return true;
       }
     } catch {

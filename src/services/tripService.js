@@ -28,11 +28,10 @@ export const fetchTripsInDate = async (date, departure, arrival) => {
       return [];
     }
   } catch (error) {
-    throw error; // Ném lại lỗi để xử lý ở nơi gọi hàm
+    throw error;
   }
 };
 
-// Lấy thông tin chuyến đi theo ID
 export const fetchTripById = async (tripId) => {
   try {
     const response = await axiosInstance.get(`/trips/${tripId}`);

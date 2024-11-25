@@ -6,81 +6,47 @@ import DefaultComponent from '../../components/DefaultComponent/DefaultComponent
 import StepProgress from '../../components/StepProgress/StepProgress';
 import {
   processMomoPayment,
+  processVNPayPayment,
   processZaloPayPayment,
 } from '../../services/paymentService';
+import Swal from 'sweetalert2';
+import { fetchPaymentMethods } from '../../services/paymentService';
 
-const PaymentMethods = ({ selectedPayment, handlePaymentChange }) => {
+const PaymentMethods = ({
+  selectedPayment,
+  handlePaymentChange,
+  paymentMethods,
+}) => {
   return (
     <div className="p-4 bg-gray-100 rounded-lg">
       <h2 className="text-center text-primary text-3xl text-blue-500 font-bold uppercase mb-4">
         Phương thức thanh toán
       </h2>
       <div className="space-y-4 text-2xl">
-        <div
-          className={`p-4 border rounded-lg cursor-pointer ${
-            selectedPayment === 'momo'
-              ? 'border-blue-500 bg-blue-50'
-              : 'border-gray-300'
-          }`}
-          onClick={() => handlePaymentChange('momo')}
-        >
-          <input
-            type="radio"
-            id="momo"
-            name="payment"
-            value="momo"
-            checked={selectedPayment === 'momo'}
-            onChange={() => handlePaymentChange('momo')}
-            className="mr-2"
-          />
-          <label htmlFor="momo" className="cursor-pointer">
-            MoMo
-          </label>
-        </div>
-
-        <div
-          className={`p-4 border rounded-lg cursor-pointer ${
-            selectedPayment === 'zalopay'
-              ? 'border-blue-500 bg-blue-50'
-              : 'border-gray-300'
-          }`}
-          onClick={() => handlePaymentChange('zalopay')}
-        >
-          <input
-            type="radio"
-            id="zalopay"
-            name="payment"
-            value="zalopay"
-            checked={selectedPayment === 'zalopay'}
-            onChange={() => handlePaymentChange('zalopay')}
-            className="mr-2"
-          />
-          <label htmlFor="zalopay" className="cursor-pointer">
-            ZaloPay
-          </label>
-        </div>
-
-        <div
-          className={`p-4 border rounded-lg cursor-pointer ${
-            selectedPayment === 'vnpay'
-              ? 'border-blue-500 bg-blue-50'
-              : 'border-gray-300'
-          }`}
-          onClick={() => handlePaymentChange('vnpay')}
-        >
-          <input
-            type="radio"
-            id="vnpay"
-            name="payment"
-            value="vnpay"
-            checked={selectedPayment === 'vnpay'}
-            onChange={() => handlePaymentChange('vnpay')}
-            className="mr-2"
-          />
-          <label htmlFor="vnpay" className="cursor-pointer">
-            VNPay
-          </label>
-        </div>
+        {paymentMethods.map((method) => (
+          <div
+            key={method.id}
+            className={`p-4 border rounded-lg cursor-pointer ${
+              selectedPayment === method.id
+                ? 'border-blue-500 bg-blue-50'
+                : 'border-gray-300'
+            }`}
+            onClick={() => handlePaymentChange(method.id)}
+          >
+            <input
+              type="radio"
+              id={method.id}
+              name="payment"
+              value={method.id}
+              checked={selectedPayment.id === method.id}
+              onChange={() => handlePaymentChange(method)}
+              className="mr-2"
+            />
+            <label htmlFor={method.id} className="cursor-pointer">
+              {method.methodName}
+            </label>
+          </div>
+        ))}
       </div>
     </div>
   );
@@ -95,20 +61,32 @@ const PaymentPage = () => {
   const seats = params.get('seats');
   const totalAmount = params.get('totalAmount');
   const tripDetails = JSON.parse(params.get('tripDetails') || '{}');
-  const [selectedPayment, setSelectedPayment] = useState('momo');
-
+  const [selectedPayment, setSelectedPayment] = useState('');
+  const [paymentMethods, setPaymentMethods] = useState([]);
   const [timeLeft, setTimeLeft] = useState(300); // 5 phút (300 giây)
   const [paymentProcessing, setPaymentProcessing] = useState(false); // Trạng thái thanh toán
+
+  useEffect(() => {
+    fetchPaymentMethods().then((data) => {
+      const userRole = 'GUEST'; // Set role to "GUEST"
+      if (data.code === 200 && Array.isArray(data.result?.contents)) {
+        // Filter payment methods based on the "GUEST" role
+        const guestPaymentMethods = data.result.contents.filter(
+          (paymentMethod) => paymentMethod.roles.includes(userRole)
+        );
+        setPaymentMethods(guestPaymentMethods); // Set the filtered payment methods
+      } else {
+        setPaymentMethods([]); // Set an empty array if no valid data
+      }
+    });
+  }, []);
 
   useEffect(() => {
     if (timeLeft <= 0) {
       window.history.back();
       alert('Hết thời gian thanh toán, ghế sẽ được mở lại.');
-      // Gọi hàm mở khóa ghế tại đây
-      // unlockSeats();
       return;
     }
-
     const countdown = setInterval(() => {
       setTimeLeft((prev) => prev - 1);
     }, 1000);
@@ -122,27 +100,44 @@ const PaymentPage = () => {
     { label: 'Chọn chuyến', className: 'text-2xl' },
   ];
 
-  const handlePaymentChange = useCallback(
-    (method) => {
-      setSelectedPayment(method);
-    },
-    [] // Empty dependency array so the function doesn't get recreated on every render
-  );
+  const handlePaymentChange = (method) => {
+    setSelectedPayment(method);
+  };
 
   const handleConfirmPayment = async () => {
     try {
-      const confirmation = window.confirm(
-        `Bạn có chắc muốn thanh toán qua ${selectedPayment}?`
-      );
-      console.log('Confirmation:', confirmation); // Kiểm tra kết quả xác nhận
-      if (!confirmation) return;
+      const { isConfirmed } = await Swal.fire({
+        title: 'Xác nhận thanh toán',
+        text: `Bạn có chắc muốn thanh toán qua ${selectedPayment.methodName}?`,
+        icon: 'question',
+        showCancelButton: true,
+        confirmButtonText: 'Đồng ý',
+        cancelButtonText: 'Hủy',
+        confirmButtonColor: '#3085d6',
+        cancelButtonColor: '#d33',
+      });
+
+      if (!isConfirmed) return;
+
+      const ticketData = {
+        actualTicketPrice: totalAmount / seats.length, // Tổng giá trị vé
+        tripId: tripDetails.tripId || '',
+        paymentMethodName: selectedPayment.methodName,
+        paymentMethodId: selectedPayment.id, // Phương thức thanh toán
+        customerName: hoten, // Tên khách hàng
+        phone: dienthoai, // Số điện thoại
+        email: email, // Email khách hàng
+      };
+
+      localStorage.removeItem('ticketData');
+      let ticketArray = JSON.parse(localStorage.getItem('ticketData')) || [];
+      ticketArray.push(ticketData); // Thêm đối tượng vé mới vào mảng
+      localStorage.setItem('ticketData', JSON.stringify(ticketArray));
 
       let result;
-
-      // Đảm bảo rằng seats là chuỗi trước khi gọi replace
       let seats1 = seats.replace(/, /g, '_');
 
-      switch (selectedPayment.trim().toLowerCase()) {
+      switch (selectedPayment.methodName.trim().toLowerCase()) {
         case 'momo':
           const paymentMomoData = {
             orderId: `${tripDetails?.tripId}_${tripDetails?.departureDate}_${seats1}`,
@@ -155,13 +150,15 @@ const PaymentPage = () => {
             customerName: hoten,
             phone: dienthoai,
           };
-          console.log('Payment MoMo Data:', paymentMomoData); // Kiểm tra dữ liệu trước khi gọi hàm
           result = await processMomoPayment(paymentMomoData);
-          console.log('Result:', result); // Kiểm tra kết quả trả về sau khi gọi hàm
           if (result?.resultCode === 0) {
             window.location.href = `${result.payUrl}`;
           } else {
-            alert('Thanh toán không thành công. Vui lòng thử lại.');
+            Swal.fire({
+              title: 'Thanh toán không thành công',
+              text: 'Vui lòng thử lại.',
+              icon: 'error',
+            });
           }
           break;
         case 'zalopay':
@@ -175,24 +172,47 @@ const PaymentPage = () => {
             customerName: hoten,
             phone: dienthoai,
           };
-          console.log('Payment Zalo Data:', paymentZaloData); // Kiểm tra dữ liệu trước khi gọi hàm
           result = await processZaloPayPayment(paymentZaloData);
-          console.log('Result:', result); // Kiểm tra kết quả trả về sau khi gọi hàm
           if (result?.return_code === 1) {
             window.location.href = `${result.order_url}`;
           } else {
-            alert('Thanh toán không thành công. Vui lòng thử lại.');
+            Swal.fire({
+              title: 'Thanh toán không thành công',
+              text: 'Vui lòng thử lại.',
+              icon: 'error',
+            });
+          }
+          break;
+        case 'vnpay':
+          const orderId = `${tripDetails?.tripId}_${tripDetails?.departureDate}_${seats1}`;
+          const amount = totalAmount;
+
+          result = await processVNPayPayment(orderId, amount);
+          if (result?.code === 200) {
+            window.location.href = `${result.result}`;
+          } else {
+            Swal.fire({
+              title: 'Thanh toán không thành công',
+              text: 'Vui lòng thử lại.',
+              icon: 'error',
+            });
           }
           break;
         default:
-          alert('Phương thức thanh toán không hợp lệ');
+          Swal.fire({
+            title: 'Lỗi',
+            text: 'Phương thức thanh toán không hợp lệ',
+            icon: 'error',
+          });
           return;
       }
     } catch (error) {
       console.error('Error during payment process:', error);
-      alert(
-        'Đã có lỗi xảy ra trong quá trình thanh toán. Vui lòng thử lại sau.'
-      );
+      Swal.fire({
+        title: 'Lỗi',
+        text: 'Đã có lỗi xảy ra trong quá trình thanh toán. Vui lòng thử lại sau.',
+        icon: 'error',
+      });
     }
   };
 
@@ -271,6 +291,7 @@ const PaymentPage = () => {
               <PaymentMethods
                 selectedPayment={selectedPayment}
                 handlePaymentChange={handlePaymentChange}
+                paymentMethods={paymentMethods}
               />
               <div className="mt-6 text-center text-2xl text-red-500">
                 Thời gian còn lại để thanh toán: {Math.floor(timeLeft / 60)}:

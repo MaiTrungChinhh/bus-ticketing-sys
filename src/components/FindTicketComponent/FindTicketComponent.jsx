@@ -5,6 +5,7 @@ import DatePicker from 'react-datepicker';
 import { Link } from 'react-router-dom';
 import 'react-datepicker/dist/react-datepicker.css';
 import { fetchRoutes } from '../../services/routeService';
+import Swal from 'sweetalert2';
 
 const FindTicketComponent = () => {
   const [startDate, setStartDate] = useState(new Date());
@@ -181,7 +182,23 @@ const FindTicketComponent = () => {
               <div className="flex justify-center">
                 <DatePicker
                   selected={startDate}
-                  onChange={(date) => setStartDate(date)}
+                  onChange={(date) => {
+                    const today = new Date();
+                    today.setHours(0, 0, 0, 0); // Đặt giờ của ngày hiện tại về 0:00 để chỉ so sánh ngày
+                    if (date < today) {
+                      Swal.fire({
+                        icon: 'error',
+                        title: 'Ngày không hợp lệ',
+                        text: 'Ngày khởi hành không được nhỏ hơn ngày hiện tại!',
+                        confirmButtonText: 'OK',
+                        confirmButtonColor: '#3085d6',
+                      }).then(() => {
+                        setStartDate(today); // Đặt lại ngày khởi hành là ngày hiện tại
+                      });
+                    } else {
+                      setStartDate(date);
+                    }
+                  }}
                   dateFormat="dd/MM/yyyy"
                   className="calendar w-full p-2 text-blue-500 lg:text-2xl text-center"
                 />

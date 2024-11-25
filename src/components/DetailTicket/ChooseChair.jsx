@@ -1,5 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { getSeatByVehicleId } from '../../services/seatService';
+import Swal from 'sweetalert2';
+import 'sweetalert2/dist/sweetalert2.min.css';
 
 // Hàm lấy thông tin xe từ API
 export const fetchVehicleDetails = async (vehicleId) => {
@@ -75,7 +77,13 @@ const ChooseChair = ({
       );
 
       if (targetSeat.status !== 'AVAILABLE') {
-        alert('Ghế này đã được khóa bởi người khác.');
+        Swal.fire({
+          icon: 'error',
+          title: 'Chọn ghế thất bại!',
+          text: 'Ghế này đã được khóa bởi người khác!',
+          confirmButtonText: 'OK',
+          confirmButtonColor: '#d33',
+        });
         const updatedData = await fetchVehicleDetails(vehicleId);
         if (updatedData) {
           setReservedSeats(
@@ -105,7 +113,13 @@ const ChooseChair = ({
           true
         );
       } else {
-        alert('Bạn chỉ có thể chọn tối đa 4 ghế!');
+        Swal.fire({
+          icon: 'error',
+          title: 'Giới hạn ghế!',
+          text: 'Bạn chỉ có thể chọn tối đa 4 ghế!',
+          confirmButtonText: 'OK',
+          confirmButtonColor: '#d33',
+        });
       }
     } catch (error) {
       console.error('Lỗi khi kiểm tra trạng thái ghế:', error);

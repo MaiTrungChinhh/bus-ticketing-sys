@@ -114,7 +114,7 @@ const BookingForm = () => {
                 <DatePicker
                   selected={departureDate}
                   onChange={(date) => setDepartureDate(date)} // Update state
-                  className="form-input border border-gray-300 rounded-md p-2 w-full text-2xl"
+                  className="form-input w-full border border-gray-300 rounded-md p-2 text-2xl"
                   dateFormat="dd/MM/yyyy"
                   placeholderText="Chọn ngày khởi hành"
                 />
