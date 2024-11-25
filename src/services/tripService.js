@@ -1,13 +1,19 @@
 import axiosInstance from './Axios';
 
 // Lấy danh sách các chuyến đi
-export const fetchTrips = async () => {
+export const fetchTrips = async (page, pageSize) => {
   try {
-    const response = await axiosInstance.get('/trips');
-    return response.data.result;
+    // Gọi API với tham số phân trang
+    const response = await axiosInstance.get('/trips', {
+      params: {
+        page: page, // Trang hiện tại
+        pageSize: pageSize, // Số lượng kết quả trên mỗi trang
+      },
+    });
+    return response.data.result; // Trả về dữ liệu kết quả từ API
   } catch (error) {
     console.error('Error fetching trips:', error);
-    throw error;
+    throw error; // Ném lỗi nếu có
   }
 };
 

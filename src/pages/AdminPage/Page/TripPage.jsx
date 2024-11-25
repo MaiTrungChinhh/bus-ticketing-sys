@@ -37,18 +37,26 @@ const ListTripPage = () => {
   const [currentPage, setCurrentPage] = useState(1);
   const [searchTerm, setSearchTerm] = useState('');
   const [totalResults, setTotalResults] = useState(0);
-  const [itemsPerPage, setItemsPerPage] = useState(7);
+  const [itemsPerPage, setItemsPerPage] = useState(10);
+  const [totalPages, setTotalPages] = useState(0);
 
+  // Fetch data when page or filters change
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const data = await fetchTrips();
-        if (Array.isArray(data)) {
-          setBookings(data);
-          setTotalResults(data.length);
+        const data = await fetchTrips(currentPage, itemsPerPage); // Gọi API với page và pageSize
+        console.log('API Response:', data); // Debug phản hồi API
+
+        // Kiểm tra định dạng dữ liệu
+        if (data?.contents && Array.isArray(data.contents)) {
+          setBookings(data.contents); // Lưu danh sách chuyến đi
+          setTotalResults(data.totalItems || 0); // Tổng số kết quả
+          setItemsPerPage(data.pageSize || 10); // Số kết quả mỗi trang
+          setTotalPages(data.totalPages || 1); // Tổng số trang
+          console.log('Trips fetched:', data.contents);
         } else {
-          console.error('Expected data to be an array, but got:', data);
-          setBookings([]);
+          console.error('Unexpected data format:', data);
+          setBookings([]); // Reset bookings nếu không đúng định dạng
           setTotalResults(0);
         }
       } catch (error) {
@@ -57,7 +65,7 @@ const ListTripPage = () => {
     };
 
     fetchData();
-  }, []);
+  }, [currentPage, itemsPerPage]); // Gọi lại khi currentPage hoặc itemsPerPage thay đổi
 
   const handleApplyFilters = (appliedFilters) => {
     const { selectedOptions } = appliedFilters;
@@ -84,12 +92,12 @@ const ListTripPage = () => {
     };
 
     setSelectedFilters(newSelectedFilters);
-    setCurrentPage(1);
+    setCurrentPage(1); // Reset về trang đầu khi thay đổi bộ lọc
   };
 
   const handleSearch = (term) => {
     setSearchTerm(term.toLowerCase());
-    setCurrentPage(1);
+    setCurrentPage(1); // Reset về trang đầu khi tìm kiếm
   };
 
   const getFilteredResults = () => {
@@ -118,19 +126,9 @@ const ListTripPage = () => {
     });
   };
 
-  const filteredResults = getFilteredResults();
-
-  const indexOfLastResult = currentPage * itemsPerPage;
-  const indexOfFirstResult = indexOfLastResult - itemsPerPage;
-  const currentResults = filteredResults.slice(
-    indexOfFirstResult,
-    indexOfLastResult
-  );
-  const totalPages = Math.ceil(filteredResults.length / itemsPerPage);
-
   const handleItemsPerPageChange = (value) => {
     setItemsPerPage(value);
-    setCurrentPage(1);
+    setCurrentPage(1); // Reset về trang đầu khi thay đổi số kết quả trên trang
   };
 
   return (
@@ -152,7 +150,7 @@ const ListTripPage = () => {
           />
         </div>
         <div className="w-4/5 px-5">
-          <ContentTrip bookings={currentResults} totalResults={totalResults} />
+          <ContentTrip bookings={bookings} totalResults={totalResults} />
           <Pagination
             currentPage={currentPage}
             totalPages={totalPages}

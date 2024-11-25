@@ -9,28 +9,44 @@ const Pagination = ({
 }) => {
   const [inputValue, setInputValue] = useState(itemsPerPage);
 
+  // Change page
   const handlePageChange = (pageNumber) => {
     if (pageNumber >= 1 && pageNumber <= totalPages) {
-      onPageChange(pageNumber);
+      onPageChange(pageNumber); // Trigger page change
     }
   };
 
+  // Handle number of items per page change
   const handleItemsPerPageChange = (event) => {
     const value = event.target.value;
     const numericValue = Number(value);
     setInputValue(value);
     if (!isNaN(numericValue) && numericValue > 0) {
-      onItemsPerPageChange(numericValue);
+      onItemsPerPageChange(numericValue); // Trigger change for items per page
     }
   };
 
   const handleInputBlur = () => {
     const numericValue = Number(inputValue);
     if (!isNaN(numericValue) && numericValue > 0) {
-      onItemsPerPageChange(numericValue);
+      onItemsPerPageChange(numericValue); // On blur, update items per page
     } else {
-      setInputValue(itemsPerPage);
+      setInputValue(itemsPerPage); // Reset if the value is invalid
     }
+  };
+
+  // Display range of pages
+  const renderPageNumbers = () => {
+    const pageNumbers = [];
+    const range = 2; // Number of page buttons before/after current page
+    for (
+      let i = Math.max(1, currentPage - range);
+      i <= Math.min(totalPages, currentPage + range);
+      i++
+    ) {
+      pageNumbers.push(i);
+    }
+    return pageNumbers;
   };
 
   return (
@@ -49,28 +65,31 @@ const Pagination = ({
       </div>
       <div className="flex items-center justify-center space-x-2 text-lg">
         <button
-          className={`px-4 py-2 border rounded-md bg-gray-100 hover:bg-gray-200 focus:ring-2 focus:ring-blue-500 ${currentPage === 1 ? 'opacity-50 cursor-not-allowed' : ''
-            }`}
+          className={`px-4 py-2 border rounded-md bg-gray-100 hover:bg-gray-200 focus:ring-2 focus:ring-blue-500 ${
+            currentPage === 1 ? 'opacity-50 cursor-not-allowed' : ''
+          }`}
           onClick={() => handlePageChange(currentPage - 1)}
           disabled={currentPage === 1}
         >
           Trang trước
         </button>
-        {Array.from({ length: totalPages }, (_, index) => (
+        {renderPageNumbers().map((pageNumber) => (
           <button
-            className={`px-4 py-2 border rounded-md bg-gray-100 hover:bg-gray-200 focus:ring-2 focus:ring-blue-500 ${currentPage === index + 1
-              ? 'font-bold text-blue-600 border-blue-500'
-              : ''
-              }`}
-            onClick={() => handlePageChange(index + 1)}
-            key={index + 1}
+            className={`px-4 py-2 border rounded-md bg-gray-100 hover:bg-gray-200 focus:ring-2 focus:ring-blue-500 ${
+              currentPage === pageNumber
+                ? 'font-bold text-blue-600 border-blue-500'
+                : ''
+            }`}
+            onClick={() => handlePageChange(pageNumber)}
+            key={pageNumber}
           >
-            {index + 1}
+            {pageNumber}
           </button>
         ))}
         <button
-          className={`px-4 py-2 border rounded-md bg-gray-100 hover:bg-gray-200 focus:ring-2 focus:ring-blue-500 ${currentPage === totalPages ? 'opacity-50 cursor-not-allowed' : ''
-            }`}
+          className={`px-4 py-2 border rounded-md bg-gray-100 hover:bg-gray-200 focus:ring-2 focus:ring-blue-500 ${
+            currentPage === totalPages ? 'opacity-50 cursor-not-allowed' : ''
+          }`}
           onClick={() => handlePageChange(currentPage + 1)}
           disabled={currentPage === totalPages}
         >
