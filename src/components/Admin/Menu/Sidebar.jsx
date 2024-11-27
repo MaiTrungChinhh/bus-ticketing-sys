@@ -38,8 +38,9 @@ const SidebarMenu = () => {
 
   return (
     <div
-      className={`flex sidebar transition-all duration-500 ease-in-out ${isOpen || isHovered ? 'w-96 opacity-100' : 'w-24 opacity-75'
-        } bg-gradient-to-r from-blue-400 to-blue-600 p-1 shadow-lg`}
+      className={`flex sidebar transition-all duration-500 ease-in-out ${
+        isOpen || isHovered ? 'w-96 opacity-100' : 'w-24 opacity-75'
+      } bg-gradient-to-r from-blue-400 to-blue-600 p-1 shadow-lg`}
       onMouseEnter={() => setIsHovered(true)} // Hiện sidebar khi hover
       onMouseLeave={() => {
         setIsHovered(false); // Ẩn sidebar khi không hover
@@ -50,8 +51,9 @@ const SidebarMenu = () => {
         <nav className="flex flex-col p-4">
           <div className="flex items-center justify-between mb-4">
             <h1
-              className={`text-2xl font-bold transition-opacity duration-500 ${isOpen || isHovered ? 'block opacity-100' : 'hidden opacity-0'
-                }`}
+              className={`text-2xl font-bold transition-opacity duration-500 ${
+                isOpen || isHovered ? 'block opacity-100' : 'hidden opacity-0'
+              }`}
             >
               {isOpen || isHovered ? 'Quản lý Hệ thống' : ''}
             </h1>
@@ -91,7 +93,6 @@ const SidebarMenu = () => {
                 to: '/dashboard/customers/list',
                 icon: <FaList />,
               },
-
             ]}
             onSubMenuToggle={() => handleSubMenuToggle('customers')}
             isOpen={isOpen}
@@ -104,7 +105,7 @@ const SidebarMenu = () => {
             subMenus={[
               {
                 label: 'Danh sách đặt vé',
-                to: '/bookings/list',
+                to: '/dashboard/bookings/list',
                 icon: <FaList />,
               },
               { label: 'Thêm đặt vé', to: '/bookings/add', icon: <FaPlus /> },
@@ -146,8 +147,16 @@ const SidebarMenu = () => {
             to="/vehicles"
             icon={<FaBus />}
             subMenus={[
-              { label: 'Danh sách xe', to: '/dashboard/vehicles/list', icon: <FaList /> },
-              { label: 'Thêm xe', to: '/dashboard/vehicles/add', icon: <FaPlus /> },
+              {
+                label: 'Danh sách xe',
+                to: '/dashboard/vehicles/list',
+                icon: <FaList />,
+              },
+              {
+                label: 'Thêm xe',
+                to: '/dashboard/vehicles/add',
+                icon: <FaPlus />,
+              },
               {
                 label: 'Cập nhật thông tin xe',
                 to: '/dashboard/vehicles/update',

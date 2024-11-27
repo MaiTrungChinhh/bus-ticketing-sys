@@ -1,11 +1,30 @@
 import axiosInstance from './Axios';
 
 export const fetchRoutes = async () => {
+  let allRoutes = [];
+  let page = 1;
+  let pageSize = 10;
+  let totalPages = 1;
+
   try {
-    const response = await axiosInstance.get('/routes');
-    return response.data.result;
+    do {
+      const response = await axiosInstance.get('/routes', {
+        params: {
+          page: page,
+          pageSize: pageSize,
+        },
+      });
+
+      const data = response.data;
+      if (data.result && data.result.contents) {
+        allRoutes = [...allRoutes, ...data.result.contents];
+        totalPages = data.result.totalPages;
+        page += 1;
+      }
+    } while (page <= totalPages);
+
+    return allRoutes;
   } catch (error) {
-    console.error('Error fetching routes:', error);
     throw error;
   }
 };

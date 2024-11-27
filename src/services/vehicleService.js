@@ -1,6 +1,5 @@
 import axiosInstance from './Axios';
 
-// Lấy danh sách các chuyến đi
 export const fetchVehicles = async () => {
   try {
     const response = await axiosInstance.get('/vehicles');

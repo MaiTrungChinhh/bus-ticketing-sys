@@ -21,11 +21,7 @@ const FindTicketComponent = () => {
   useEffect(() => {
     const getRoutes = async () => {
       try {
-        const response = await fetchRoutes();
-        console.log('API Response:', response);
-
-        const routes = response.contents || [];
-
+        const routes = await fetchRoutes();
         if (Array.isArray(routes) && routes.length > 0) {
           setRoutes(routes);
 
@@ -39,11 +35,8 @@ const FindTicketComponent = () => {
           setDepartureLocations(uniqueDepartures);
           setArrivalLocations(uniqueArrivals);
         } else {
-          console.error('No routes found in the response:', response);
         }
-      } catch (error) {
-        console.error('Error fetching routes:', error);
-      }
+      } catch (error) {}
     };
 
     getRoutes();

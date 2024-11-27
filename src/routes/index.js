@@ -20,7 +20,7 @@ import LoginPage from '../pages/LoginLogout/LoginPage';
 import RegisterPage from '../pages/LoginLogout/RegisterPage';
 import NotFoundPage from '../pages/NotFoundPage/NotFoundPage';
 import OrderPage from '../pages/OrderPage/OrderPage';
-
+import BookTicketPage from '../pages/AdminPage/Page/BookTicketPage.jsx';
 
 export const routes = [
   {
@@ -48,22 +48,21 @@ export const routes = [
     page: Dashboard,
   },
 
-
   {
     path: '/admin',
     page: Dashboard, // Cập nhật để trang /admin chuyển trực tiếp đến Dashboard
   },
   {
     path: '/dashboard/customers/list',
-    page: CustomerListPage, 
+    page: CustomerListPage,
   },
   {
     path: '/dashboard/customer/add',
-    page: AddCustomerPage, 
+    page: AddCustomerPage,
   },
 
   {
-    path:'/dashboard/employees/type',
+    path: '/dashboard/employees/type',
     page: EmployeeTypePage,
   },
   {
@@ -73,7 +72,7 @@ export const routes = [
   {
     path: '/dashboard/employees/type/edit',
     page: EditEmployeeTypePage,
-},
+  },
   {
     path: '/dashboard/employees/list',
     page: ListEmployeePage,
@@ -86,8 +85,6 @@ export const routes = [
     path: '/dashboard/employee/edit/:id',
     page: EditEmployeePage,
   },
-
-
 
   {
     path: '/dashboard/trip/list',
@@ -104,6 +101,10 @@ export const routes = [
   {
     path: '/dashboard/trip/list',
     page: ListTrip,
+  },
+  {
+    path: '/dashboard/bookings/list',
+    page: BookTicketPage,
   },
   {
     path: '/dashboard/trip/add',

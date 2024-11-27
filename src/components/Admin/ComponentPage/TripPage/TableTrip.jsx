@@ -35,7 +35,7 @@ const TableTrip = ({ bookings }) => {
     <div className="overflow-x-auto mt-4">
       <div className="max-h-[500px] overflow-y-auto">
         <table className="min-w-full divide-y divide-gray-200">
-          <thead className="bg-gray-100">
+          <thead className="bg-gray-100 sticky top-0 z-10">
             <tr>
               <th className="px-6 py-3 text-2xl font-semibold text-gray-800 text-center">
                 Tuyến
