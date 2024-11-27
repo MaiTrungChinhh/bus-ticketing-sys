@@ -4,6 +4,12 @@ import { useNavigate } from 'react-router-dom';
 
 const CustomerTable = ({ customers, onEdit, onDelete }) => {
     const navigate = useNavigate(); // Import useNavigate để sử dụng navigate
+    customers.map((customer, index) => {
+        if (!customer || !customer.account || !customer.account.username) {
+            return null; // Bỏ qua nếu dữ liệu không hợp lệ
+        }
+    })
+
 
     return (
         <div className="relative">
@@ -33,7 +39,7 @@ const CustomerTable = ({ customers, onEdit, onDelete }) => {
                                 <td className="px-6 py-4 border">{customer.phone}</td>
                                 <td className="px-6 py-4 border">{customer.email}</td>
                                 <td className="px-6 py-4 border">{customer.dob}</td>
-                                <td className="px-6 py-4 border">{customer.account.username}</td> {/* Sửa thành customer.account.username */}
+                                <td className="px-6 py-4 border">{customer.account.username}</td>
                                 <td className="px-6 py-4 border">
                                     {customer.account.roles.join(', ')}
                                 </td>

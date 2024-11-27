@@ -15,6 +15,8 @@ import {
   FaUserShield,
   FaWrench,
 } from 'react-icons/fa';
+import { IoPricetags } from "react-icons/io5";
+import { MdOutlinePayment } from "react-icons/md";
 import NavMenuItem from './NavMenuItem';
 
 const SidebarMenu = () => {
@@ -77,17 +79,17 @@ const SidebarMenu = () => {
             icon={<FaUsers />}
             subMenus={[
               {
-                label: 'Quản lý loại nhân viên',
+                label: 'Loại nhân viên',
                 to: '/dashboard/employees/type',
                 icon: <FaList />,
               },
               {
-                label: 'Quản lý nhân viên',
+                label: 'Danh sách nhân viên',
                 to: '/dashboard/employees/list',
                 icon: <FaList />,
               },
               {
-                label: 'Quản lý người dùng',
+                label: 'Danh sách người dùng',
                 to: '/dashboard/customers/list',
                 icon: <FaList />,
               },
@@ -146,15 +148,31 @@ const SidebarMenu = () => {
             to="/vehicles"
             icon={<FaBus />}
             subMenus={[
+              { label: 'Loại xe', to: '/dashboard/vehicles/type', icon: <FaList /> },
               { label: 'Danh sách xe', to: '/dashboard/vehicles/list', icon: <FaList /> },
-              { label: 'Thêm xe', to: '/dashboard/vehicles/add', icon: <FaPlus /> },
-              {
-                label: 'Cập nhật thông tin xe',
-                to: '/dashboard/vehicles/update',
-                icon: <FaEdit />,
-              },
+              { label: 'Danh sách xe không còn hoạt động', to: '/dashboard/vehicles/list/inactive', icon: <FaList /> },
             ]}
             onSubMenuToggle={() => handleSubMenuToggle('vehicles')}
+            isOpen={isOpen}
+          />
+          <NavMenuItem
+            label={isOpen || isHovered ? 'Quản lý giá' : ''} // Hiện text khi hover
+            to="/prices"
+            icon={<IoPricetags />}
+            subMenus={[
+              { label: 'Danh sách giá', to: '/dashboard/prices/list', icon: <FaList /> },
+            ]}
+            onSubMenuToggle={() => handleSubMenuToggle('prices')}
+            isOpen={isOpen}
+          />
+          <NavMenuItem
+            label={isOpen || isHovered ? 'Quản lý phương thức thanh toán' : ''} // Hiện text khi hover
+            to="/paymentmethod"
+            icon={<MdOutlinePayment />}
+            subMenus={[
+              { label: 'Danh sách phương thức thanh toán', to: '/dashboard/paymentmethod/list', icon: <FaList /> },
+            ]}
+            onSubMenuToggle={() => handleSubMenuToggle('paymentmethod')}
             isOpen={isOpen}
           />
           <NavMenuItem

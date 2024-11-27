@@ -1,41 +1,40 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 
 const EmployeeForm = ({ initialData = {}, onSubmit, onCancel, employeeTypes = [] }) => {
-  // Khởi tạo state cho các trường dữ liệu
-  const [address, setAddress] = useState(initialData.address || '');
-  const [phone, setPhone] = useState(initialData.phone || '');
-  const [email, setEmail] = useState(initialData.email || '');
-  const [nationalIDNumber, setNationalIDNumber] = useState(initialData.nationalIDNumber || '');
-  const [employeeTypeId, setEmployeeTypeId] = useState(initialData.employeeTypeId || '');
-  const [dob, setDob] = useState(initialData.dob || '');
-  const [roles, setRoles] = useState(initialData.roles || []);
-  const [username, setUsername] = useState(initialData.username || ''); // Gắn giá trị username
-  const [password, setPassword] = useState(initialData.password || '12345678');
-  const [isUsernameEditable, setIsUsernameEditable] = useState(false);
-  const [isPasswordEditable, setIsPasswordEditable] = useState(false);
+  const [address, setAddress] = useState('');
+  const [phone, setPhone] = useState('');
+  const [email, setEmail] = useState('');
+  const [nationalIDNumber, setNationalIDNumber] = useState('');
+  const [employeeTypeId, setEmployeeTypeId] = useState('');
+  const [dob, setDob] = useState('');
+  const [roles, setRoles] = useState([]);
+  const [username, setUsername] = useState('');
+  const [password, setPassword] = useState('12345678');
 
-  const availableRoles = ['ADMIN', 'EMPLOYEE', 'GUEST']; // Vai trò có sẵn
+  const availableRoles = ['ADMIN', 'EMPLOYEE', 'GUEST'];
 
-  // Hàm xử lý submit form
+  // Đồng bộ dữ liệu với initialData khi nó thay đổi
+  useEffect(() => {
+    if (initialData && Object.keys(initialData).length > 0) {
+      setAddress(initialData.address || '');
+      setPhone(initialData.phone || '');
+      setEmail(initialData.email || '');
+      setNationalIDNumber(initialData.nationalIDNumber || '');
+      setEmployeeTypeId(initialData.employeeTypeId || '');
+      setDob(initialData.dob || '');
+      setRoles(initialData.roles || []);
+      setUsername(initialData.username || '');
+      setPassword('12345678'); // Reset mật khẩu mặc định khi chỉnh sửa
+    }
+  }, [initialData]);
+
   const handleSubmit = (e) => {
     e.preventDefault();
-
     if (!address || !phone || !email || !nationalIDNumber || !employeeTypeId || !dob) {
       alert('Vui lòng điền đầy đủ các thông tin bắt buộc.');
       return;
     }
-
-    onSubmit({
-      address,
-      phone,
-      email,
-      nationalIDNumber,
-      employeeTypeId,
-      dob,
-      roles,
-      username,
-      password,
-    });
+    onSubmit({ address, phone, email, nationalIDNumber, employeeTypeId, dob, roles, username, password });
   };
 
   return (
@@ -164,19 +163,18 @@ const EmployeeForm = ({ initialData = {}, onSubmit, onCancel, employeeTypes = []
           value={username}
           onChange={(e) => setUsername(e.target.value)}
           className="w-full p-2 border rounded"
-          readOnly={!isUsernameEditable}
+          readOnly
         />
       </div>
 
       {/* Mật khẩu */}
-      <div className="mb-4 relative">
+      <div className="mb-4">
         <label className="block mb-2">Mật khẩu</label>
         <input
           type="password"
           value={password}
           onChange={(e) => setPassword(e.target.value)}
-          className="w-full p-2 border rounded pr-10"
-          readOnly={!isPasswordEditable}
+          className="w-full p-2 border rounded"
         />
       </div>
 

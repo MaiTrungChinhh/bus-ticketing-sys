@@ -1,6 +1,7 @@
 import React from 'react';
 import { FaEdit, FaPlus, FaTrash } from 'react-icons/fa';
 import { useNavigate } from 'react-router-dom';
+import Swal from 'sweetalert2';
 
 const EmployeeTypeTable = ({ onEdit, onDelete, employeeTypes, loading, onPageChange, currentPage }) => {
     const navigate = useNavigate();
@@ -44,11 +45,27 @@ const EmployeeTypeTable = ({ onEdit, onDelete, employeeTypes, loading, onPageCha
                                         <span className="mx-2">|</span>
                                         <button
                                             onClick={async () => {
-                                                if (window.confirm("Bạn chắc chắn xóa chứ?")) {
+                                                const result = await Swal.fire({
+                                                    title: 'Bạn có chắc chắn?',
+                                                    text: 'Hành động này không thể hoàn tác!',
+                                                    icon: 'warning',
+                                                    showCancelButton: true,
+                                                    confirmButtonColor: '#d33',
+                                                    cancelButtonColor: '#3085d6',
+                                                    confirmButtonText: 'Xóa',
+                                                    cancelButtonText: 'Hủy',
+                                                });
+
+                                                if (result.isConfirmed) {
                                                     await onDelete(type.id);
                                                     if (typeof onPageChange === 'function') {
                                                         onPageChange(currentPage);
                                                     }
+                                                    Swal.fire(
+                                                        'Đã xóa!',
+                                                        'Loại nhân viên đã được xóa.',
+                                                        'success'
+                                                    );
                                                 }
                                             }}
                                             className="bg-red-500 text-white px-3 py-2 rounded"

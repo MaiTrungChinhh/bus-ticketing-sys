@@ -1,8 +1,8 @@
-// EditEmployeeTypePage.jsx
-import axios from 'axios';
-import React, { useState, useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
 import { useLocation, useNavigate } from 'react-router-dom';
+import Swal from 'sweetalert2';
 import DefaultComponent from '../../../components/Admin/DefaultComponent/DefaultComponent';
+import employeeService from '../../../services/employeeService';
 
 const EditEmployeeTypePage = () => {
     const location = useLocation();
@@ -10,66 +10,57 @@ const EditEmployeeTypePage = () => {
     const initialData = location.state?.initialData;
 
     const [nameEmployeeType, setNameEmployeeType] = useState(initialData?.nameEmployeeType || '');
-    const [message, setMessage] = useState('');
 
     useEffect(() => {
         if (!initialData) {
-            console.error("No initial data provided for editing");
-            setMessage('No initial data available. Redirecting...');
-            setTimeout(() => {
-                navigate('/dashboard/employees/type'); // Redirect if no data is found
-            }, 2000);
+            Swal.fire({
+                icon: 'error',
+                title: 'Không tìm thấy dữ liệu!',
+                text: 'Đang chuyển hướng...',
+                timer: 2000,
+                showConfirmButton: false,
+            });
+            navigate('/dashboard/employees/type', { replace: true });
         }
     }, [initialData, navigate]);
 
-    const handleSubmit = (e) => {
+    const handleSubmit = async (e) => {
         e.preventDefault();
-        const token = localStorage.getItem('token');
 
-        if (!token) {
-            console.error("Token không tồn tại hoặc đã hết hạn");
-            setMessage('Token không tồn tại hoặc đã hết hạn');
+        if (!nameEmployeeType.trim()) {
+            Swal.fire({
+                icon: 'error',
+                title: 'Lỗi',
+                text: 'Tên loại nhân viên không được để trống!',
+            });
             return;
         }
 
-        const url = `http://localhost:8080/api/employeeTypes/${initialData.id}`;
-        const method = 'put';
-
-        const requestData = { nameEmployeeType };
-
-        axios({
-            method,
-            url,
-            data: requestData,
-            headers: {
-                Authorization: `Bearer ${token}`
-            }
-        })
-            .then(response => {
-                setMessage('Lưu thành công');
-                setTimeout(() => {
-                    navigate('/dashboard/employees/type'); // Redirect to the employee type list page after editing
-                }, 1500);
-            })
-            .catch(error => {
-                console.error('Lỗi khi lưu loại nhân viên:', error);
-                if (error.response) {
-                    console.error('Lỗi từ server:', error.response.data);
-                    setMessage(`Lưu không thành công: ${error.response.data.message || 'Lỗi không xác định'}`);
-                } else {
-                    setMessage('Lưu không thành công');
-                }
+        try {
+            await employeeService.updateEmployeeType(initialData.id, { nameEmployeeType });
+            Swal.fire({
+                icon: 'success',
+                title: 'Thành công!',
+                text: 'Loại nhân viên đã được cập nhật.',
+            }).then(() => navigate('/dashboard/employees/type'));
+        } catch (error) {
+            console.error('Lỗi khi cập nhật loại nhân viên:', error);
+            Swal.fire({
+                icon: 'error',
+                title: 'Lỗi',
+                text: error.response?.data?.message || 'Không thể cập nhật loại nhân viên. Vui lòng thử lại.',
             });
+        }
     };
 
     const handleCancel = () => {
-        navigate('/dashboard/employees/type'); // Redirect to the employee type list page when canceling
+        navigate('/dashboard/employees/type'); // Quay lại danh sách loại nhân viên
     };
 
     return (
         <DefaultComponent>
             <form onSubmit={handleSubmit} className="p-4 bg-white shadow rounded">
-                <h2 className="text-2xl mb-4">Chỉnh sửa loại nhân viên</h2>
+                <h2 className="text-2xl mb-4 text-center ">Chỉnh sửa loại nhân viên</h2>
                 <div className="mb-4">
                     <label className="block mb-2">Tên loại nhân viên</label>
                     <input
@@ -77,15 +68,22 @@ const EditEmployeeTypePage = () => {
                         value={nameEmployeeType}
                         onChange={(e) => setNameEmployeeType(e.target.value)}
                         className="w-full p-2 border rounded"
+                        placeholder="Nhập tên loại nhân viên"
                         required
                     />
                 </div>
-                {message && <p className="text-red-500 mb-4">{message}</p>}
                 <div className="flex justify-end">
-                    <button type="button" onClick={handleCancel} className="mr-2 bg-gray-500 text-white px-4 py-2 rounded">
+                    <button
+                        type="button"
+                        onClick={handleCancel}
+                        className="mr-2 bg-gray-500 text-white px-4 py-2 rounded hover:bg-gray-600"
+                    >
                         Hủy
                     </button>
-                    <button type="submit" className="bg-blue-500 text-white px-4 py-2 rounded">
+                    <button
+                        type="submit"
+                        className="bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600"
+                    >
                         Lưu
                     </button>
                 </div>

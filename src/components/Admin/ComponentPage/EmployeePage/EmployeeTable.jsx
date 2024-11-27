@@ -1,12 +1,14 @@
 import React from 'react';
 import { FaEdit, FaPlus } from 'react-icons/fa';
 import { MdDelete } from 'react-icons/md';
+import { useNavigate } from 'react-router-dom';
 
 const EmployeeTable = ({ employees, loading, onEdit, onDelete, onAdd }) => {
+  const navigate = useNavigate();
   return (
     <div>
       <button
-        onClick={onAdd}
+        onClick={() => navigate('/dashboard/employee/add')}
         className="bg-blue-500 text-white w-20 h-20 rounded-full flex items-center justify-center fixed right-4 bottom-4 shadow-lg"
       >
         <FaPlus className="text-3xl" />
@@ -52,7 +54,7 @@ const EmployeeTable = ({ employees, loading, onEdit, onDelete, onAdd }) => {
                 <td className="px-4 py-2 border flex items-center justify-center gap-2">
                   <button
                     className="bg-blue-500 text-white px-3 py-1 rounded"
-                    onClick={() => onEdit(employee)}
+                    onClick={() => navigate(`/dashboard/employee/edit/${employee.id}`)}
                   >
                     <FaEdit />
                   </button>

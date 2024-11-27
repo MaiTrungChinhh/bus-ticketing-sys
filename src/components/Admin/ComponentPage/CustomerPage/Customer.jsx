@@ -1,6 +1,6 @@
-import axios from 'axios';
 import React, { useEffect, useState } from 'react';
 import Swal from 'sweetalert2';
+import customerService from '../../../../services/customerService';
 import AdvancedFilter from '../../DefaultComponent/AdvancedFilter';
 import Pagination from '../../DefaultComponent/Pagination';
 import CustomerForm from './CustomerForm';
@@ -11,8 +11,7 @@ const filtersPage1 = [
         title: 'Loại Khách Hàng',
         items: [
             { id: 'all-customers', label: 'Tất cả', checked: true },
-            { id: 'guest', label: 'Guest', checked: false },
-            { id: 'admin', label: 'Admin', checked: false },
+            { id: 'GUEST', label: 'GUEST', checked: false }
         ],
     },
 ];
@@ -22,8 +21,7 @@ const Customer = () => {
     const [selectedCustomer, setSelectedCustomer] = useState(null);
     const [isEditMode, setIsEditMode] = useState(false);
     const [currentPage, setCurrentPage] = useState(1);
-    const [itemsPerPage, setItemsPerPage] = useState(4);
-    const [totalResults, setTotalResults] = useState(0);
+    const [itemsPerPage, setItemsPerPage] = useState(10);
     const [searchTerm, setSearchTerm] = useState('');
     const [selectedFilters, setSelectedFilters] = useState({
         customerType: [],
@@ -37,14 +35,12 @@ const Customer = () => {
     const fetchCustomers = async () => {
         setIsLoading(true);
         try {
-            const response = await axios.get('http://localhost:8080/api/customers', {
-                headers: {
-                    Authorization: `Bearer ${localStorage.getItem('token')}`,
-                },
-            });
-            if (response.data.result && Array.isArray(response.data.result.contents)) {
-                setCustomers(response.data.result.contents);
-                setTotalResults(response.data.result.contents.length);
+            const data = await customerService.fetchCustomers();
+            if (Array.isArray(data.contents)) {
+                const validCustomers = data.contents.filter(
+                    (customer) => customer && customer.account && customer.account.username
+                );
+                setCustomers(validCustomers);
             }
         } catch (error) {
             console.error('Lỗi khi lấy danh sách khách hàng:', error);
@@ -70,11 +66,7 @@ const Customer = () => {
         });
         if (confirm.isConfirmed) {
             try {
-                await axios.delete(`http://localhost:8080/api/customers/${id}`, {
-                    headers: {
-                        Authorization: `Bearer ${localStorage.getItem('token')}`,
-                    },
-                });
+                await customerService.deleteCustomer(id);
                 Swal.fire('Thành công', 'Khách hàng đã được xóa', 'success');
                 fetchCustomers();
             } catch (error) {
@@ -100,9 +92,8 @@ const Customer = () => {
         };
 
         setSelectedFilters(newSelectedFilters);
-        setCurrentPage(1); // Reset về trang đầu
+        setCurrentPage(1);
     };
-
 
     const handleSearch = (term) => {
         setSearchTerm(term.toLowerCase());
@@ -111,13 +102,14 @@ const Customer = () => {
 
     const filterCustomers = (customers, searchTerm, selectedFilters) => {
         return customers.filter((customer) => {
+            if (!customer || !customer.account || !customer.account.username) return false;
+
             const searchMatch =
                 searchTerm === '' ||
                 customer.customerName.toLowerCase().includes(searchTerm) ||
                 customer.email.toLowerCase().includes(searchTerm) ||
                 customer.phone.toLowerCase().includes(searchTerm) ||
                 customer.account.username.toLowerCase().includes(searchTerm);
-
 
             const customerTypeMatch =
                 selectedFilters.customerType.length === 0 ||
@@ -180,7 +172,6 @@ const Customer = () => {
             </div>
         </div>
     );
-
 };
 
 export default Customer;

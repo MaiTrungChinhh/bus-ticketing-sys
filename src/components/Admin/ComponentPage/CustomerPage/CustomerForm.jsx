@@ -1,5 +1,5 @@
-import axios from 'axios';
 import React, { useState } from 'react';
+import customerService from '../../../../services/customerService';
 
 const CustomerForm = ({ customer, onCancel, onSave, usePatch = false }) => {
   const [customerName, setCustomerName] = useState(customer?.customerName || '');
@@ -8,69 +8,11 @@ const CustomerForm = ({ customer, onCancel, onSave, usePatch = false }) => {
   const [phone, setPhone] = useState(customer?.phone || '');
   const [email, setEmail] = useState(customer?.email || '');
   const [dob, setDob] = useState(customer?.dob || '');
-  const [roles, setRoles] = useState(customer?.account.roles || '');
+  const [roles, setRoles] = useState(customer?.account?.roles || '');
   const [message, setMessage] = useState('');
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
-
-    // Kiểm tra log dữ liệu để xác nhận
-    const employeeData = {
-      address,
-      phone,
-      email,
-      nationalIDNumber,
-      employeeTypeId: employeeType
-    };
-
-    console.log("Dữ liệu gửi đi:", employeeData);
-
-    onSubmit(employeeData);
-  };
-
-
-  const patchCustomerInfo = async () => {
-    const url = `http://localhost:8080/api/customers/${customer.id}`;
-    const method = 'patch';
-    const [availableRoles, setAvailableRoles] = useState([]);
-    const requestData = {};
-    if (customerName !== customer.customerName) requestData.customerName = customerName;
-    if (gender !== customer.gender) requestData.gender = gender;
-    if (address !== customer.address) requestData.address = address;
-    if (phone !== customer.phone) requestData.phone = phone;
-    if (email !== customer.email) requestData.email = email;
-    if (dob !== customer.dob) requestData.dob = dob;
-    if (roles !== customer.account.roles) requestData.dob = roles;
-
-    if (Object.keys(requestData).length === 0) {
-      setMessage('Không có thay đổi nào để cập nhật.');
-      return;
-    }
-
-    try {
-      const response = await axios({
-        method,
-        url,
-        data: requestData,
-        headers: {
-          Authorization: `Bearer ${localStorage.getItem('token')}`,
-        },
-      });
-      setMessage('Cập nhật thành công');
-      onSave(response.data);
-    } catch (error) {
-      console.error('Lỗi khi cập nhật thông tin khách hàng:', error);
-      if (error.response) {
-        setMessage(`Cập nhật không thành công: ${error.response.data.message || 'Lỗi không xác định'}`);
-      } else {
-        setMessage('Cập nhật không thành công');
-      }
-    }
-  };
-
-  const putCustomerInfo = async () => {
-    const url = `http://localhost:8080/api/customers/${customer.id}`;
-    const method = 'put';
 
     const requestData = {
       customerName,
@@ -83,29 +25,23 @@ const CustomerForm = ({ customer, onCancel, onSave, usePatch = false }) => {
     };
 
     try {
-      const response = await axios({
-        method,
-        url,
-        data: requestData,
-        headers: {
-          Authorization: `Bearer ${localStorage.getItem('token')}`,
-        },
-      });
+      if (usePatch) {
+        await customerService.patchCustomer(customer.id, requestData);
+      } else {
+        await customerService.putCustomer(customer.id, requestData);
+      }
       setMessage('Cập nhật thành công');
-      onSave(response.data);
+      onSave(requestData);
     } catch (error) {
       console.error('Lỗi khi cập nhật thông tin khách hàng:', error);
-      if (error.response) {
-        setMessage(`Cập nhật không thành công: ${error.response.data.message || 'Lỗi không xác định'}`);
-      } else {
-        setMessage('Cập nhật không thành công');
-      }
+      setMessage(`Cập nhật không thành công: ${error.response?.data?.message || 'Lỗi không xác định'}`);
     }
   };
 
   return (
     <form onSubmit={handleSubmit} className="p-4 bg-white shadow rounded">
       <h2 className="text-2xl mb-4">Chỉnh sửa thông tin khách hàng</h2>
+      {/* Các trường nhập liệu */}
       <div className="mb-4">
         <label className="block mb-2">Tên khách hàng</label>
         <input
@@ -170,7 +106,7 @@ const CustomerForm = ({ customer, onCancel, onSave, usePatch = false }) => {
       <div className="mb-4">
         <label className="block mb-2">Quyền</label>
         <input
-          type="roles"
+          type="text"
           value={roles}
           onChange={(e) => setRoles(e.target.value)}
           className="w-full p-2 border rounded"
