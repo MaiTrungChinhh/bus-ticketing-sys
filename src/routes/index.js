@@ -7,7 +7,10 @@ import AddTrip from '../pages/AdminPage/Add/AddTripPage';
 import AddVehiclePage from '../pages/AdminPage/Add/AddVehiclePage.jsx';
 import AddVehicleTypePage from '../pages/AdminPage/Add/AddVehicleTypePage.jsx';
 import EditEmployeePage from '../pages/AdminPage/Edit/EditEmployeePage.jsx';
-import { default as EditEmployeeTypePage, default as EditVehicleType } from '../pages/AdminPage/Edit/EditEmployeeTypePage';
+import {
+  default as EditEmployeeTypePage,
+  default as EditVehicleType,
+} from '../pages/AdminPage/Edit/EditEmployeeTypePage';
 import EditPaymentMethodPage from '../pages/AdminPage/Edit/EditPaymentMethodPage.jsx';
 import EditPricePage from '../pages/AdminPage/Edit/EditPricePage.jsx';
 import EditVehiclePage from '../pages/AdminPage/Edit/EditVehiclePage.jsx';
@@ -97,16 +100,15 @@ export const routes = [
     page: EditEmployeePage,
   },
 
-
-// quản lý xe
-{
-  path: '/dashboard/vehicles/type',
-  page: VehicleTypePage,
-},  
-{
-  path: '/dashboard/vehicle/type/add',
-  page : AddVehicleTypePage,
-},
+  // quản lý xe
+  {
+    path: '/dashboard/vehicles/type',
+    page: VehicleTypePage,
+  },
+  {
+    path: '/dashboard/vehicle/type/add',
+    page: AddVehicleTypePage,
+  },
 
   {
     path: '/dashboard/vehicles/list',
@@ -116,46 +118,47 @@ export const routes = [
     path: '/dashboard/vehicle/add',
     page: AddVehiclePage,
   },
-{
-  path: '/dashboard/vehicles/list/inactive',
-  page : VehicleInactivePage,
-},
-{
-  path: '/dashboard/vehicle/edit',
-  page : EditVehiclePage,
-},
-{
-  path: '/dashboard/vehicletype/edit',
-  page: EditVehicleType,
-},
+  {
+    path: '/dashboard/vehicles/list/inactive',
+    page: VehicleInactivePage,
+  },
+  {
+    path: '/dashboard/vehicle/edit',
+    page: EditVehiclePage,
+  },
+  {
+    path: '/dashboard/vehicletype/edit',
+    page: EditVehicleType,
+  },
 
-// quản lý giá 
-{
-  path: '/dashboard/prices/list',
-  page: PricePage,
-},
-{
-  path: '/dashboard/price/edit',
-  page: EditPricePage,
-},
-{
-  path: '/dashboard/price/add',
-  page: AddPricePage,
-},
-//quản lý phương thức thanh toán
+  // quản lý giá
+  {
+    path: '/dashboard/prices/list',
+    page: PricePage,
+  },
+  {
+    path: '/dashboard/price/edit',
+    page: EditPricePage,
+  },
+  {
+    path: '/dashboard/price/add',
+    page: AddPricePage,
+  },
+  //quản lý phương thức thanh toán
 
-{
-  path: '/dashboard/paymentmethod/list',
-  page: PaymentMethodPage,
-},{
-  path: '/dashboard/paymentmethod/edit/:id',
-  page: EditPaymentMethodPage,
-},
-{
-  path: '/dashboard/paymentmethod/add',
-  page: AddPaymentMethodPage,
-},
-// quản lý chuyến xe
+  {
+    path: '/dashboard/paymentmethod/list',
+    page: PaymentMethodPage,
+  },
+  {
+    path: '/dashboard/paymentmethod/edit/:id',
+    page: EditPaymentMethodPage,
+  },
+  {
+    path: '/dashboard/paymentmethod/add',
+    page: AddPaymentMethodPage,
+  },
+  // quản lý chuyến xe
   {
     path: '/dashboard/trip/list',
     page: ListTrip,
@@ -164,36 +167,14 @@ export const routes = [
     path: '/dashboard/trip/add',
     page: AddTrip,
   },
-
-  {
-    path: '/dashboard/trip/list',
-    page: ListTrip,
-  },
-  {
-    path: '/dashboard/trip/add',
-    page: AddTrip,
-  },
-  {
-    path: '/dashboard/vehicles/list',
-    page: ListVehicle,
-  },
-  {
-    path: '/dashboard/trip/list',
-    page: ListTrip,
-  },
+  // {
+  //   path: '/dashboard/vehicles/list',
+  //   page: ListVehicle,
+  // },
   {
     path: '/dashboard/bookings/list',
     page: BookTicketPage,
   },
-  {
-    path: '/dashboard/trip/add',
-    page: AddTrip,
-  },
-  {
-    path: '/dashboard/vehicles/list',
-    page: ListVehicle,
-  },
-
   {
     path: '/login',
     page: LoginPage,

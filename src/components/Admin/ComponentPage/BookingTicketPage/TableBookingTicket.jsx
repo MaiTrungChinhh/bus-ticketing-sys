@@ -84,7 +84,7 @@ const TableTrip = ({ bookings }) => {
                 </div>
               </td>
               <td className="px-6 py-4 text-xl text-gray-700 text-center">
-                {booking.seat.vehicle?.licensePlate || 'N/A'}
+                {booking.trip.vehicle?.licensePlate || 'N/A'}
               </td>
               <td className="px-6 py-4 text-xl text-gray-700 text-center">
                 {booking.seat?.position || 'N/A'}

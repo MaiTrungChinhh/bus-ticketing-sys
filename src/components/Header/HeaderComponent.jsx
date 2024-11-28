@@ -15,7 +15,6 @@ const HeaderComponent = () => {
   const [isLoggedIn, setIsLoggedIn] = useState(false);
   const [username, setUsername] = useState('');
 
-
   useEffect(() => {
     const token = localStorage.getItem('token');
     const storedUsername = localStorage.getItem('username'); // Lấy username từ localStorage
@@ -85,12 +84,14 @@ const HeaderComponent = () => {
         </div>
 
         <div
-          className={`${isMenuOpen ? 'flex' : 'hidden'
-            } flex-col lg:flex lg:flex-row lg:items-center lg:ml-10 bg-white lg:bg-transparent lg:relative absolute left-0 w-full lg:w-auto z-10 mt-72 lg:mt-0`}
+          className={`${
+            isMenuOpen ? 'flex' : 'hidden'
+          } flex-col lg:flex lg:flex-row lg:items-center lg:ml-10 bg-white lg:bg-transparent lg:relative absolute left-0 w-full lg:w-auto z-10 mt-72 lg:mt-0`}
         >
           <nav
-            className={`navigation text-2xl flex items-center ${isHomePage ? 'text-white' : 'lg:text-blue-400'
-              }`}
+            className={`navigation text-2xl flex items-center ${
+              isHomePage ? 'text-white' : 'lg:text-blue-400'
+            }`}
           >
             <ul className="nav-list flex flex-col lg:flex-row lg:space-x-6 space-y-2 lg:space-y-0 p-4 lg:p-0">
               {[
@@ -135,21 +136,54 @@ const HeaderComponent = () => {
           onMouseLeave={handleMouseLeave}
         >
           {isLoggedIn ? (
-            <div className="relative">
-              <span className="text-blue-500 text-2xl">Xin chào, {username}</span>
-              <button
-                onClick={handleLogout}
-                className="ml-4 px-4 py-2 bg-red-500 text-white rounded hover:bg-red-600"
+            <div className="relative group account-menu">
+              <a
+                href="/users/login/"
+                className={`flex items-center text-2xl account-link ${
+                  isHomePage ? 'text-white' : 'text-blue-400'
+                }`}
+                title="Tài khoản"
               >
-                Đăng xuất
-              </button>
+                <PiUserCircleThin className="text-2xl lg:text-4xl account-icon" />
+                <span className="hidden lg:inline-block ml-2 account-text">
+                  Xin chào, {username} <i className="fa fa-angle-down"></i>
+                </span>
+              </a>
+              <ul
+                className={`absolute left-0 w-fit bg-white border border-gray-300 mt-2 ${
+                  isAccountDropdownOpen ? 'block' : 'hidden'
+                }`}
+              >
+                <li>
+                  <a
+                    className="block px-4 py-2 text-blue-500 hover:bg-gray-100 dropdown-item text-2xl whitespace-nowrap"
+                    href="/login"
+                    title="Thông tin tài khoản"
+                  >
+                    <button className="login-button">
+                      Thông tin tài khoản
+                    </button>
+                  </a>
+                </li>
+                <li>
+                  <a
+                    className="block px-4 py-2 text-blue-500 hover:bg-gray-100 dropdown-item text-2xl whitespace-nowrap"
+                    title="Đăng xuất"
+                  >
+                    <button onClick={handleLogout} className="logout-button">
+                      Đăng xuất
+                    </button>
+                  </a>
+                </li>
+              </ul>
             </div>
           ) : (
             <div className="relative group account-menu">
               <a
                 href="/users/login/"
-                className={`flex items-center text-2xl account-link ${isHomePage ? 'text-white' : 'text-blue-400'
-                  }`}
+                className={`flex items-center text-2xl account-link ${
+                  isHomePage ? 'text-white' : 'text-blue-400'
+                }`}
                 title="Tài khoản"
               >
                 <PiUserCircleThin className="text-2xl lg:text-4xl account-icon" />
@@ -158,8 +192,9 @@ const HeaderComponent = () => {
                 </span>
               </a>
               <ul
-                className={`absolute left-0 w-fit bg-white border border-gray-300 mt-2 ${isAccountDropdownOpen ? 'block' : 'hidden'
-                  }`}
+                className={`absolute left-0 w-fit bg-white border border-gray-300 mt-2 ${
+                  isAccountDropdownOpen ? 'block' : 'hidden'
+                }`}
               >
                 <li>
                   <a
@@ -220,8 +255,9 @@ const HeaderComponent = () => {
               </span>
             </a>
             <p
-              className={`working-hours text-base lg:text-2xl ${isHomePage ? 'text-white' : 'text-blue-400'
-                }`}
+              className={`working-hours text-base lg:text-2xl ${
+                isHomePage ? 'text-white' : 'text-blue-400'
+              }`}
             >
               <LuClock3 className="inline-block " /> 05h → 21h
             </p>
