@@ -1,7 +1,7 @@
-import axios from 'axios';
 import React, { useEffect, useState } from 'react';
 import { FaEdit } from 'react-icons/fa';
 import DefaultComponent from '../../../components/Admin/DefaultComponent/DefaultComponent';
+import employeeService from '../../../services/employeeService';
 
 const AddEmployeePage = () => {
     const [employeeName, setEmployeeName] = useState('');
@@ -21,67 +21,38 @@ const AddEmployeePage = () => {
     const [isPasswordEditable, setIsPasswordEditable] = useState(false);
 
     useEffect(() => {
-        fetchEmployeeTypes();
-    }, []);
-    const generatePassword = () => {
-        return Math.random().toString(36).slice(-8); // Tạo mật khẩu ngẫu nhiên 8 ký tự
-    };
-
-    const fetchEmployeeTypes = async () => {
-        const token = localStorage.getItem('token');
-        if (!token) {
-            console.error("Token không tồn tại hoặc đã hết hạn");
-            setMessage('Token không tồn tại hoặc đã hết hạn');
-            return;
-        }
-
-        try {
-            const response = await axios.get('http://localhost:8080/api/employeeTypes', {
-                headers: {
-                    Authorization: `Bearer ${token}`,
-                },
-            });
-            if (response.data.result && Array.isArray(response.data.result.contents)) {
-                setEmployeeTypes(response.data.result.contents);
-            } else {
-                console.error('Dữ liệu không đúng định dạng mong đợi:', response.data);
+        const fetchEmployeeTypes = async () => {
+            try {
+                const data = await employeeService.fetchEmployeeTypes();
+                setEmployeeTypes(data.contents || []);
+            } catch (error) {
+                console.error('Lỗi khi lấy danh sách loại nhân viên:', error);
                 setMessage('Không thể lấy danh sách loại nhân viên.');
             }
-        } catch (error) {
-            console.error('Lỗi khi lấy danh sách loại nhân viên:', error);
-            setMessage('Lỗi khi lấy danh sách loại nhân viên.');
-        }
-    };
+        };
+        fetchEmployeeTypes();
+    }, []);
     useEffect(() => {
         const generateUsername = (name) => {
             if (!name) return '';
             return name
-                .normalize("NFD")
-                .replace(/[\u0300-\u036f]/g, "") // Loại bỏ dấu tiếng Việt
+                .normalize('NFD')
+                .replace(/[\u0300-\u036f]/g, '') // Loại bỏ dấu tiếng Việt
                 .replace(/\s+/g, '') // Loại bỏ khoảng trắng
                 .toLowerCase();
         };
-        setUsername(generateUsername(employeeName)); // Cập nhật username từ employeeName
+        setUsername(generateUsername(employeeName));
     }, [employeeName]);
 
     const handleSubmit = async (e) => {
         e.preventDefault();
-        const token = localStorage.getItem('token');
-
-        if (!token) {
-            console.error("Token không tồn tại hoặc đã hết hạn");
-            setMessage('Token không tồn tại hoặc đã hết hạn');
-            return;
-        }
-
         if (!employeeType) {
-            setMessage("Vui lòng chọn loại nhân viên.");
+            setMessage('Vui lòng chọn loại nhân viên.');
             return;
         }
 
         try {
-            // Bước 1: Gửi yêu cầu tạo nhân viên
-            const employeeResponse = await axios.post('http://localhost:8080/api/employees', {
+            await employeeService.addEmployee({
                 employeeName,
                 gender,
                 address,
@@ -93,31 +64,9 @@ const AddEmployeePage = () => {
                 status,
                 username,
                 password,
-            }, {
-                headers: { Authorization: `Bearer ${token}` },
             });
 
-            const employeeId = employeeResponse.data.result.id;
-
-            // Bước 2: Gửi yêu cầu tạo tài khoản
-            const accountResponse = await axios.post('http://localhost:8080/api/accounts', {
-                username,
-                password, // Mật khẩu ngẫu nhiên
-                roles: ['EMPLOYEE'],
-            }, {
-                headers: { Authorization: `Bearer ${token}` },
-            });
-
-            const accountId = accountResponse.data.result.id;
-
-            // Bước 3: Liên kết tài khoản với nhân viên
-            await axios.patch(`http://localhost:8080/api/employees/${employeeId}`, {
-                accountId,
-            }, {
-                headers: { Authorization: `Bearer ${token}` },
-            });
-
-            setMessage('Tạo nhân viên và tài khoản thành công');
+            setMessage('Tạo nhân viên và tài khoản thành công.');
             window.location.href = '/dashboard/employees/list';
         } catch (error) {
             console.error('Lỗi khi lưu nhân viên:', error);

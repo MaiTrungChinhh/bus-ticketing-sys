@@ -1,7 +1,7 @@
-import axios from 'axios';
 import React, { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import Swal from 'sweetalert2';
+import employeeService from '../../../../services/employeeService';
 import AdvancedFilter from '../../DefaultComponent/AdvancedFilter';
 import Pagination from '../../DefaultComponent/Pagination';
 import EmployeeForm from './EmployeeForm';
@@ -12,7 +12,7 @@ const Employee = () => {
     const [selectedEmployee, setSelectedEmployee] = useState(null);
     const [isEditMode, setIsEditMode] = useState(false);
     const [currentPage, setCurrentPage] = useState(1);
-    const [itemsPerPage, setItemsPerPage] = useState(4);
+    const [itemsPerPage, setItemsPerPage] = useState(10);
     const [totalResults, setTotalResults] = useState(0);
     const [isLoading, setIsLoading] = useState(false);
     const [searchTerm, setSearchTerm] = useState('');
@@ -20,41 +20,33 @@ const Employee = () => {
         employeeType: [],
         status: [],
     });
-    const [filtersPage1, setFiltersPage1] = useState([]); // Lưu các tùy chọn bộ lọc
+    const [filtersPage1, setFiltersPage1] = useState([]);
     const navigate = useNavigate();
 
     const fetchFilterOptions = async () => {
         try {
-            const token = localStorage.getItem('token');
-            const response = await axios.get('http://localhost:8080/api/employeeTypes', {
-                headers: { Authorization: `Bearer ${token}` },
-            });
+            const employeeTypesResult = await employeeService.fetchEmployeeTypes();
+            const employeeTypes = (employeeTypesResult.contents || []).map((type) => ({
+                id: type.id,
+                label: type.nameEmployeeType,
+                checked: false,
+            }));
 
-            if (response.data.result && Array.isArray(response.data.result.contents)) {
-                const employeeTypes = response.data.result.contents.map((type) => ({
-                    id: type.id,
-                    label: type.nameEmployeeType,
-                    checked: false,
-                }));
+            const statusOptions = [
+                { id: 'ACTIVE', label: 'Hoạt động', checked: false },
+                { id: 'INACTIVE', label: 'Không hoạt động', checked: false },
+            ];
 
-                // Cập nhật các bộ lọc từ API
-                setFiltersPage1([
-                    {
-                        title: 'Loại Nhân Viên',
-                        items: [
-                            { id: 'all-employees', label: 'Tất cả', checked: true },
-                            ...employeeTypes,
-                        ],
-                    },
-                    {
-                        title: 'Trạng Thái',
-                        items: [
-                            { id: 'ACTIVE', label: 'ACTIVE', checked: false },
-                            { id: 'INACTIVE', label: 'INACTIVE', checked: false },
-                        ],
-                    },
-                ]);
-            }
+            setFiltersPage1([
+                {
+                    title: 'Loại Nhân Viên',
+                    items: [{ id: 'all-employees', label: 'Tất cả', checked: true }, ...employeeTypes],
+                },
+                {
+                    title: 'Trạng Thái',
+                    items: statusOptions,
+                },
+            ]);
         } catch (error) {
             console.error('Lỗi khi lấy dữ liệu lọc:', error);
             Swal.fire('Lỗi', 'Không thể lấy danh sách bộ lọc.', 'error');
@@ -71,8 +63,8 @@ const Employee = () => {
 
             const employeeTypeMatch =
                 selectedFilters.employeeType.length === 0 ||
-                selectedFilters.employeeType.includes('Tất cả') ||
-                selectedFilters.employeeType.includes(employee.employeeType?.nameEmployeeType);
+                selectedFilters.employeeType.includes('all-employees') ||
+                selectedFilters.employeeType.includes(employee.employeeType?.id);
 
             const statusMatch =
                 selectedFilters.status.length === 0 ||
@@ -91,21 +83,16 @@ const Employee = () => {
 
     useEffect(() => {
         fetchEmployees();
-        fetchFilterOptions(); // Fetch tùy chọn lọc từ API
+        fetchFilterOptions();
     }, [searchTerm, selectedFilters]);
 
     const fetchEmployees = async () => {
         setIsLoading(true);
         try {
-            const token = localStorage.getItem('token');
-            const response = await axios.get('http://localhost:8080/api/employees', {
-                headers: { Authorization: `Bearer ${token}` },
-            });
-
-            if (response.data.result) {
-                const { contents, totalItems } = response.data.result;
-                setEmployees(contents);
-                setTotalResults(totalItems);
+            const result = await employeeService.fetchEmployees();
+            if (result) {
+                setEmployees(result.contents);
+                setTotalResults(result.totalItems);
             }
         } catch (error) {
             Swal.fire('Lỗi', 'Không thể lấy danh sách nhân viên.', 'error');
@@ -120,15 +107,18 @@ const Employee = () => {
         const newFilters = {
             employeeType: Object.keys(selectedOptions)
                 .filter((key) => selectedOptions[key])
-                .map((key) => filtersPage1[0].items.find((item) => item.id === key)?.label),
+                .filter((key) => filtersPage1[0].items.some((item) => item.id === key))
+                .map((key) => key), // Use key as it directly corresponds to the filter ID
             status: Object.keys(selectedOptions)
                 .filter((key) => selectedOptions[key])
-                .map((key) => filtersPage1[1].items.find((item) => item.id === key)?.label),
+                .filter((key) => filtersPage1[1].items.some((item) => item.id === key))
+                .map((key) => key), // Use key as it directly corresponds to the filter ID
         };
 
         setSelectedFilters(newFilters);
         setCurrentPage(1);
     };
+
 
     const handleSearch = (term) => {
         setSearchTerm(term.toLowerCase());
@@ -163,25 +153,11 @@ const Employee = () => {
         });
 
         if (confirm.isConfirmed) {
-            const token = localStorage.getItem('token');
-            if (!token) {
-                Swal.fire('Lỗi', 'Token không tồn tại hoặc đã hết hạn.', 'error');
-                return;
-            }
-
             try {
-                // Xóa nhân viên
-                await axios.delete(`http://localhost:8080/api/employees/${employeeId}`, {
-                    headers: { Authorization: `Bearer ${token}` },
-                });
-
-                // Xóa tài khoản nếu tồn tại
+                await employeeService.deleteEmployee(employeeId);
                 if (accountId) {
-                    await axios.delete(`http://localhost:8080/api/accounts/${accountId}`, {
-                        headers: { Authorization: `Bearer ${token}` },
-                    });
+                    await employeeService.deleteAccount(accountId);
                 }
-
                 Swal.fire('Thành công', 'Nhân viên và tài khoản đã được xóa.', 'success');
                 fetchEmployees();
             } catch (error) {

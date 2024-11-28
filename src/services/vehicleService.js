@@ -1,4 +1,4 @@
-import axiosInstance from './Axios';
+import axios from 'axios';
 
 export const fetchVehicles = async () => {
   try {
@@ -8,33 +8,110 @@ export const fetchVehicles = async () => {
     console.error('Error fetching vehicles:', error);
     throw error;
   }
+const API_BASE_URL = 'http://localhost:8080/api';
+
+const getToken = () => {
+    const token = localStorage.getItem('token');
+    if (!token) {
+        throw new Error('Token không tồn tại hoặc đã hết hạn.');
+    }
+    return token;
 };
 
-export const fetchVehicleById = async (vehicleId) => {
-  try {
-    const response = await axiosInstance.get(`/vehicles/${vehicleId}`);
-    return response.data;
-  } catch (error) {
-    console.error('Error fetching vehicle by ID:', error);
-    throw error;
-  }
+const vehicleService = {
+    fetchVehicles: async () => {
+        const token = getToken();
+        const response = await axios.get(`${API_BASE_URL}/vehicles`, {
+            headers: { Authorization: `Bearer ${token}` },
+        });
+        return response.data.result.contents || [];
+    },
+    fetchInactiveVehicles: async () => {
+      const token = getToken();
+      const response = await axios.get(`${API_BASE_URL}/vehicles`, {
+          headers: { Authorization: `Bearer ${token}` },
+      });
+      const vehicles = response.data.result.contents || [];
+      return vehicles.filter(
+          (vehicle) =>
+              vehicle.status === 'OUT_OF_SERVICE'
+      );
+  }, 
+  fetchVehicleTypes: async () => {
+      const token = getToken();
+      const response = await axios.get(`${API_BASE_URL}/vehicleTypes`, {
+          headers: { Authorization: `Bearer ${token}` },
+      });
+      return response.data.result.contents || [];
+  },
+
+  addVehicleType: async (vehicleTypeName) => {
+      const token = getToken();
+      const response = await axios.post(
+          `${API_BASE_URL}/vehicleTypes`,
+          { vehicleTypeName },
+          {
+              headers: { Authorization: `Bearer ${token}` },
+          }
+      );
+      return response.data;
+  },
+    
+    addVehicle: async (vehicleData) => {
+        const token = getToken();
+        const response = await axios.post(`${API_BASE_URL}/vehicles`, vehicleData, {
+            headers: { Authorization: `Bearer ${token}` },
+        });
+        return response.data;
+    },
+    addVehicleType: async (vehicleTypeName) => {
+      const token = getToken();
+      const response = await axios.post(
+          `${API_BASE_URL}/vehicleTypes`,
+          { vehicleTypeName },
+          {
+              headers: { Authorization: `Bearer ${token}` },
+          }
+      );
+      return response.data;
+  },
+    updateVehicle: async (vehicleId, payload) => {
+      const token = getToken();
+      const response = await axios.put(`${API_BASE_URL}/vehicles/${vehicleId}`, payload, {
+          headers: { Authorization: `Bearer ${token}` },
+      });
+      return response.data;
+  },
+    updateVehicleStatus: async (vehicleId, status) => {
+        const token = getToken();
+        await axios.patch(
+            `${API_BASE_URL}/vehicles/${vehicleId}`,
+            { status },
+            {
+                headers: { Authorization: `Bearer ${token}` },
+            }
+        );
+    },
+    updateVehicleType: async (id, data) => {
+        const token = getToken();
+        const response = await axios.put(`${API_BASE_URL}/vehicleTypes/${id}`, data, {
+            headers: { Authorization: `Bearer ${token}` },
+        });
+        return response.data;
+    },
+   
+deleteVehicle: async (vehicleId) => {
+      const token = getToken();
+      await axios.delete(`${API_BASE_URL}/vehicles/${vehicleId}`, {
+          headers: { Authorization: `Bearer ${token}` },
+      });
+  },
+  deleteVehicleType: async (vehicleTypeId) => {
+      const token = getToken();
+      await axios.delete(`${API_BASE_URL}/vehicleTypes/${vehicleTypeId}`, {
+          headers: { Authorization: `Bearer ${token}` },
+      });
+  },
 };
 
-export const createVehicle = async (vehicleData) => {
-  try {
-    const response = await axiosInstance.post('/vehicles', vehicleData);
-    return response.data;
-  } catch (error) {
-    console.error('Error creating vehicle:', error);
-    throw error;
-  }
-};
-
-export const deleteVehicle = async (vehicleId) => {
-  try {
-    await axiosInstance.delete(`/vehicles/${vehicleId}`);
-  } catch (error) {
-    console.error('Error deleting vehicle:', error);
-    throw error;
-  }
-};
+export default vehicleService;

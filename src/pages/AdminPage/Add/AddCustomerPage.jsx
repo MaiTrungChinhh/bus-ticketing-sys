@@ -1,7 +1,7 @@
-import axios from 'axios';
 import React, { useEffect, useState } from 'react';
 import { FaEdit } from 'react-icons/fa';
 import DefaultComponent from '../../../components/Admin/DefaultComponent/DefaultComponent';
+import customerService from '../../../services/customerService';
 
 const AddCustomerPage = () => {
     const [customerName, setCustomerName] = useState('');
@@ -30,17 +30,8 @@ const AddCustomerPage = () => {
 
     const handleSubmit = async (e) => {
         e.preventDefault();
-        const token = localStorage.getItem('token');
-
-        if (!token) {
-            console.error("Token không tồn tại hoặc đã hết hạn");
-            setMessage('Token không tồn tại hoặc đã hết hạn');
-            return;
-        }
-
         try {
-            // Tạo khách hàng với vai trò mặc định là GUEST
-            const response = await axios.post('http://localhost:8080/api/customers', {
+            await customerService.createCustomer({
                 customerName,
                 gender,
                 address,
@@ -50,10 +41,7 @@ const AddCustomerPage = () => {
                 username,
                 password,
                 roles: ['GUEST'], // Vai trò mặc định là GUEST
-            }, {
-                headers: { Authorization: `Bearer ${token}` },
             });
-
             setMessage('Tạo khách hàng thành công');
             window.location.href = '/dashboard/customers/list';
         } catch (error) {
@@ -168,8 +156,6 @@ const AddCustomerPage = () => {
                         <p className="text-red-500 text-sm mt-2">Mật khẩu mặc định: 12345678</p>
                     )}
                 </div>
-
-
                 {message && <p className="text-red-500 mb-4">{message}</p>}
                 <div className="flex justify-end">
                     <button type="button" onClick={handleCancel} className="mr-2 bg-gray-500 text-white px-4 py-2 rounded">

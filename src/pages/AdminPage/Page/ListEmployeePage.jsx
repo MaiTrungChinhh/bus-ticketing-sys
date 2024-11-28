@@ -3,7 +3,7 @@ import Employee from '../../../components/Admin/ComponentPage/EmployeePage/Emplo
 import DefaultComponent from '../../../components/Admin/DefaultComponent/DefaultComponent';
 const ListEmployeePage = () => {
   return (
-    <DefaultComponent>
+    <DefaultComponent title={"Danh sách nhân viên"}>
       <Employee />
     </DefaultComponent>
   );

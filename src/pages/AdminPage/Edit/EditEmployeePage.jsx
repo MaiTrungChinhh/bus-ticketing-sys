@@ -1,67 +1,71 @@
-import axios from 'axios';
 import React, { useEffect, useState } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
 import EmployeeForm from '../../../components/Admin/ComponentPage/EmployeePage/EmployeeForm';
 import DefaultComponent from '../../../components/Admin/DefaultComponent/DefaultComponent';
+import employeeService from '../../../services/employeeService';
 
 const EditEmployeePage = () => {
-    const { id } = useParams();
-    const navigate = useNavigate();
-    const [employee, setEmployee] = useState(null);
-    const [employeeTypes, setEmployeeTypes] = useState([]);
-    const [loading, setLoading] = useState(true);
-    const [error, setError] = useState('');
+    const { id } = useParams(); // Lấy ID từ URL
+    const navigate = useNavigate(); // Điều hướng trang
+    const [employee, setEmployee] = useState(null); // Dữ liệu nhân viên
+    const [employeeTypes, setEmployeeTypes] = useState([]); // Loại nhân viên
+    const [loading, setLoading] = useState(true); // Trạng thái tải dữ liệu
+    const [error, setError] = useState(''); // Lỗi tải dữ liệu
 
     useEffect(() => {
         const fetchData = async () => {
             try {
-                const token = localStorage.getItem('token');
-                if (!token) {
-                    throw new Error('Token không tồn tại.');
-                }
-
-                // Gọi API lấy thông tin nhân viên và loại nhân viên
-                const [employeeResponse, typesResponse] = await Promise.all([
-                    axios.get(`http://localhost:8080/api/employees/${id}`, {
-                        headers: { Authorization: `Bearer ${token}` },
-                    }),
-                    axios.get('http://localhost:8080/api/employeeTypes', {
-                        headers: { Authorization: `Bearer ${token}` },
-                    }),
+                const [employeeData, employeeTypeData] = await Promise.all([
+                    employeeService.fetchEmployeesById(id), // Gọi API lấy nhân viên theo ID
+                    employeeService.fetchEmployeeTypes(), // Gọi API lấy loại nhân viên
                 ]);
 
-                const employeeData = employeeResponse.data;
+                // Kiểm tra nếu username là admin
+                if (employeeData?.account?.username === 'admin') {
+                    alert('Bạn không thể chỉnh sửa tài khoản admin!');
+                    navigate('/dashboard/employees/list'); // Điều hướng về danh sách
+                    return; // Dừng xử lý nếu username là admin
+                }
 
-                // Gắn dữ liệu nhân viên và danh sách loại nhân viên
-                setEmployee({
-                    ...employeeData,
-                    username: employeeData?.account?.username || 'Không có tên đăng nhập', // Lấy username
-                    employeeTypeId: employeeData?.employeeType?.id || '', // Lấy loại nhân viên
-                });
+                // Ánh xạ dữ liệu nhân viên trả về đúng định dạng
+                if (employeeData) {
+                    setEmployee({
+                        employeeName: employeeData.employeeName || '',
+                        gender: employeeData.gender || '',
+                        address: employeeData.address || '',
+                        phone: employeeData.phone || '',
+                        email: employeeData.email || '',
+                        dob: employeeData.dob || '',
+                        nationalIDNumber: employeeData.nationalIDNumber || '',
+                        status: employeeData.status || '',
+                        employeeTypeId: employeeData.employeeTypeId || '',
+                        accountId: employeeData.accountId || '',
+                    });
+                }
 
-                setEmployeeTypes(typesResponse.data.result.contents || []);
+                // Thiết lập danh sách loại nhân viên
+                setEmployeeTypes(employeeTypeData.contents || []);
             } catch (error) {
                 console.error('Lỗi khi tải dữ liệu:', error);
-                setError('Không thể tải dữ liệu.');
+
+                if (error.response?.status === 404) {
+                    setError('Không tìm thấy nhân viên. Vui lòng kiểm tra ID.');
+                } else if (error.response?.data?.message) {
+                    setError(`Lỗi từ server: ${error.response.data.message}`);
+                } else {
+                    setError('Lỗi không xác định khi tải dữ liệu.');
+                }
             } finally {
                 setLoading(false);
             }
         };
 
         fetchData();
-    }, [id]);
+    }, [id, navigate]);
 
     const handleFormSubmit = async (data) => {
         try {
-            const token = localStorage.getItem('token');
-            if (!token) {
-                throw new Error('Token không tồn tại.');
-            }
-
-            await axios.put(`http://localhost:8080/api/employees/${id}`, data, {
-                headers: { Authorization: `Bearer ${token}` },
-            });
-
+            await employeeService.updateEmployee(id, data); // Gọi API cập nhật nhân viên
             alert('Cập nhật nhân viên thành công.');
             navigate('/dashboard/employees/list');
         } catch (error) {
@@ -71,11 +75,11 @@ const EditEmployeePage = () => {
     };
 
     if (loading) {
-        return <p>Đang tải...</p>;
+        return <p className="text-center text-gray-500 text-xl">Đang tải dữ liệu...</p>;
     }
 
     if (error) {
-        return <p>{error}</p>;
+        return <p className="text-center text-red-500 text-xl">{error}</p>;
     }
 
     return (
@@ -83,8 +87,8 @@ const EditEmployeePage = () => {
             <EmployeeForm
                 initialData={employee} // Truyền dữ liệu nhân viên
                 employeeTypes={employeeTypes} // Truyền danh sách loại nhân viên
-                onSubmit={handleFormSubmit}
-                onCancel={() => navigate('/dashboard/employees/list')}
+                onSubmit={handleFormSubmit} // Gọi khi submit form
+                onCancel={() => navigate('/dashboard/employees/list')} // Điều hướng về danh sách
             />
         </DefaultComponent>
     );
