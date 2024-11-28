@@ -1,9 +1,9 @@
-import React, { useState } from 'react';
-import { useEffect } from 'react';
+import React, { useState, useEffect } from 'react';
 import DefaultComponent from '../../../components/Admin/DefaultComponent/DefaultComponent';
 import { createTrip } from '../../../services/tripService';
 import Breadcrumb from '../../../components/Breadcrumb/Breadcrumb';
 import { fetchAllVehicleType } from '../../../services/vehicleTypeService';
+import { fetchRoutes } from '../../../services/routeService';
 
 const breadcrumbItems = [
   {
@@ -15,13 +15,11 @@ const breadcrumbItems = [
 ];
 
 const AddTripPage = () => {
-  const [vehicleOptions, setVehicleOptions] = useState([]);
-
-  const routeOptions = [
-    { id: '101', name: 'Hà Nội - Hồ Chí Minh' },
-    { id: '102', name: 'Đà Nẵng - Huế' },
-    { id: '103', name: 'Cần Thơ - Nha Trang' },
-  ];
+  const [vehicleTypeOptions, setVehicleOptions] = useState([]);
+  const [vehicleOptionsByType, setVehicleOptionsByType] = useState([]); // State lưu xe theo loại
+  const [routeOptions, setRoutes] = useState([]);
+  const [departureLocations, setDepartureLocations] = useState([]);
+  const [arrivalLocations, setArrivalLocations] = useState([]);
 
   useEffect(() => {
     const loadVehicleOptions = async () => {
@@ -31,12 +29,37 @@ const AddTripPage = () => {
         const formattedOptions = vehicles.map((vehicle) => ({
           id: vehicle.id,
           name: vehicle.vehicleTypeName,
+          type: vehicle.type, // Giả sử bạn có thuộc tính 'type' để xác định loại xe
         }));
         setVehicleOptions(formattedOptions);
       }
     };
 
     loadVehicleOptions();
+  }, []);
+
+  useEffect(() => {
+    const getRoutes = async () => {
+      try {
+        const routes = await fetchRoutes();
+        if (Array.isArray(routes) && routes.length > 0) {
+          setRoutes(routes);
+
+          const uniqueDepartures = [
+            ...new Set(routes.map((route) => route.departureLocation)),
+          ];
+          const uniqueArrivals = [
+            ...new Set(routes.map((route) => route.arrivalLocation)),
+          ];
+
+          setDepartureLocations(uniqueDepartures);
+          setArrivalLocations(uniqueArrivals);
+        } else {
+        }
+      } catch (error) {}
+    };
+
+    getRoutes();
   }, []);
 
   // State để lưu các trường dữ liệu của chuyến đi
@@ -47,6 +70,7 @@ const AddTripPage = () => {
     arrivalTime: '',
     vehicleId: '',
     routeId: '',
+    vehicleTypeId: '', // Thêm trường này
   });
 
   // State để lưu thông báo trạng thái
@@ -59,6 +83,14 @@ const AddTripPage = () => {
       ...prevData,
       [name]: value,
     }));
+
+    if (name === 'vehicleTypeId') {
+      // Lọc xe theo loại xe khi người dùng chọn loại xe
+      const filteredVehicles = vehicleOptions.filter(
+        (vehicle) => vehicle.type === value
+      );
+      setVehicleOptionsByType(filteredVehicles);
+    }
   };
 
   // Hàm để gửi dữ liệu thêm chuyến đi
@@ -160,10 +192,34 @@ const AddTripPage = () => {
           {/* Phương tiện */}
           <div>
             <label
-              htmlFor="vehicleId"
+              htmlFor="vehicleTypeId"
               className="block text-gray-700 font-medium mb-2 text-2xl"
             >
               Phương tiện
+            </label>
+            <select
+              id="vehicleTypeId"
+              name="vehicleTypeId"
+              value={tripData.vehicleTypeId}
+              onChange={handleInputChange}
+              className="form-control text-xl"
+            >
+              <option value="">Chọn Loại Xe</option>
+              {vehicleTypeOptions.map((vehicleType) => (
+                <option key={vehicleType.id} value={vehicleType.type}>
+                  {vehicleType.name}
+                </option>
+              ))}
+            </select>
+          </div>
+
+          {/* Chọn xe */}
+          <div>
+            <label
+              htmlFor="vehicleId"
+              className="block text-gray-700 font-medium mb-2 text-2xl"
+            >
+              Chọn Xe
             </label>
             <select
               id="vehicleId"
@@ -172,8 +228,8 @@ const AddTripPage = () => {
               onChange={handleInputChange}
               className="form-control text-xl"
             >
-              <option value="">Chọn Phương Tiện</option>
-              {vehicleOptions.map((vehicle) => (
+              <option value="">Chọn Xe</option>
+              {vehicleOptionsByType.map((vehicle) => (
                 <option key={vehicle.id} value={vehicle.id}>
                   {vehicle.name}
                 </option>
@@ -181,6 +237,7 @@ const AddTripPage = () => {
             </select>
           </div>
 
+          {/* Tuyến */}
           {/* Tuyến */}
           <div>
             <label
@@ -199,18 +256,25 @@ const AddTripPage = () => {
               <option value="">Chọn Tuyến</option>
               {routeOptions.map((route) => (
                 <option key={route.id} value={route.id}>
-                  {route.name}
+                  {route.departureLocation} - {route.arrivalLocation}
                 </option>
               ))}
             </select>
           </div>
         </div>
 
-        <button onClick={handleAddTrip} className="btn btn-primary mt-4 w-full">
-          Thêm Chuyến Đi
+        <button
+          onClick={handleAddTrip}
+          className="mt-4 py-2 px-4 bg-blue-500 text-white rounded-lg"
+        >
+          Thêm Chuyến Xe
         </button>
 
-        {statusMessage && <p className="mt-4 text-center">{statusMessage}</p>}
+        {statusMessage && (
+          <div className="mt-4">
+            <p className="text-xl">{statusMessage}</p>
+          </div>
+        )}
       </div>
     </DefaultComponent>
   );
