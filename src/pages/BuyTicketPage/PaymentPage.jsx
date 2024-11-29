@@ -63,36 +63,51 @@ const PaymentPage = () => {
   const tripDetails = JSON.parse(params.get('tripDetails') || '{}');
   const [selectedPayment, setSelectedPayment] = useState('');
   const [paymentMethods, setPaymentMethods] = useState([]);
-  const [timeLeft, setTimeLeft] = useState(300); // 5 phút (300 giây)
-  const [paymentProcessing, setPaymentProcessing] = useState(false); // Trạng thái thanh toán
+  const [timeLeft, setTimeLeft] = useState(300);
+  const [paymentProcessing, setPaymentProcessing] = useState(false);
 
   useEffect(() => {
     fetchPaymentMethods().then((data) => {
-      const userRole = 'GUEST'; // Set role to "GUEST"
+      const userRole = 'GUEST';
       if (data.code === 200 && Array.isArray(data.result?.contents)) {
-        // Filter payment methods based on the "GUEST" role
         const guestPaymentMethods = data.result.contents.filter(
           (paymentMethod) => paymentMethod.roles.includes(userRole)
         );
-        setPaymentMethods(guestPaymentMethods); // Set the filtered payment methods
+        setPaymentMethods(guestPaymentMethods);
       } else {
-        setPaymentMethods([]); // Set an empty array if no valid data
+        setPaymentMethods([]);
       }
     });
   }, []);
 
   useEffect(() => {
+    const savedTimeLeft = localStorage.getItem('timeLeft');
+    if (savedTimeLeft) {
+      const parsedTimeLeft = parseInt(savedTimeLeft, 10);
+      setTimeLeft(parsedTimeLeft > 0 ? parsedTimeLeft : 300);
+    }
+  }, []);
+
+  useEffect(() => {
     if (timeLeft <= 0) {
       window.history.back();
-      alert('Hết thời gian thanh toán, ghế sẽ được mở lại.');
       return;
     }
+
     const countdown = setInterval(() => {
-      setTimeLeft((prev) => prev - 1);
+      setTimeLeft((prev) => {
+        const newTime = prev - 1;
+        localStorage.setItem('timeLeft', newTime);
+        return newTime;
+      });
     }, 1000);
 
     return () => clearInterval(countdown);
   }, [timeLeft]);
+
+  useEffect(() => {
+    return () => localStorage.removeItem('timeLeft');
+  }, []);
 
   const breadcrumbItems = [
     { label: 'Trang nhất', link: '/', className: 'text-2xl' },
@@ -120,18 +135,18 @@ const PaymentPage = () => {
       if (!isConfirmed) return;
 
       const ticketData = {
-        actualTicketPrice: totalAmount / seats.length, // Tổng giá trị vé
+        actualTicketPrice: totalAmount / seats.length,
         tripId: tripDetails.tripId || '',
         paymentMethodName: selectedPayment.methodName,
-        paymentMethodId: selectedPayment.id, // Phương thức thanh toán
-        customerName: hoten, // Tên khách hàng
-        phone: dienthoai, // Số điện thoại
-        email: email, // Email khách hàng
+        paymentMethodId: selectedPayment.id,
+        customerName: hoten,
+        phone: dienthoai,
+        email: email,
       };
 
       localStorage.removeItem('ticketData');
       let ticketArray = JSON.parse(localStorage.getItem('ticketData')) || [];
-      ticketArray.push(ticketData); // Thêm đối tượng vé mới vào mảng
+      ticketArray.push(ticketData);
       localStorage.setItem('ticketData', JSON.stringify(ticketArray));
 
       let result;

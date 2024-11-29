@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
+import Swal from 'sweetalert2';
 
 const FormGuestInformation = ({
   selectedSeats,
@@ -35,9 +36,14 @@ const FormGuestInformation = ({
     e.preventDefault();
     setLoading(true); // Hiển thị loading spinner
 
-    if (selectedSeats.length === 0) {
-      alert('Vui lòng chọn ghế trước khi tiếp tục!');
-      setLoading(false); // Ẩn loading spinner nếu không có ghế
+    if (!selectedSeats || selectedSeats.length === 0) {
+      Swal.fire({
+        title: 'Thông báo',
+        text: 'Vui lòng chọn ghế trước khi tiếp tục!',
+        icon: 'warning',
+        confirmButtonText: 'OK',
+        confirmButtonColor: '#3085d6',
+      });
       return;
     }
 
@@ -62,10 +68,8 @@ const FormGuestInformation = ({
       } else {
       }
     } catch (error) {
-      console.error('Có lỗi khi khóa ghế:', error);
-      alert('Đã xảy ra lỗi khi khóa ghế, vui lòng thử lại!');
     } finally {
-      setLoading(false); // Ẩn loading spinner sau khi hoàn thành
+      setLoading(false);
     }
   };
 

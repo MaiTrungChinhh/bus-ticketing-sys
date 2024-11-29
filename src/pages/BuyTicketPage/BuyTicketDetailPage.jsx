@@ -119,7 +119,6 @@ const BuyTicketDetailPage = () => {
         return true;
       }
     } catch {
-      alert('Đã xảy ra lỗi không mong muốn. Vui lòng thử lại.');
       window.location.reload();
       return false;
     }

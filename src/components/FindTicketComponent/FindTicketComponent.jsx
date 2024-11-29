@@ -174,7 +174,7 @@ const FindTicketComponent = () => {
                   selected={startDate}
                   onChange={(date) => {
                     const today = new Date();
-                    today.setHours(0, 0, 0, 0); // Đặt giờ của ngày hiện tại về 0:00 để chỉ so sánh ngày
+                    today.setHours(0, 0, 0, 0);
                     if (date < today) {
                       Swal.fire({
                         icon: 'error',
@@ -183,7 +183,7 @@ const FindTicketComponent = () => {
                         confirmButtonText: 'OK',
                         confirmButtonColor: '#3085d6',
                       }).then(() => {
-                        setStartDate(today); // Đặt lại ngày khởi hành là ngày hiện tại
+                        setStartDate(today);
                       });
                     } else {
                       setStartDate(date);
@@ -223,7 +223,7 @@ const FindTicketComponent = () => {
               )}&date=${formatDate(startDate)}${
                 isRoundTrip ? `&returnDate=${formatDate(returnDate)}` : ''
               }`}
-              onClick={saveToLocalStorage} // Gọi hàm lưu dữ liệu trước khi chuyển trang
+              onClick={saveToLocalStorage}
             >
               <button className="bg-blue-500 text-white px-4 py-2 rounded-lg lg:text-2xl">
                 Tìm vé

@@ -18,7 +18,6 @@ function PaymentSuccess() {
     let isPaymentChecked = false;
     const ticketData = JSON.parse(localStorage.getItem('ticketData'));
     if (!ticketData) {
-      console.error('Không tìm thấy thông tin vé');
       return;
     }
 
@@ -36,7 +35,6 @@ function PaymentSuccess() {
 
     const handlePaymentSuccess = async () => {
       try {
-        // Lấy các tham số từ URL
         const searchParams = new URLSearchParams(window.location.search);
         const requestId = searchParams.get('requestId'); //mm
         const orderId = searchParams.get('orderId'); //mm
@@ -46,7 +44,6 @@ function PaymentSuccess() {
 
         const paymentMethodName = ticketData[0].paymentMethodName;
 
-        // Hiển thị vòng xoay loading
         MySwal.fire({
           title:
             '<span class="text-blue-500 text-xl font-semibold">Đang kiểm tra thanh toán...</span>',
@@ -112,15 +109,15 @@ function PaymentSuccess() {
           }, 3000);
         }
       } catch (error) {
-        clearInterval(intervalId); // Dừng gọi API nếu có lỗi
+        clearInterval(intervalId);
         MySwal.fire({
           title:
             '<span class="text-red-500 text-xl font-semibold">Thanh toán thất bại</span>',
           html: '<p class="text-gray-700 text-lg">Vui lòng thử lại sau.</p>',
           icon: 'error',
           showConfirmButton: true,
-          allowOutsideClick: false, // Không cho phép nhấn ra ngoài
-          allowEscapeKey: false, // Không cho phép đóng bằng phím Escape
+          allowOutsideClick: false,
+          allowEscapeKey: false,
           confirmButtonText: 'Đóng',
           confirmButtonColor: '#f44336',
         });
@@ -162,8 +159,8 @@ function PaymentSuccess() {
           <p class="text-lg">Cảm ơn bạn đã sử dụng dịch vụ!</p>
         </div>`,
         showConfirmButton: true,
-        allowOutsideClick: false, // Không cho phép nhấn ra ngoài
-        allowEscapeKey: false, // Không cho phép đóng bằng phím Escape
+        allowOutsideClick: false,
+        allowEscapeKey: false,
         confirmButtonText: 'Đóng',
         confirmButtonColor: '#4caf50',
       }).then((result) => {
@@ -176,12 +173,12 @@ function PaymentSuccess() {
     handlePaymentSuccess();
 
     return () => {
-      clearInterval(intervalId); // Dọn dẹp interval khi component bị hủy
+      clearInterval(intervalId);
       document.body.style.overflow = 'auto';
     };
   }, []);
 
-  return null; // Không cần render gì thêm
+  return null;
 }
 
 export default PaymentSuccess;
