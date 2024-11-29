@@ -14,9 +14,10 @@ import {
   FaUsers,
   FaUserShield,
   FaWrench,
+  FaTasks,
 } from 'react-icons/fa';
-import { IoPricetags } from "react-icons/io5";
-import { MdOutlinePayment } from "react-icons/md";
+import { IoPricetags } from 'react-icons/io5';
+import { MdOutlinePayment } from 'react-icons/md';
 import NavMenuItem from './NavMenuItem';
 
 const SidebarMenu = () => {
@@ -110,7 +111,11 @@ const SidebarMenu = () => {
                 to: '/dashboard/bookings/list',
                 icon: <FaList />,
               },
-              { label: 'Thêm đặt vé', to: '/bookings/add', icon: <FaPlus /> },
+              {
+                label: 'Thêm đặt vé',
+                to: '/dashboard/bookings/add',
+                icon: <FaPlus />,
+              },
               {
                 label: 'Lịch sử đặt vé',
                 to: '/bookings/history',
@@ -164,9 +169,21 @@ const SidebarMenu = () => {
                 to: '/dashboard/vehicles/update',
                 icon: <FaEdit />,
               },
-              { label: 'Loại xe', to: '/dashboard/vehicles/type', icon: <FaList /> },
-              { label: 'Danh sách xe', to: '/dashboard/vehicles/list', icon: <FaList /> },
-              { label: 'Danh sách xe không còn hoạt động', to: '/dashboard/vehicles/list/inactive', icon: <FaList /> },
+              {
+                label: 'Loại xe',
+                to: '/dashboard/vehicles/type',
+                icon: <FaList />,
+              },
+              {
+                label: 'Danh sách xe',
+                to: '/dashboard/vehicles/list',
+                icon: <FaList />,
+              },
+              {
+                label: 'Danh sách xe không còn hoạt động',
+                to: '/dashboard/vehicles/list/inactive',
+                icon: <FaList />,
+              },
             ]}
             onSubMenuToggle={() => handleSubMenuToggle('vehicles')}
             isOpen={isOpen}
@@ -176,7 +193,11 @@ const SidebarMenu = () => {
             to="/prices"
             icon={<IoPricetags />}
             subMenus={[
-              { label: 'Danh sách giá', to: '/dashboard/prices/list', icon: <FaList /> },
+              {
+                label: 'Danh sách giá',
+                to: '/dashboard/prices/list',
+                icon: <FaList />,
+              },
             ]}
             onSubMenuToggle={() => handleSubMenuToggle('prices')}
             isOpen={isOpen}
@@ -186,9 +207,32 @@ const SidebarMenu = () => {
             to="/paymentmethod"
             icon={<MdOutlinePayment />}
             subMenus={[
-              { label: 'Danh sách phương thức thanh toán', to: '/dashboard/paymentmethod/list', icon: <FaList /> },
+              {
+                label: 'Danh sách phương thức thanh toán',
+                to: '/dashboard/paymentmethod/list',
+                icon: <FaList />,
+              },
             ]}
             onSubMenuToggle={() => handleSubMenuToggle('paymentmethod')}
+            isOpen={isOpen}
+          />
+          <NavMenuItem
+            label={isOpen || isHovered ? 'Quản lý phân công' : ''} // Hiện text khi hover
+            to="/reports"
+            icon={<FaTasks />}
+            subMenus={[
+              {
+                label: 'Phân công xe',
+                to: '/dashboard/assignmentVehicle/list',
+                icon: <FaFileAlt />,
+              },
+              {
+                label: 'Phân công chuyến',
+                to: '/dashboard/assignmentTrip/list',
+                icon: <FaUserFriends />,
+              },
+            ]}
+            onSubMenuToggle={() => handleSubMenuToggle('reports')}
             isOpen={isOpen}
           />
           <NavMenuItem

@@ -36,6 +36,8 @@ import NotFoundPage from '../pages/NotFoundPage/NotFoundPage';
 import OrderPage from '../pages/OrderPage/OrderPage';
 import BookTicketPage from '../pages/AdminPage/Page/BookTicketPage.jsx';
 import AddBookingPage from '../pages/AdminPage/Add/AddBookingPage.jsx';
+import AssignmentTrip from '../pages/AdminPage/Page/AssignmentTrip.jsx';
+import AssignmentVehicle from '../pages/AdminPage/Page/AssignmentVehicle.jsx';
 
 export const routes = [
   {
@@ -167,6 +169,14 @@ export const routes = [
   {
     path: '/dashboard/trip/add',
     page: AddTrip,
+  },
+  {
+    path: '/dashboard/assignmentTrip/list',
+    page: AssignmentTrip,
+  },
+  {
+    path: '/dashboard/assignmentVehicle/list',
+    page: AssignmentVehicle,
   },
   // {
   //   path: '/dashboard/vehicles/list',

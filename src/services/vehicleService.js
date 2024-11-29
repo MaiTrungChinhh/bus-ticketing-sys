@@ -1,4 +1,4 @@
-import axios from 'axios';
+import axiosInstance from './Axios';
 
 export const fetchVehicles = async () => {
   try {
@@ -6,6 +6,19 @@ export const fetchVehicles = async () => {
     return response.data.result;
   } catch (error) {
     console.error('Error fetching vehicles:', error);
+    throw error;
+  }
+};
+
+export const fetchVehiclesByIdType = async (id) => {
+  try {
+    if (!id) {
+      throw new Error('ID type is required');
+    }
+    const response = await axiosInstance.get(`/vehicles/type/${id}`);
+    return response.data.result;
+  } catch (error) {
+    console.error('Error fetching vehicles:', error.message || error);
     throw error;
   }
 };

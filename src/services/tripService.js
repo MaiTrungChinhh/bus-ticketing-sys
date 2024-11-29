@@ -81,3 +81,33 @@ export const deleteTrip = async (tripId) => {
     throw error;
   }
 };
+
+export const fetchAssignmentTrips = async (page, pageSize) => {
+  try {
+    const response = await axiosInstance.get('/driverAssignmentsForTrips', {
+      params: {
+        page: page, // Trang hiện tại
+        pageSize: pageSize, // Số lượng kết quả trên mỗi trang
+      },
+    });
+    return response.data.result; // Trả về dữ liệu kết quả từ API
+  } catch (error) {
+    console.error('Error fetching trips:', error);
+    throw error; // Ném lỗi nếu có
+  }
+};
+
+export const fetchAssignmentVehicles = async (page, pageSize) => {
+  try {
+    const response = await axiosInstance.get('/driverAssignmentsForVehicles', {
+      params: {
+        page: page, // Trang hiện tại
+        pageSize: pageSize, // Số lượng kết quả trên mỗi trang
+      },
+    });
+    return response.data.result; // Trả về dữ liệu kết quả từ API
+  } catch (error) {
+    console.error('Error fetching trips:', error);
+    throw error; // Ném lỗi nếu có
+  }
+};
