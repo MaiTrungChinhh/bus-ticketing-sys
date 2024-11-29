@@ -105,7 +105,7 @@ const FindTicketComponent = () => {
               />
               <span className="text-blue-500 lg:text-2xl">Một chiều</span>
             </label>
-            <label className="flex items-center">
+            {/* <label className="flex items-center">
               <input
                 type="radio"
                 name="ticket-type"
@@ -115,7 +115,7 @@ const FindTicketComponent = () => {
                 className="mr-2"
               />
               <span className="text-blue-500 lg:text-2xl">Khứ hồi</span>
-            </label>
+            </label> */}
           </div>
         </div>
 
