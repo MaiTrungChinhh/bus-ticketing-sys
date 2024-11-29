@@ -84,11 +84,11 @@ const FindTicketComponent = () => {
             <span className="inline sm:hidden">Tìm chuyến</span>
           </Link>
           <Link
-            to="/muave/?action=huongdanmuave"
+            to="/ticketlookup"
             className="px-4 py-2 text-blue-500 rounded-lg"
           >
-            <span className="hidden sm:inline">Hướng dẫn mua vé</span>
-            <span className="inline sm:hidden">Hướng dẫn</span>
+            <span className="hidden sm:inline">Tra cứu vé</span>
+            <span className="inline sm:hidden">Tra cứu vé</span>
           </Link>
         </div>
 

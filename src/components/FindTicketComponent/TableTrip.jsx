@@ -2,6 +2,7 @@ import React, { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { fetchTripsInDate } from '../../services/tripService';
 import Swal from 'sweetalert2';
+import { FcAdvance } from 'react-icons/fc';
 
 const BookingTable = () => {
   const [bookings, setBookings] = useState([]);
@@ -138,11 +139,14 @@ const BookingTable = () => {
                 </td>
                 <td className="px-6 py-4 whitespace-nowrap text-[1.375rem] text-center">
                   <button
-                    className="btn btn-primary text-[1.375rem]"
+                    className="relative inline-flex items-center text-[1.375rem] pt-2 pb-2 pl-4 pr-4 group rounded-md overflow-hidden bg-blue-200"
                     onClick={() => book(booking.tripId)}
                   >
-                    <i className="fa fa-arrow-right icons-flat bg-btn-actived"></i>{' '}
-                    Chọn
+                    <span className="absolute inset-0 bg-blue-400 transition-all duration-300 group-hover:w-full w-0 z-0"></span>
+                    <FcAdvance className="text-2xl mr-2 text-black group-hover:text-white transition-all duration-300 z-10" />
+                    <span className="text-black group-hover:text-white transition-all duration-300 z-10">
+                      Chọn
+                    </span>
                   </button>
                 </td>
               </tr>

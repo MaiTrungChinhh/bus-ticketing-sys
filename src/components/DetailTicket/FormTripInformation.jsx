@@ -1,4 +1,6 @@
 import React from 'react';
+import { GiWaterBottle } from 'react-icons/gi';
+import { FaWifi } from 'react-icons/fa';
 
 const TripInfo = ({ tripDetails }) => {
   const route = tripDetails?.route;
@@ -100,31 +102,32 @@ const TripInfo = ({ tripDetails }) => {
             <div className="mt-4 flex items-center">
               <div className="flex-1 text-center">
                 <img
-                  src="/themes/default/images/food_icon.png"
+                  src="https://chinnghia.com.vn/themes/default/images/food_icon.png"
                   alt="food"
                   className="mx-auto"
                 />
                 <div className="text-blue-500">Phục vụ ăn</div>
               </div>
-              <div className="flex-1 text-right">
+              <div className="flex-1 text-left">
                 <strong>Miễn phí</strong>
                 <span className="ml-2">
-                  <span
-                    className="inline-block bg-water-icon w-6 h-6"
+                  <img
+                    src="https://chinnghia.com.vn/themes/default/images/food_icon.png"
+                    className="inline-block bg-water-icon w-9 h-8"
                     title="Miễn phí Nước uống"
-                  ></span>
+                  ></img>{' '}
                   <span
-                    className="inline-block bg-towel-icon w-6 h-6"
-                    title="Miễn phí Khăn lạnh"
-                  ></span>
+                    className="inline-block bg-water-icon w-15 h-4"
+                    title="Miễn phí Nước uống"
+                  >
+                    <GiWaterBottle inline-block bg-water-icon w-12 h- />
+                  </span>
                   <span
-                    className="inline-block bg-wifi-icon w-6 h-6"
-                    title="Miễn phí Wifi"
-                  ></span>
-                  <span
-                    className="inline-block bg-tv-icon w-6 h-6"
-                    title="Miễn phí xem Tivi"
-                  ></span>
+                    className="inline-block bg-water-icon w-15 h-4"
+                    title="Miễn phí Nước uống"
+                  >
+                    <FaWifi inline-block bg-water-icon w-12 h- />
+                  </span>
                 </span>
               </div>
             </div>
@@ -150,18 +153,20 @@ const TripInfo = ({ tripDetails }) => {
         <div className="tab-content mt-4">
           <div className="tab-pane active">
             <p className="text-justify">
-              - <strong>Dãy A</strong> ở phía sau tài xế, <strong>dãy B</strong>{' '}
-              nằm giữa xe, <strong>dãy C</strong> ở phía cửa lên xe.
-            </p>
-            <p className="text-justify">
               - <strong>Giường</strong> lẻ nằm tầng dưới; giường chẵn nằm tầng
-              trên. VD:
+              trên.
               <br />
-              &nbsp;&nbsp; + Giường <strong>A2</strong> : tầng 2 đầu xe thuộc
-              dãy phía sau tài xế.
+              &nbsp;&nbsp; + Giường <strong>1</strong> : tầng dưới hàng ngang
+              thứ nhất thuộc dãy phía sau tài xế.
               <br />
-              &nbsp;&nbsp; + Giường <strong>A3</strong> : tầng dưới hàng thứ 2
-              thuộc dãy phía sau tài xế.
+              &nbsp;&nbsp; + Giường <strong>2</strong> : tầng trên hàng ngang
+              thứ nhất thuộc dãy phía sau tài xế.
+              <br />
+              &nbsp;&nbsp; + Giường <strong>11</strong> : tầng dưới thuộc dãy
+              bên cửa lên xe.
+              <br />
+              &nbsp;&nbsp; + Giường <strong>12</strong> : tầng trên thuộc dãy
+              dãy bên cửa lên xe.
             </p>
           </div>
         </div>

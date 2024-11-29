@@ -238,7 +238,29 @@ const ChooseChair = ({
       <h2 className="text-2xl text-blue-600 uppercase font-bold text-center mb-4 ">
         Chọn ghế
       </h2>
+
       <div className="seat-selection">{renderSeats()}</div>
+
+      {/* Chú thích */}
+      <div className="mt-6">
+        <div className="flex justify-between items-center w-full">
+          {/* Sử dụng justify-between để tạo khoảng cách đều giữa các ô */}
+          <div className="flex flex-col items-center">
+            <div className="w-12 h-12 bg-white border border-gray-400"></div>
+            <span className="text-2xl text-gray-700">Ghế trống</span>
+          </div>
+
+          <div className="flex flex-col items-center">
+            <div className="w-12 h-12 bg-blue-500 border-gray-400"></div>
+            <span className="text-2xl text-gray-700">Ghế đang chọn</span>
+          </div>
+
+          <div className="flex flex-col items-center">
+            <div className="w-12 h-12 bg-gray-300 border-gray-400"></div>
+            <span className="text-2xl text-gray-700">Ghế đã đặt</span>
+          </div>
+        </div>
+      </div>
     </div>
   );
 };

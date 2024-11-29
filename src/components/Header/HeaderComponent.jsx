@@ -6,6 +6,7 @@ import { PiUserCircleThin } from 'react-icons/pi';
 import { useLocation } from 'react-router-dom'; // Import useLocation
 import Login from '../../Account/Login';
 import RegisterAccount from '../../Account/RegisterAccout';
+import { useNavigate } from 'react-router-dom';
 
 const HeaderComponent = () => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
@@ -14,10 +15,15 @@ const HeaderComponent = () => {
   const [showRegister, setRegister] = useState(false);
   const [isLoggedIn, setIsLoggedIn] = useState(false);
   const [username, setUsername] = useState('');
+  const [roles, setRoles] = useState('');
+  const navigate = useNavigate();
 
   useEffect(() => {
     const token = localStorage.getItem('token');
     const storedUsername = localStorage.getItem('username'); // Lấy username từ localStorage
+    const roles = localStorage.getItem('roles');
+
+    setRoles(roles);
     if (token && storedUsername) {
       setIsLoggedIn(true);
       setUsername(storedUsername);
@@ -39,22 +45,23 @@ const HeaderComponent = () => {
 
   const handleLoginClick = () => {
     setShowLogin(true);
-    setRegister(true); // Khi nhấn vào nút, đổi trạng thái để hiển thị component Login
+    setRegister(true);
   };
 
   if (showLogin) {
-    return <Login />; // Nếu trạng thái là true, hiển thị component Login
+    return <Login />;
   }
 
   if (showRegister) {
-    return <RegisterAccount />; // Nếu trạng thái là true, hiển thị component Register
+    return <RegisterAccount />;
   }
   const handleLogout = () => {
-    localStorage.clear(); // Xóa toàn bộ dữ liệu trong localStorage
+    localStorage.clear();
     setIsLoggedIn(false);
     setUsername('');
+    navigate('/login');
   };
-  const isHomePage = location.pathname === '/'; // Check if the current page is home
+  const isHomePage = location.pathname === '/';
 
   return (
     <div className="header-container w-full font-medium">
@@ -65,7 +72,7 @@ const HeaderComponent = () => {
             onClick={toggleMenu}
           >
             {isMenuOpen ? (
-              <IoClose className="text-3xl" /> // Hiển thị dấu X khi menu đang mở
+              <IoClose className="text-3xl" />
             ) : (
               <>
                 <div className="menu-line w-8 h-0.5 bg-black my-1"></div>
@@ -154,6 +161,18 @@ const HeaderComponent = () => {
                   isAccountDropdownOpen ? 'block' : 'hidden'
                 }`}
               >
+                <li>
+                  {(roles === 'ADMIN' || roles === 'EMPLOYEE') && (
+                    <a
+                      className="block px-4 py-2 text-blue-500 hover:bg-gray-100 dropdown-item text-2xl whitespace-nowrap"
+                      title="Bảng điều khiển"
+                      href="/dashboard"
+                    >
+                      <button className="logout-button">Bảng điều khiển</button>
+                    </a>
+                  )}
+                </li>
+
                 <li>
                   <a
                     className="block px-4 py-2 text-blue-500 hover:bg-gray-100 dropdown-item text-2xl whitespace-nowrap"

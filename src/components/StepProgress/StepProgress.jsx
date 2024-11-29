@@ -5,20 +5,24 @@ const StepProgress = ({ currentStep }) => {
   const steps = ['Chọn chuyến', 'Chi tiết vé', 'Thanh toán'];
 
   return (
-    <div className="w-full mb-4">
-      <ul className="flex justify-center space-x-4">
+    <div className="w-full mb-6">
+      <ul className="flex justify-center items-center space-x-6">
         {steps.map((step, index) => (
           <li key={index} className="flex items-center">
             <div
-              className={`px-4 py-2 rounded-full text-white transition duration-300 ease-in-out ${
-                index === currentStep ? 'bg-blue-500' : 'bg-gray-300'
-              }`}
+              className={`px-6 py-3 rounded-full text-white font-medium text-lg transition-all duration-300 ease-in-out transform ${
+                index === currentStep
+                  ? 'bg-blue-600 scale-110'
+                  : 'bg-gray-400 scale-100'
+              } hover:scale-110 hover:bg-blue-500 cursor-pointer`}
             >
               {step}
             </div>
+
+            {/* Hiển thị mũi tên giữa các bước */}
             {index < steps.length - 1 && (
               <svg
-                className="w-4 h-4 mx-2 text-gray-400"
+                className="w-5 h-5 mx-4 text-gray-500 transition-all duration-300 ease-in-out"
                 xmlns="http://www.w3.org/2000/svg"
                 fill="none"
                 viewBox="0 0 24 24"
