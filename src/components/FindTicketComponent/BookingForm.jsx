@@ -2,6 +2,8 @@ import React, { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import DatePicker from 'react-datepicker';
 import 'react-datepicker/dist/react-datepicker.css';
+import { fetchRoutes } from '../../services/routeService';
+import { useSearchParams } from 'react-router-dom';
 
 const BookingForm = () => {
   const [selectedDeparture, setSelectedDeparture] = useState('');
@@ -9,12 +11,14 @@ const BookingForm = () => {
   const [departureDate, setDepartureDate] = useState(null); // Initialize as null
   const [departureLocations, setDepartureLocations] = useState([]);
   const [arrivalLocations, setArrivalLocations] = useState([]);
+  const [searchParams] = useSearchParams();
+
   const navigate = useNavigate();
 
   const handleSearch = () => {
-    if (!departureDate) return; // Check if departureDate is selected
+    if (!departureDate) return;
 
-    const formattedDate = formatDate(departureDate); // Sử dụng hàm formatDate
+    const formattedDate = formatDate(departureDate);
 
     navigate(
       `/buyticket?departure=${encodeURIComponent(
@@ -33,22 +37,47 @@ const BookingForm = () => {
   };
 
   useEffect(() => {
-    const savedDeparture = localStorage.getItem('selectedDeparture');
-    const savedArrival = localStorage.getItem('selectedArrival');
-    const savedDate = localStorage.getItem('startDate');
-    const storedDepartureLocations = localStorage.getItem('departureLocations');
-    const storedArrivalLocations = localStorage.getItem('arrivalLocations');
+    const getRoutes = async () => {
+      try {
+        const routes = await fetchRoutes();
+        if (Array.isArray(routes) && routes.length > 0) {
+          const uniqueDepartures = [
+            ...new Set(routes.map((route) => route.departureLocation)),
+          ];
+          const uniqueArrivals = [
+            ...new Set(routes.map((route) => route.arrivalLocation)),
+          ];
 
-    if (storedDepartureLocations) {
-      setDepartureLocations(JSON.parse(storedDepartureLocations));
-    }
-    if (storedArrivalLocations) {
-      setArrivalLocations(JSON.parse(storedArrivalLocations));
-    }
-    if (savedDeparture) setSelectedDeparture(savedDeparture);
-    if (savedArrival) setSelectedArrival(savedArrival);
-    if (savedDate) setDepartureDate(new Date(savedDate)); // Set as Date object
+          setDepartureLocations(uniqueDepartures);
+          setArrivalLocations(uniqueArrivals);
+        } else {
+        }
+      } catch (error) {}
+    };
+
+    getRoutes();
   }, []);
+
+  useEffect(() => {
+    const departure = searchParams.get('departure');
+    const arrival = searchParams.get('arrival');
+    const date = searchParams.get('date');
+    // const savedDeparture = localStorage.getItem('selectedDeparture');
+    // const savedArrival = localStorage.getItem('selectedArrival');
+    // const savedDate = localStorage.getItem('startDate');
+    // const storedDepartureLocations = localStorage.getItem('departureLocations');
+    // const storedArrivalLocations = localStorage.getItem('arrivalLocations');
+
+    // if (storedDepartureLocations) {
+    //   setDepartureLocations(JSON.parse(storedDepartureLocations));
+    // }
+    // if (storedArrivalLocations) {
+    //   setArrivalLocations(JSON.parse(storedArrivalLocations));
+    // }
+    if (departure) setSelectedDeparture(departure);
+    if (arrival) setSelectedArrival(arrival);
+    if (date) setDepartureDate(new Date(date));
+  }, [searchParams]);
 
   return (
     <div className="booking-form w-9/12">

@@ -42,7 +42,6 @@ const FindTicketComponent = () => {
     getRoutes();
   }, []);
 
-  // Function to format date to YYYY-MM-DD
   const formatDate = (date) => {
     if (!date) return '';
     const year = date.getFullYear();
@@ -51,7 +50,6 @@ const FindTicketComponent = () => {
     return `${year}-${month}-${day}`; // Format: YYYY-MM-DD
   };
 
-  // Function to save the selected data to localStorage
   const saveToLocalStorage = () => {
     localStorage.setItem('selectedDeparture', selectedDeparture);
     localStorage.setItem('selectedArrival', selectedArrival);
@@ -61,12 +59,11 @@ const FindTicketComponent = () => {
     }
     localStorage.setItem('isRoundTrip', isRoundTrip);
 
-    // Save the arrays of locations as JSON strings
-    localStorage.setItem(
-      'departureLocations',
-      JSON.stringify(departureLocations)
-    );
-    localStorage.setItem('arrivalLocations', JSON.stringify(arrivalLocations));
+    // localStorage.setItem(
+    //   'departureLocations',
+    //   JSON.stringify(departureLocations)
+    // );
+    // localStorage.setItem('arrivalLocations', JSON.stringify(arrivalLocations));
   };
 
   return (

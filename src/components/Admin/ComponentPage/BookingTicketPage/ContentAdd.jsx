@@ -1,19 +1,19 @@
 import React from 'react';
-import TableBookingTicket from './TableBookingTicket';
+import TableTrip from './TableTrip';
 import { Link } from 'react-router-dom';
 import Breadcrumb from '../../../Breadcrumb/Breadcrumb';
-import { FaCog, FaPlus } from 'react-icons/fa';
+import { FaCog, FaPlus } from 'react-icons/fa'; // Import icons from react-icons
 
 const breadcrumbItems = [
   {
     label: 'Quản lý đặt vé',
-    link: '/dashboard/bookings/list',
+    link: '/dashboard/trip/list',
     className: 'text-3xl ',
   },
-  { label: 'Danh sách đặt vé', className: 'text-3xl font-bold' },
+  { label: 'Thêm đặt vé', className: 'text-3xl font-bold' },
 ];
 
-const ContentBookingTicket = ({ bookings, totalResults }) => {
+const ContentAdd = ({ bookings, totalResults }) => {
   return (
     <div className="content-trip">
       <div className="card bg-light-subtle bg-white shadow-md p-5">
@@ -37,10 +37,10 @@ const ContentBookingTicket = ({ bookings, totalResults }) => {
                 More Setting <FaCog className="ms-2" /> {/* Icon after text */}
               </button>
               <Link
-                to="/dashboard/bookings/add"
+                to="/dashboard/trip/add"
                 className="text-xl btn btn-success me-1 flex items-center text-blue-500 hover:text-blue-600 p-2 m-2 bg-blue-100 hover:bg-blue-200 rounded-xl"
               >
-                Đặt vé mới <FaPlus className="ms-2" />{' '}
+                Thêm chuyến xe <FaPlus className="ms-2" />{' '}
                 {/* Icon after text */}
               </Link>
             </div>
@@ -48,7 +48,7 @@ const ContentBookingTicket = ({ bookings, totalResults }) => {
         </div>
       </div>
       {bookings && bookings.length > 0 ? (
-        <TableBookingTicket bookings={bookings} />
+        <TableTrip bookings={bookings} />
       ) : (
         <p>Không có xe nào.</p>
       )}
@@ -56,4 +56,4 @@ const ContentBookingTicket = ({ bookings, totalResults }) => {
   );
 };
 
-export default ContentBookingTicket;
+export default ContentAdd;

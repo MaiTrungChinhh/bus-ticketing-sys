@@ -35,6 +35,7 @@ import RegisterPage from '../pages/LoginLogout/RegisterPage';
 import NotFoundPage from '../pages/NotFoundPage/NotFoundPage';
 import OrderPage from '../pages/OrderPage/OrderPage';
 import BookTicketPage from '../pages/AdminPage/Page/BookTicketPage.jsx';
+import AddBookingPage from '../pages/AdminPage/Add/AddBookingPage.jsx';
 
 export const routes = [
   {
@@ -174,6 +175,10 @@ export const routes = [
   {
     path: '/dashboard/bookings/list',
     page: BookTicketPage,
+  },
+  {
+    path: '/dashboard/bookings/add',
+    page: AddBookingPage,
   },
   {
     path: '/login',
