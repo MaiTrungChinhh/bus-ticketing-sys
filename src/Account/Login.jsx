@@ -1,4 +1,3 @@
-
 import { jwtDecode } from 'jwt-decode';
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
@@ -16,9 +15,7 @@ const Login = () => {
         try {
             const loginResponse = await fetch('http://localhost:8080/api/auth/token', {
                 method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json',
-                },
+                headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify({ username, password }),
             });
 
@@ -27,14 +24,19 @@ const Login = () => {
 
             if (loginResponse.ok && loginData.result && loginData.result.token) {
                 const token = loginData.result.token;
-                localStorage.setItem('token', token);
-                localStorage.setItem('username', username);
+                localStorage.setItem('token', token); // Lưu token
+                localStorage.setItem('username', username); // Lưu username
 
-                // Giải mã token để lấy roles
+                // Decode token và lấy vai trò
                 const decodedToken = jwtDecode(token);
-                const roles = decodedToken.scope.split(',');
+                const roles = decodedToken.scope?.split(',') || []; // Phân cách vai trò bằng dấu ","
 
-                console.log('Vai trò từ token:', roles);
+                if (roles.length > 0) {
+                    localStorage.setItem('roles', roles[0]); // Lưu vai trò đầu tiên
+                    console.log('Vai trò từ token:', roles[0]);
+                } else {
+                    console.error('Không tìm thấy vai trò trong token.');
+                }
 
                 // Điều hướng dựa trên vai trò
                 if (roles.includes('ADMIN') || roles.includes('EMPLOYEE')) {
@@ -54,6 +56,7 @@ const Login = () => {
             setLoginStatus('Đăng nhập thất bại. Vui lòng thử lại.');
         }
     };
+
 
     return (
         <div className='flex justify-center items-center min-h-screen bg-gray-100'>
@@ -116,4 +119,4 @@ const Login = () => {
     );
 };
 
-export default Login;
+export default Login;    

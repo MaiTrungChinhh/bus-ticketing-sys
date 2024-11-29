@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import {
   FaBus,
   FaChartLine,
@@ -23,6 +23,16 @@ const SidebarMenu = () => {
   const [isOpen, setIsOpen] = useState(true); // Trạng thái mở/đóng sidebar
   const [isHovered, setIsHovered] = useState(false); // Trạng thái hover
   const [openMenuId, setOpenMenuId] = useState(null); // Trạng thái menu mở
+  const [userRole, setUserRole] = useState(null); // Vai trò của người dùng
+
+  // Lấy vai trò từ localStorage
+  useEffect(() => {
+    const role = localStorage.getItem('roles'); // Lấy vai trò từ localStorage
+    console.log('Vai trò hiện tại:', role); // Kiểm tra giá trị
+    setUserRole(role); // Lưu vai trò vào state
+  }, []);
+
+
 
   const toggleSidebar = () => {
     setIsOpen(!isOpen); // Chuyển đổi sidebar
@@ -37,6 +47,14 @@ const SidebarMenu = () => {
       setOpenMenuId(menuId); // Mở menu đã chọn
     }
   };
+  const hasAccess = (requiredRoles) => {
+    if (!userRole) {
+      console.warn('Không tìm thấy vai trò người dùng.');
+      return false;
+    }
+    return requiredRoles.includes(userRole); // Kiểm tra vai trò
+  };
+
 
   return (
     <div
@@ -66,95 +84,108 @@ const SidebarMenu = () => {
           </div>
 
           {/* Các mục menu */}
-          <NavMenuItem
-            label={isOpen || isHovered ? 'Dashboard' : ''} // Hiện text khi hover
-            to="/dashboard"
-            icon={<FaTachometerAlt />}
-            onSubMenuToggle={() => handleSubMenuToggle('dashboard')}
-            isOpen={isOpen}
-          />
-          <NavMenuItem
-            label={isOpen || isHovered ? 'Quản lý người dùng' : ''} // Hiện text khi hover
-            to="/users"
-            icon={<FaUsers />}
-            subMenus={[
-              {
-                label: 'Loại nhân viên',
-                to: '/dashboard/employees/type',
-                icon: <FaList />,
-              },
-              {
-                label: 'Danh sách nhân viên',
-                to: '/dashboard/employees/list',
-                icon: <FaList />,
-              },
-              {
-                label: 'Danh sách người dùng',
-                to: '/dashboard/customers/list',
-                icon: <FaList />,
-              },
+          {hasAccess(['ADMIN', 'EMPLOYEE']) && (
+            <NavMenuItem
+              label={isOpen || isHovered ? 'Dashboard' : ''}
+              to="/dashboard"
+              icon={<FaTachometerAlt />}
+              onSubMenuToggle={() => handleSubMenuToggle('dashboard')}
+              isOpen={isOpen}
+            />
+          )}
 
-            ]}
-            onSubMenuToggle={() => handleSubMenuToggle('customers')}
-            isOpen={isOpen}
-          />
+          {hasAccess(['ADMIN']) && (
+            <NavMenuItem
+              label={isOpen || isHovered ? 'Quản lý người dùng' : ''}
+              to="/users"
+              icon={<FaUsers />}
+              subMenus={[
+                {
+                  label: 'Loại nhân viên',
+                  to: '/dashboard/employees/type',
+                  icon: <FaList />,
+                },
+                {
+                  label: 'Danh sách nhân viên',
+                  to: '/dashboard/employees/list',
+                  icon: <FaList />,
+                },
+                {
+                  label: 'Danh sách người dùng',
+                  to: '/dashboard/customers/list',
+                  icon: <FaList />,
+                },
+              ]}
+              onSubMenuToggle={() => handleSubMenuToggle('customers')}
+              isOpen={isOpen}
+            />
+          )}
 
-          <NavMenuItem
-            label={isOpen || isHovered ? 'Quản lý đặt vé' : ''} // Hiện text khi hover
-            to="/bookings"
-            icon={<FaTicketAlt />}
-            subMenus={[
-              {
-                label: 'Danh sách đặt vé',
-                to: '/bookings/list',
-                icon: <FaList />,
-              },
-              { label: 'Thêm đặt vé', to: '/bookings/add', icon: <FaPlus /> },
-              {
-                label: 'Lịch sử đặt vé',
-                to: '/bookings/history',
-                icon: <FaHistory />,
-              },
-            ]}
-            onSubMenuToggle={() => handleSubMenuToggle('bookings')}
-            isOpen={isOpen}
-          />
-          <NavMenuItem
-            label={isOpen || isHovered ? 'Quản lý chuyến xe' : ''} // Hiện text khi hover
-            to="/bus-schedule"
-            icon={<FaBus />}
-            subMenus={[
-              {
-                label: 'Danh sách chuyến xe',
-                to: '/dashboard/trip/list',
-                icon: <FaList />,
-              },
-              {
-                label: 'Thêm chuyến xe',
-                to: '/dashboard/trip/add',
-                icon: <FaPlus />,
-              },
-              {
-                label: 'Cập nhật chuyến xe',
-                to: '/dashboard/trip/edit',
-                icon: <FaEdit />,
-              },
-            ]}
-            onSubMenuToggle={() => handleSubMenuToggle('busSchedule')}
-            isOpen={isOpen}
-          />
-          <NavMenuItem
-            label={isOpen || isHovered ? 'Quản lý xe' : ''} // Hiện text khi hover
-            to="/vehicles"
-            icon={<FaBus />}
-            subMenus={[
-              { label: 'Loại xe', to: '/dashboard/vehicles/type', icon: <FaList /> },
-              { label: 'Danh sách xe', to: '/dashboard/vehicles/list', icon: <FaList /> },
-              { label: 'Danh sách xe không còn hoạt động', to: '/dashboard/vehicles/list/inactive', icon: <FaList /> },
-            ]}
-            onSubMenuToggle={() => handleSubMenuToggle('vehicles')}
-            isOpen={isOpen}
-          />
+          {hasAccess(['ADMIN', 'EMPLOYEE']) && (
+            <NavMenuItem
+              label={isOpen || isHovered ? 'Quản lý đặt vé' : ''}
+              to="/bookings"
+              icon={<FaTicketAlt />}
+              subMenus={[
+                {
+                  label: 'Danh sách đặt vé',
+                  to: '/bookings/list',
+                  icon: <FaList />,
+                },
+                { label: 'Thêm đặt vé', to: '/bookings/add', icon: <FaPlus /> },
+                {
+                  label: 'Lịch sử đặt vé',
+                  to: '/bookings/history',
+                  icon: <FaHistory />,
+                },
+              ]}
+              onSubMenuToggle={() => handleSubMenuToggle('bookings')}
+              isOpen={isOpen}
+            />
+          )}
+          {hasAccess(['ADMIN', 'EMPLOYEE']) && (
+            <NavMenuItem
+              label={isOpen || isHovered ? 'Quản lý chuyến xe' : ''} // Hiện text khi hover
+              to="/bus-schedule"
+              icon={<FaBus />}
+              subMenus={[
+                {
+                  label: 'Danh sách chuyến xe',
+                  to: '/dashboard/trip/list',
+                  icon: <FaList />,
+                },
+                {
+                  label: 'Thêm chuyến xe',
+                  to: '/dashboard/trip/add',
+                  icon: <FaPlus />,
+                },
+                {
+                  label: 'Cập nhật chuyến xe',
+                  to: '/dashboard/trip/edit',
+                  icon: <FaEdit />,
+                },
+              ]}
+
+              onSubMenuToggle={() => handleSubMenuToggle('busSchedule')}
+              isOpen={isOpen}
+            />
+          )}
+
+          {hasAccess(['ADMIN', 'EMPLOYEE']) && (
+            <NavMenuItem
+              label={isOpen || isHovered ? 'Quản lý xe' : ''}
+              to="/vehicles"
+              icon={<FaBus />}
+              subMenus={[
+                { label: 'Loại xe', to: '/dashboard/vehicles/type', icon: <FaList /> },
+                { label: 'Danh sách xe', to: '/dashboard/vehicles/list', icon: <FaList /> },
+                { label: 'Danh sách xe không còn hoạt động', to: '/dashboard/vehicles/list/inactive', icon: <FaList /> },
+              ]}
+              onSubMenuToggle={() => handleSubMenuToggle('vehicles')}
+              isOpen={isOpen}
+            />
+          )}
+
           <NavMenuItem
             label={isOpen || isHovered ? 'Quản lý giá' : ''} // Hiện text khi hover
             to="/prices"
@@ -219,4 +250,4 @@ const SidebarMenu = () => {
   );
 };
 
-export default SidebarMenu;
+export default SidebarMenu;     

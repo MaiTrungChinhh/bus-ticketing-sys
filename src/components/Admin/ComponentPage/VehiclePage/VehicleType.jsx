@@ -10,7 +10,7 @@ const VehicleType = () => {
     const [filteredVehicleTypes, setFilteredVehicleTypes] = useState([]);
     const [searchTerm, setSearchTerm] = useState('');
     const [currentPage, setCurrentPage] = useState(1);
-    const [itemsPerPage, setItemsPerPage] = useState(10);
+    const [itemsPerPage, setItemsPerPage] = useState(10); // Mặc định 10 phần tử mỗi trang
     const [loading, setLoading] = useState(false);
     const [selectedFilters, setSelectedFilters] = useState({});
 
@@ -129,7 +129,7 @@ const VehicleType = () => {
                 onPageChange={setCurrentPage}
                 onItemsPerPageChange={(newItemsPerPage) => {
                     setItemsPerPage(newItemsPerPage);
-                    localStorage.setItem('itemsPerPage', newItemsPerPage);
+                    localStorage.setItem('itemsPerPage', newItemsPerPage); // Lưu số phần tử vào localStorage
                 }}
                 itemsPerPage={itemsPerPage}
             />
