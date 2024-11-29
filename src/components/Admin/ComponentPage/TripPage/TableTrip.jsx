@@ -13,6 +13,7 @@ const TableTrip = ({ bookings }) => {
 
   const editBooking = (id) => {
     console.log(`Edit Booking ID: ${id}`);
+    navigate(`/dashboard/trip/edit/${id}`);
     // Add navigation or edit functionality here
   };
 

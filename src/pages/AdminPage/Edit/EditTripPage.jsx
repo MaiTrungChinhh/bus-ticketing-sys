@@ -1,11 +1,12 @@
 import React, { useState, useEffect } from 'react';
 import DefaultComponent from '../../../components/Admin/DefaultComponent/DefaultComponent';
-import { createTrip } from '../../../services/tripService';
+import { fetchTripById, updateTrip } from '../../../services/tripService';
 import Breadcrumb from '../../../components/Breadcrumb/Breadcrumb';
 import { fetchAllVehicleType } from '../../../services/vehicleTypeService';
 import { fetchRoutes } from '../../../services/routeService';
 import { fetchVehiclesByIdType } from '../../../services/vehicleService';
 import Swal from 'sweetalert2'; // Import SweetAlert2
+import { useParams } from 'react-router-dom'; // Import để lấy ID từ URL
 
 const breadcrumbItems = [
   {
@@ -13,15 +14,16 @@ const breadcrumbItems = [
     link: '/dashboard/trip/list',
     className: 'text-3xl ',
   },
-  { label: 'Tạo Chuyến Xe', className: 'text-3xl font-bold' },
+  { label: 'Sửa Chuyến Xe', className: 'text-3xl font-bold' },
 ];
 
-const AddTripPage = () => {
-  const [vehicleTypeOptions, setVehicleTypeOptions] = useState([]); // Danh sách loại xe
-  const [vehicleOptionsByType, setVehicleOptionsByType] = useState([]); // Danh sách xe theo loại
-  const [routeOptions, setRoutes] = useState([]); // Danh sách tuyến
-  const [departureLocations, setDepartureLocations] = useState([]); // Danh sách điểm khởi hành
-  const [arrivalLocations, setArrivalLocations] = useState([]); // Danh sách điểm đến
+const EditTripPage = () => {
+  const { id } = useParams(); // Lấy ID chuyến xe từ URL
+  const [vehicleTypeOptions, setVehicleTypeOptions] = useState([]);
+  const [vehicleOptionsByType, setVehicleOptionsByType] = useState([]);
+  const [routeOptions, setRoutes] = useState([]);
+  const [departureLocations, setDepartureLocations] = useState([]);
+  const [arrivalLocations, setArrivalLocations] = useState([]);
 
   // State để lưu dữ liệu chuyến xe
   const [tripData, setTripData] = useState({
@@ -31,22 +33,65 @@ const AddTripPage = () => {
     arrivalTime: '',
     vehicleId: '',
     routeId: '',
-    vehicleTypeId: '', // Lưu loại xe
+    vehicleTypeId: '',
   });
 
   const [statusMessage, setStatusMessage] = useState('');
 
-  // Lấy danh sách loại xe
+  useEffect(() => {
+    const fetchTripData = async () => {
+      try {
+        const trip = await fetchTripById(id);
+        console.log('Trip data:', trip);
+
+        if (trip?.result) {
+          const {
+            departureDate,
+            departureTime,
+            arrivalDate,
+            arrivalTime,
+            route,
+            vehicle,
+          } = trip.result;
+
+          setTripData({
+            departureTime: departureTime || '',
+            departureDate: departureDate || '',
+            arrivalDate: arrivalDate || '',
+            arrivalTime: arrivalTime || '',
+            vehicleId: vehicle?.id || '',
+            vehicleTypeId: vehicle?.vehicleType?.id || '',
+            routeId: route?.id || '',
+            // departureLocation: route?.departureLocation || '',
+            // departurePoint: route?.departurePoint || '',
+            // arrivalLocation: route?.arrivalLocation || '',
+            // arrivalPoint: route?.arrivalPoint || '',
+            // distance: route?.distance || '',
+            // duration: route?.duration || '',
+            // vehicleName: vehicle?.vehicleName || '',
+            // licensePlate: vehicle?.licensePlate || '',
+          });
+        } else {
+          console.error('No result found in trip data');
+        }
+      } catch (error) {
+        console.error('Error fetching trip data:', error);
+      }
+    };
+
+    fetchTripData();
+  }, [id]);
+
   useEffect(() => {
     const getVehicleTypes = async () => {
       try {
         const vehicleTypes = await fetchAllVehicleType();
-        const formattedVehicleTypes = vehicleTypes.map((type) => ({
-          id: type.id,
-          name: type.vehicleTypeName,
-        }));
-
-        setVehicleTypeOptions(formattedVehicleTypes);
+        setVehicleTypeOptions(
+          vehicleTypes.map((type) => ({
+            id: type.id,
+            name: type.vehicleTypeName,
+          }))
+        );
       } catch (error) {
         console.error('Error fetching vehicle types:', error);
       }
@@ -55,19 +100,19 @@ const AddTripPage = () => {
     getVehicleTypes();
   }, []);
 
-  // Lấy danh sách xe theo loại
   useEffect(() => {
     const loadVehiclesByType = async () => {
       try {
         if (tripData.vehicleTypeId) {
           const vehicles = await fetchVehiclesByIdType(tripData.vehicleTypeId);
-          const formattedVehicles = vehicles.map((vehicle) => ({
-            id: vehicle.id,
-            name: vehicle.licensePlate,
-          }));
-          setVehicleOptionsByType(formattedVehicles);
+          setVehicleOptionsByType(
+            vehicles.map((vehicle) => ({
+              id: vehicle.id,
+              name: vehicle.licensePlate,
+            }))
+          );
         } else {
-          setVehicleOptionsByType([]); // Reset vehicle list if no type selected
+          setVehicleOptionsByType([]);
         }
       } catch (error) {
         console.error('Error fetching vehicles by type:', error);
@@ -77,24 +122,19 @@ const AddTripPage = () => {
     loadVehiclesByType();
   }, [tripData.vehicleTypeId]);
 
-  // Lấy danh sách tuyến đường
   useEffect(() => {
     const getRoutes = async () => {
       try {
         const routes = await fetchRoutes();
-        if (Array.isArray(routes) && routes.length > 0) {
-          setRoutes(routes);
-
-          const uniqueDepartures = [
-            ...new Set(routes.map((route) => route.departureLocation)),
-          ];
-          const uniqueArrivals = [
-            ...new Set(routes.map((route) => route.arrivalLocation)),
-          ];
-
-          setDepartureLocations(uniqueDepartures);
-          setArrivalLocations(uniqueArrivals);
-        }
+        setRoutes(routes);
+        const uniqueDepartures = [
+          ...new Set(routes.map((route) => route.departureLocation)),
+        ];
+        const uniqueArrivals = [
+          ...new Set(routes.map((route) => route.arrivalLocation)),
+        ];
+        setDepartureLocations(uniqueDepartures);
+        setArrivalLocations(uniqueArrivals);
       } catch (error) {
         console.error('Error fetching routes:', error);
       }
@@ -103,7 +143,6 @@ const AddTripPage = () => {
     getRoutes();
   }, []);
 
-  // Xử lý thay đổi dữ liệu input
   const handleInputChange = (e) => {
     const { name, value } = e.target;
 
@@ -114,39 +153,29 @@ const AddTripPage = () => {
     }));
   };
 
-  // Thêm chuyến xe
-  const handleAddTrip = async () => {
-    // Kiểm tra dữ liệu trước khi gọi API
-    if (
-      !tripData.departure ||
-      !tripData.destination ||
-      !tripData.date ||
-      !tripData.time
-    ) {
-      // Hiển thị thông báo lỗi nếu thiếu thông tin
-      Swal.fire({
-        icon: 'warning',
-        title: 'Thiếu thông tin!',
-        text: 'Vui lòng nhập đầy đủ thông tin trước khi thêm chuyến xe.',
-        showConfirmButton: true,
-      });
-      return; // Dừng hàm nếu dữ liệu không hợp lệ
-    }
+  const handleUpdateTrip = async () => {
+    console.log('Updating trip:', tripData);
 
+    const tripUpdatedata = {
+      departureTime: tripData.departureTime,
+      departureDate: tripData.departureDate,
+      arrivalDate: tripData.arrivalDate,
+      arrivalTime: tripData.arrivalTime,
+      vehicleId: tripData.vehicleId,
+      routeId: tripData.routeId,
+    };
+    console.log('Updating trip:', tripUpdatedata);
     try {
-      const response = await createTrip(tripData);
+      const response = await updateTrip(id, tripUpdatedata);
 
-      if (response.code === 201) {
-        // Thông báo thành công
+      if (response.code === 200) {
         Swal.fire({
           icon: 'success',
-          title: 'Thêm chuyến xe thành công!',
+          title: 'Cập nhật chuyến xe thành công!',
           showConfirmButton: false,
-          timer: 1500, // Tự động đóng thông báo sau 1.5 giây
+          timer: 1500,
         });
       } else {
-        // Xử lý khi response code khác 201
-        // Thông báo lỗi từ API
         Swal.fire({
           icon: 'error',
           title: 'Thất bại!',
@@ -155,36 +184,18 @@ const AddTripPage = () => {
         });
       }
     } catch (error) {
-      console.error('Error adding trip:', error);
-
-      // Kiểm tra nếu lỗi từ API có thông tin chi tiết hơn
-      if (error.response && error.response.data) {
-        // Nếu có response từ API
-        const apiError = error.response.data;
-        const errorMessage = apiError.message || 'Vui lòng thử lại sau.';
-        const errorCode = apiError.code || 'Không xác định';
-
-        // Hiển thị thông báo lỗi chi tiết từ API
-        Swal.fire({
-          icon: 'error',
-          title: `Lỗi ${errorCode}`,
-          text: errorMessage,
-          showConfirmButton: true,
-        });
-      } else {
-        // Nếu không có lỗi từ API, hiển thị lỗi chung
-        Swal.fire({
-          icon: 'error',
-          title: 'Có lỗi xảy ra!',
-          text: error.message || 'Vui lòng thử lại sau.',
-          showConfirmButton: true,
-        });
-      }
+      console.error('Error updating trip:', error);
+      Swal.fire({
+        icon: 'error',
+        title: 'Có lỗi xảy ra!',
+        text: error.message || 'Vui lòng thử lại sau.',
+        showConfirmButton: true,
+      });
     }
   };
 
   return (
-    <DefaultComponent title="Thêm Chuyến Xe Mới">
+    <DefaultComponent title="Sửa Chuyến Xe">
       <div className="w-full py-5">
         <div className="w-full bg-white shadow-md p-5">
           <Breadcrumb items={breadcrumbItems} />
@@ -192,7 +203,7 @@ const AddTripPage = () => {
       </div>
       <div className="px-5 py-4 bg-white shadow-md rounded-lg">
         <div className="grid grid-cols-2 gap-4">
-          {/* Ngày khởi hành */}
+          {/* Các input tương tự như file thêm */}
           <div>
             <label
               htmlFor="departureDate"
@@ -334,7 +345,7 @@ const AddTripPage = () => {
               name="routeId"
               value={tripData.routeId}
               onChange={handleInputChange}
-              className="form-control text-xl p-2 border border-gray-300 rounded-lg w-full focus:outline-none focus:ring-2 focus:ring-blue-500"
+              className="form-control text-xl p-2 border border-gray-300 rounded-lg w-full focus:outline-none focus:ring-2 focus:ring-blue-500 max-h-60 overflow-y-auto"
               required
             >
               <option value="" className="text-gray-500">
@@ -352,10 +363,10 @@ const AddTripPage = () => {
         </div>
 
         <button
-          onClick={handleAddTrip}
+          onClick={handleUpdateTrip}
           className="mt-4 py-2 px-4 bg-blue-500 text-white rounded-lg"
         >
-          Thêm Chuyến Xe
+          Cập Nhật Chuyến Xe
         </button>
         {statusMessage && (
           <div className="mt-3 text-lg text-red-500">{statusMessage}</div>
@@ -365,4 +376,4 @@ const AddTripPage = () => {
   );
 };
 
-export default AddTripPage;
+export default EditTripPage;

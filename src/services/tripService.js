@@ -111,3 +111,13 @@ export const fetchAssignmentVehicles = async (page, pageSize) => {
     throw error; // Ném lỗi nếu có
   }
 };
+
+export const updateTrip = async (tripId, tripData) => {
+  try {
+    const response = await axiosInstance.put(`/trips/${tripId}`, tripData);
+    return response.data;
+  } catch (error) {
+    console.error('Error updating trip:', error);
+    throw error;
+  }
+};
