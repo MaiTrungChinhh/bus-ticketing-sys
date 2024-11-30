@@ -2,6 +2,7 @@ import React from 'react';
 import { useNavigate } from 'react-router-dom';
 import { FaRegCalendarAlt } from 'react-icons/fa';
 import { deleteTrip } from '../../../../services/tripService';
+import { FcAdvance } from 'react-icons/fc';
 
 const TableTrip = ({ bookings }) => {
   const navigate = useNavigate();
@@ -76,14 +77,16 @@ const TableTrip = ({ bookings }) => {
                   {booking.vehicle?.vehicleName || booking.vehicleName || 'N/A'}
                 </td>
                 <td className="px-6 py-4 whitespace-nowrap text-center">
-                  <div className="d-flex justify-center">
-                    <button
-                      className="text-green-500 hover:text-green-600 p-2 m-2 bg-green-100 hover:bg-green-200 rounded-xl"
-                      onClick={() => book(booking.id)}
-                    >
-                      <FaRegCalendarAlt size={15} />
-                    </button>
-                  </div>
+                  <button
+                    className="relative inline-flex items-center text-[1.375rem] pt-2 pb-2 pl-4 pr-4 group rounded-md overflow-hidden bg-blue-200"
+                    onClick={() => book(booking.id)}
+                  >
+                    <span className="absolute inset-0 bg-blue-400 transition-all duration-300 group-hover:w-full w-0 z-0"></span>
+                    <FcAdvance className="text-2xl mr-2 text-black group-hover:text-white transition-all duration-300 z-10" />
+                    <span className="text-black group-hover:text-white transition-all duration-300 z-10">
+                      Chọn
+                    </span>
+                  </button>
                 </td>
               </tr>
             ))}

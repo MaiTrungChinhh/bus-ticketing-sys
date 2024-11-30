@@ -1,8 +1,13 @@
 {
   "dependencies": {
+    "@canvasjs/charts": "^3.10.17",
+    "@canvasjs/react-charts": "^1.0.2",
+    "@canvasjs/react-stockcharts": "^1.0.2",
+    "@canvasjs/stockcharts": "^1.10.17",
     "@reduxjs/toolkit": "^2.2.7",
     "axios": "^1.7.7",
     "base-x": "^5.0.0",
+    "canvasjs": "^1.8.3",
     "frontend": "file:",
     "jwt-decode": "^4.0.0",
     "react": "^18.3.1",

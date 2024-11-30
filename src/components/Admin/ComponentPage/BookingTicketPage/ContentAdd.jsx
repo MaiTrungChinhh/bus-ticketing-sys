@@ -36,13 +36,6 @@ const ContentAdd = ({ bookings, totalResults }) => {
               >
                 More Setting <FaCog className="ms-2" /> {/* Icon after text */}
               </button>
-              <Link
-                to="/dashboard/trip/add"
-                className="text-xl btn btn-success me-1 flex items-center text-blue-500 hover:text-blue-600 p-2 m-2 bg-blue-100 hover:bg-blue-200 rounded-xl"
-              >
-                Thêm chuyến xe <FaPlus className="ms-2" />{' '}
-                {/* Icon after text */}
-              </Link>
             </div>
           </div>
         </div>

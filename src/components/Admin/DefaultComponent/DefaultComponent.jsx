@@ -5,18 +5,15 @@ import SidebarMenu from '../../Admin/Menu/Sidebar';
 const DefaultComponent = ({ children, title }) => {
   return (
     <div className="flex h-screen">
-      {/* SidebarMenu positioned on the left with fixed width */}
-      <div className="">
+      {/* Menu cố định bên trái */}
+      <div className="sticky top-0 h-screen w-64 text-white">
         <SidebarMenu />
       </div>
 
-      {/* Main content area with HeaderAdmin and dynamic children */}
-      <div className="flex-1 bg-gray-100">
+      {/* Nội dung chính, có thể cuộn dọc */}
+      <div className="flex-1 bg-gray-100 overflow-auto">
         <HeaderAdmin pageTitle={title} />
-        <div className="container mx-auto p-4">
-          {/* Render children passed to DashboardPage */}
-          {children}
-        </div>
+        <div className="container mx-auto p-4">{children}</div>
       </div>
     </div>
   );

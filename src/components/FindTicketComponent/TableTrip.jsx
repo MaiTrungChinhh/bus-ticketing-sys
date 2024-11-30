@@ -16,9 +16,8 @@ const BookingTable = () => {
 
   useEffect(() => {
     const today = new Date();
-    today.setHours(0, 0, 0, 0); // Đặt giờ về 0:00 để chỉ so sánh ngày
+    today.setHours(0, 0, 0, 0);
 
-    // Kiểm tra ngày đi
     if (date && new Date(date) < today) {
       Swal.fire({
         icon: 'error',
