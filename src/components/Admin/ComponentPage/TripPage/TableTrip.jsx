@@ -1,6 +1,6 @@
 import React from 'react';
 import { useNavigate } from 'react-router-dom';
-import { FaPencilAlt, FaTrashAlt } from 'react-icons/fa';
+import { FaPencilAlt, FaTrashAlt, FaEye } from 'react-icons/fa';
 import { deleteTrip } from '../../../../services/tripService';
 
 const TableTrip = ({ bookings }) => {
@@ -127,6 +127,12 @@ const TableTrip = ({ bookings }) => {
                       onClick={() => editBooking(booking.id)}
                     >
                       <FaPencilAlt size={15} />
+                    </button>
+                    <button
+                      className="text-green-500 hover:text-green-600 p-2 m-2 bg-blue-100 hover:bg-blue-200 rounded-xl"
+                      onClick={() => viewBooking(booking.id)}
+                    >
+                      <FaEye size={15} />
                     </button>
                     <button
                       className="text-red-500 hover:text-red-600 p-2 m-2 bg-blue-100 hover:bg-blue-200 rounded-xl"

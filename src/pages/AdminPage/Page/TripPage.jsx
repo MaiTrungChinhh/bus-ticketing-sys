@@ -135,7 +135,7 @@ const ListTripPage = () => {
     <DefaultComponent title="List Trips">
       <div className="flex">
         <div className="w-1/5">
-          <AdvancedFilter
+          {/* <AdvancedFilter
             filters={filtersPage1.map((filter) => ({
               ...filter,
               items: filter.items.map((item) => ({
@@ -147,9 +147,9 @@ const ListTripPage = () => {
             }))}
             onApply={handleApplyFilters}
             onSearch={handleSearch}
-          />
+          /> */}
         </div>
-        <div className="w-4/5 px-5">
+        <div className="w-full px-5">
           <ContentTrip bookings={bookings} totalResults={totalResults} />
           <Pagination
             currentPage={currentPage}

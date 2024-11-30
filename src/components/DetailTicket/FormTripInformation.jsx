@@ -51,15 +51,14 @@ const TripInfo = ({ tripDetails }) => {
                       <span>{tripDetails?.departureDate || 'N/A'}</span>
                     </td>
                   </tr>
-                  <tr>
+                  {/* <tr>
                     <td>Thời gian mua còn lại:</td>
                     <td>
                       <strong className="text-blue-500 countdown_time">
-                        {/* Countdown or remaining time calculation here */}
                         15:10:55
                       </strong>
                     </td>
-                  </tr>
+                  </tr> */}
                 </tbody>
               </table>
             </div>
@@ -76,7 +75,7 @@ const TripInfo = ({ tripDetails }) => {
                     </td>
                   </tr>
                   <tr>
-                    <td>Tổng số vé:</td>
+                    <td>Số vé còn lại:</td>
                     <td>
                       <strong className="text-blue-500">
                         {tripDetails?.availableSeats || 'N/A'}
