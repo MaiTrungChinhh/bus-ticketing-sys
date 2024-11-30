@@ -12,8 +12,11 @@ const VehicleInactive = () => {
     useEffect(() => {
         const fetchVehicle = async () => {
             try {
-                const fetchedVehicles = await fetchVehicles(); // Gọi đúng hàm từ `vehicleService`
-                setVehicles(fetchedVehicles);
+                const fetchedVehicles = await fetchVehicles(); // Gọi API lấy danh sách tất cả các xe
+                const inactiveVehicles = fetchedVehicles.filter(
+                    (vehicle) => vehicle.status === 'OUT_OF_SERVICE' // Lọc xe `OUT_OF_SERVICE`
+                );
+                setVehicles(inactiveVehicles); // Lưu danh sách xe đã lọc vào state
             } catch (err) {
                 console.error('Error fetching vehicles:', err);
                 Swal.fire({

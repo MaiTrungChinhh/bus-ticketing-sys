@@ -114,7 +114,7 @@ const Vehicle = () => {
         }
     };
 
-    const filterVehicles = (vehicles, searchTerm, selectedFilters) => {
+    const filterVehicles = (vehicles, searchTerm) => {
         return vehicles.filter((vehicle) => {
             const searchMatch =
                 !searchTerm ||
@@ -122,14 +122,13 @@ const Vehicle = () => {
                 (vehicle.licensePlate && vehicle.licensePlate.toLowerCase().includes(searchTerm)) ||
                 (vehicle.color && vehicle.color.toLowerCase().includes(searchTerm));
 
-            const statusMatch =
-                selectedFilters.status.length > 0 // Nếu có bộ lọc trạng thái
-                    ? selectedFilters.status.includes(vehicle.status) // Chỉ giữ trạng thái phù hợp
-                    : true; // Nếu không có bộ lọc trạng thái, hiển thị tất cả
+            // Chỉ hiển thị các xe có trạng thái `ACTIVE`
+            const statusMatch = vehicle.status === 'ACTIVE';
 
             return searchMatch && statusMatch;
         });
     };
+
 
 
     const handleSearch = (term) => {
