@@ -1,7 +1,9 @@
 import React, { useState } from 'react';
 import { useLocation, useNavigate } from 'react-router-dom';
+import Swal from 'sweetalert2';
 import FooterComponent from '../../components/Footer/FooterComponent';
 import HeaderComponent from '../../components/Header/HeaderComponent';
+import { changePassword } from '../../services/forgotpasswordService';
 
 export default function ChangePasswordPage() {
     const [password, setPassword] = useState('');
@@ -12,7 +14,20 @@ export default function ChangePasswordPage() {
     const email = location.state?.email || ''; // Lấy email từ state khi điều hướng
     const otp = location.state?.otp || ''; // Lấy OTP từ state
 
-    const handleSubmit = (e) => {
+    // Kiểm tra email và OTP trước khi render
+    if (!email || !otp) {
+        Swal.fire({
+            title: 'Lỗi!',
+            text: 'Không tìm thấy thông tin cần thiết. Vui lòng thử lại.',
+            icon: 'error',
+            confirmButtonText: 'OK',
+        }).then(() => {
+            navigate('/forgot-password'); // Chuyển về trang quên mật khẩu
+        });
+        return null;
+    }
+
+    const handleSubmit = async (e) => {
         e.preventDefault();
 
         // Kiểm tra mật khẩu trùng khớp
@@ -23,18 +38,36 @@ export default function ChangePasswordPage() {
 
         setError(''); // Xóa lỗi nếu mật khẩu hợp lệ
 
-        // Gửi request đổi mật khẩu (giả sử bạn có hàm `changePassword` đã kết nối với API)
-        console.log({ email, otp, password, confirmPassword });
-        alert('Đổi mật khẩu thành công! Quay lại đăng nhập.');
-        navigate('/login'); // Điều hướng về trang đăng nhập sau khi đổi mật khẩu thành công
+        try {
+            // Gửi yêu cầu đổi mật khẩu đến API
+            const response = await changePassword(email, password, confirmPassword, otp);
+            console.log('Đổi mật khẩu thành công:', response);
+
+            // Thông báo thành công và điều hướng
+            Swal.fire({
+                title: 'Thành công!',
+                text: 'Đổi mật khẩu thành công! Hãy đăng nhập lại.',
+                icon: 'success',
+                confirmButtonText: 'OK',
+            }).then(() => {
+                navigate('/login'); // Chuyển về trang đăng nhập
+            });
+        } catch (error) {
+            // Hiển thị lỗi từ server hoặc các lỗi khác
+            const errorMessage = error.message || 'Có lỗi xảy ra, vui lòng thử lại.';
+            console.error('Lỗi đổi mật khẩu:', error);
+            Swal.fire({
+                title: 'Lỗi!',
+                text: errorMessage,
+                icon: 'error',
+                confirmButtonText: 'OK',
+            });
+        }
     };
 
     return (
         <div className="flex flex-col min-h-screen bg-gray-50">
-            {/* Header */}
             <HeaderComponent />
-
-            {/* Main Content */}
             <div className="flex flex-col items-center justify-center flex-grow">
                 <div className="bg-white p-12 shadow-xl rounded-xl w-[400px]">
                     <div className="mb-6">
@@ -92,8 +125,6 @@ export default function ChangePasswordPage() {
                     </form>
                 </div>
             </div>
-
-            {/* Footer */}
             <FooterComponent />
         </div>
     );

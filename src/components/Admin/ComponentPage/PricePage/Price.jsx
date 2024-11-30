@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import priceService from '../../../../services/priceService';
 import AdvancedFilter from '../../DefaultComponent/AdvancedFilter';
+import Pagination from '../../DefaultComponent/Pagination';
 import PriceForm from './PriceForm';
 import PriceTable from './PriceTable';
 
@@ -11,6 +12,9 @@ const Price = () => {
     const [prices, setPrices] = useState([]); // Danh sách giá vé đầy đủ
     const [filteredPrices, setFilteredPrices] = useState([]); // Kết quả lọc sau tìm kiếm
     const [searchTerm, setSearchTerm] = useState(''); // Từ khóa tìm kiếm
+    const [currentPage, setCurrentPage] = useState(1);
+    const [itemsPerPage, setItemsPerPage] = useState(10);
+    const [totalPages, setTotalPages] = useState(1);
 
     // Fetch dữ liệu từ API khi component mount
     useEffect(() => {
@@ -26,6 +30,7 @@ const Price = () => {
                 setVehicleTypes(fetchedVehicleTypes);
                 setPrices(fetchedPrices);
                 setFilteredPrices(fetchedPrices); // Khởi tạo danh sách lọc bằng dữ liệu gốc
+                setTotalPages(Math.ceil(fetchedPrices.length / itemsPerPage));
             } catch (err) {
                 console.error('Lỗi khi tải dữ liệu:', err);
             }
@@ -64,26 +69,47 @@ const Price = () => {
         });
 
         setFilteredPrices(filtered); // Cập nhật danh sách lọc
+        setTotalPages(Math.ceil(filtered.length / itemsPerPage));
     }, [searchTerm, prices]);
+    const indexOfLastResult = currentPage * itemsPerPage;
+    const indexOfFirstResult = indexOfLastResult - itemsPerPage;
+    const currentResults = filteredPrices.slice(indexOfFirstResult, indexOfLastResult);
 
+    const handlePageChange = (page) => {
+        setCurrentPage(page);
+    };
+
+    // Xử lý thay đổi số mục trên mỗi trang
+    const handleItemsPerPageChange = (value) => {
+        setItemsPerPage(value);
+        setCurrentPage(1); // Reset về trang đầu tiên khi thay đổi số mục trên mỗi trang
+        setTotalPages(Math.ceil(filteredPrices.length / value));
+    };
     return (
         <div>
-            {/* Thanh tìm kiếm */}
             <AdvancedFilter
                 filters={[]} // Không cần thêm bộ lọc nâng cao
-                onSearch={handleSearch} // Gọi hàm handleSearch khi nhập từ khóa
-                selectedFilters={{}} // Không có bộ lọc được chọn
+                onSearch={handleSearch}
+                selectedFilters={{}}
             />
 
-            {/* Hiển thị bảng giá hoặc form chỉnh sửa */}
             {!editingPrice ? (
-                <PriceTable prices={filteredPrices} onEdit={handleEdit} />
+                <>
+                    <PriceTable prices={currentResults} onEdit={handleEdit} />
+                    <Pagination
+                        currentPage={currentPage}
+                        totalPages={totalPages}
+                        onPageChange={handlePageChange}
+                        onItemsPerPageChange={handleItemsPerPageChange}
+                        itemsPerPage={itemsPerPage}
+                    />
+                </>
             ) : (
                 <PriceForm
                     onSubmit={handleFormSubmit}
-                    initialData={editingPrice || {}} // Dữ liệu chỉnh sửa hoặc trống
-                    routes={routes} // Truyền danh sách tuyến đường
-                    vehicleTypes={vehicleTypes} // Truyền danh sách loại xe
+                    initialData={editingPrice || {}}
+                    routes={routes}
+                    vehicleTypes={vehicleTypes}
                 />
             )}
         </div>
