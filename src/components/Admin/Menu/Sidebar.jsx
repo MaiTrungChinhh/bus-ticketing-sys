@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import {
   FaBus,
+  FaBusAlt,
   FaChartLine,
   FaCogs,
   FaEdit,
@@ -8,6 +9,7 @@ import {
   FaHistory,
   FaList,
   FaPlus,
+  FaRoute,
   FaTachometerAlt,
   FaTicketAlt,
   FaUserFriends,
@@ -33,8 +35,6 @@ const SidebarMenu = () => {
     setUserRole(role); // Lưu vai trò vào state
   }, []);
 
-
-
   const toggleSidebar = () => {
     setIsOpen(!isOpen); // Chuyển đổi sidebar
     setOpenMenuId(null); // Đóng menu khi sidebar đóng
@@ -55,7 +55,6 @@ const SidebarMenu = () => {
     }
     return requiredRoles.includes(userRole); // Kiểm tra vai trò
   };
-
 
   return (
     <div
@@ -265,6 +264,7 @@ const SidebarMenu = () => {
               isOpen={isOpen}
             />
           )}
+
           {hasAccess(['ADMIN', 'EMPLOYEE']) && (
             <NavMenuItem
               label={isOpen || isHovered ? 'Quản lý chuyến xe' : ''} // Hiện text khi hover
@@ -287,7 +287,6 @@ const SidebarMenu = () => {
                   icon: <FaEdit />,
                 },
               ]}
-
               onSubMenuToggle={() => handleSubMenuToggle('busSchedule')}
               isOpen={isOpen}
             />
@@ -297,13 +296,42 @@ const SidebarMenu = () => {
             <NavMenuItem
               label={isOpen || isHovered ? 'Quản lý xe' : ''}
               to="/vehicles"
-              icon={<FaBus />}
+              icon={<FaBusAlt />}
               subMenus={[
-                { label: 'Loại xe', to: '/dashboard/vehicles/type', icon: <FaList /> },
-                { label: 'Danh sách xe', to: '/dashboard/vehicles/list', icon: <FaList /> },
-                { label: 'Danh sách xe không còn hoạt động', to: '/dashboard/vehicles/list/inactive', icon: <FaList /> },
+                {
+                  label: 'Loại xe',
+                  to: '/dashboard/vehicles/type',
+                  icon: <FaList />,
+                },
+                {
+                  label: 'Danh sách xe',
+                  to: '/dashboard/vehicles/list',
+                  icon: <FaList />,
+                },
+                {
+                  label: 'Danh sách xe không còn hoạt động',
+                  to: '/dashboard/vehicles/list/inactive',
+                  icon: <FaList />,
+                },
               ]}
               onSubMenuToggle={() => handleSubMenuToggle('vehicles')}
+              isOpen={isOpen}
+            />
+          )}
+
+          {hasAccess(['ADMIN']) && (
+            <NavMenuItem
+              label={isOpen || isHovered ? 'Quản lý tuyến' : ''}
+              to="/routes"
+              icon={<FaRoute />}
+              subMenus={[
+                {
+                  label: 'Danh sách tuyến',
+                  to: '/dashboard/routes/list',
+                  icon: <FaList />,
+                },
+              ]}
+              onSubMenuToggle={() => handleSubMenuToggle('routes')}
               isOpen={isOpen}
             />
           )}
@@ -399,4 +427,4 @@ const SidebarMenu = () => {
   );
 };
 
-export default SidebarMenu;     
+export default SidebarMenu;

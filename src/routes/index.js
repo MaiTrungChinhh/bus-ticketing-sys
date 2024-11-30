@@ -3,6 +3,7 @@ import AddEmployeePage from '../pages/AdminPage/Add/AddEmployeePage.jsx'; // Th�
 import AddEmployeeTypePage from '../pages/AdminPage/Add/AddEmployeeTypePage.jsx';
 import AddPaymentMethodPage from '../pages/AdminPage/Add/AddPaymentMethodPage.jsx';
 import AddPricePage from '../pages/AdminPage/Add/AddPricePage.jsx';
+import AddRoutePage from '../pages/AdminPage/Add/AddRoutePage.jsx';
 import AddTrip from '../pages/AdminPage/Add/AddTripPage';
 import AddVehiclePage from '../pages/AdminPage/Add/AddVehiclePage.jsx';
 import AddVehicleTypePage from '../pages/AdminPage/Add/AddVehicleTypePage.jsx';
@@ -13,6 +14,7 @@ import {
 } from '../pages/AdminPage/Edit/EditEmployeeTypePage';
 import EditPaymentMethodPage from '../pages/AdminPage/Edit/EditPaymentMethodPage.jsx';
 import EditPricePage from '../pages/AdminPage/Edit/EditPricePage.jsx';
+import EditRoutePage from '../pages/AdminPage/Edit/EditRoute.jsx';
 import EditVehiclePage from '../pages/AdminPage/Edit/EditVehiclePage.jsx';
 import CustomerListPage from '../pages/AdminPage/Page/CustomerListPage.jsx';
 import Dashboard from '../pages/AdminPage/Page/DashboardPage';
@@ -20,6 +22,7 @@ import EmployeeTypePage from '../pages/AdminPage/Page/EmployeeTypePage.jsx';
 import ListEmployeePage from '../pages/AdminPage/Page/ListEmployeePage.jsx';
 import PaymentMethodPage from '../pages/AdminPage/Page/PaymentMethodPage.jsx';
 import PricePage from '../pages/AdminPage/Page/PricePage.jsx';
+import RoutePage from '../pages/AdminPage/Page/RoutePage.jsx';
 import ListTrip from '../pages/AdminPage/Page/TripPage';
 import VehicleInactivePage from '../pages/AdminPage/Page/VehicleInactivePage.jsx';
 import VehicleListPage from '../pages/AdminPage/Page/VehicleListPage.jsx';
@@ -28,6 +31,9 @@ import BuyTicketDetailPage from '../pages/BuyTicketPage/BuyTicketDetailPage';
 import BuyTicketPage from '../pages/BuyTicketPage/BuyTicketPage';
 import PaymentPage from '../pages/BuyTicketPage/PaymentPage';
 import FooterPage from '../pages/FooterPage/FooterPage';
+import ChangePasswordPage from '../pages/ForgotPasswordPage/ChangePasswordPage.jsx';
+import InputEmail from '../pages/ForgotPasswordPage/InputEmail.jsx';
+import VerifyOtpPage from '../pages/ForgotPasswordPage/VerifyOtpPage.jsx';
 import HomePage from '../pages/HomePage/HomePage';
 import QuyDinhChungPage from '../pages/LinksFooter/QuyDinhChungPage';
 import LoginPage from '../pages/LoginLogout/LoginPage';
@@ -151,19 +157,36 @@ export const routes = [
   },
   //quản lý phương thức thanh toán
 
-  {
-    path: '/dashboard/paymentmethod/list',
-    page: PaymentMethodPage,
-  },
-  {
-    path: '/dashboard/paymentmethod/edit/:id',
-    page: EditPaymentMethodPage,
-  },
-  {
-    path: '/dashboard/paymentmethod/add',
-    page: AddPaymentMethodPage,
-  },
-  // quản lý chuyến xe
+{
+  path: '/dashboard/paymentmethod/list',
+  page: PaymentMethodPage,
+},{
+  path: '/dashboard/paymentmethod/edit/:id',
+  page: EditPaymentMethodPage,
+},
+{
+  path: '/dashboard/paymentmethod/add',
+  page: AddPaymentMethodPage,
+},
+
+
+// Quản lý tuyến
+{
+  path: '/dashboard/routes/list',
+  page: RoutePage, 
+},
+{
+  path: '/dashboard/route/add',
+  page: AddRoutePage, 
+},
+{
+  path: '/dashboard/route/edit/:id',
+  page: EditRoutePage, 
+},
+
+
+
+// quản lý chuyến xe
   {
     path: '/dashboard/trip/list',
     page: ListTrip,
@@ -220,4 +243,22 @@ export const routes = [
     path: '*',
     page: NotFoundPage,
   },
+
+// Quên mật khẩu
+{
+  path: '/user/forgotpassword',
+  page: InputEmail ,
+},
+{
+  path: '/user/verifyotp',
+  page: VerifyOtpPage ,
+},
+{
+  path: '/user/changepassword',
+  page: ChangePasswordPage ,
+},
+
 ];
+
+
+
