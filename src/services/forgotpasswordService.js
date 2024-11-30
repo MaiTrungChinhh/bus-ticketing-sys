@@ -25,10 +25,10 @@ export const verifyEmail = async (email) => {
 export const verifyOtp = async (otp, email) => {
   try {
     const response = await axiosInstance.post(`/password/verifyOtp/${otp}/${email}`);
-    return response.data; // Trả về dữ liệu API
+    return response.data; // Trả về kết quả từ API
   } catch (error) {
     if (error.response) {
-      throw error.response.data; // Lỗi từ server
+      throw error.response.data; // Xử lý lỗi từ server
     } else if (error.request) {
       throw 'Không nhận được phản hồi từ máy chủ. Vui lòng kiểm tra kết nối mạng.';
     } else {
@@ -38,7 +38,7 @@ export const verifyOtp = async (otp, email) => {
 };
 
 /**
- * Đổi mật khẩu mới
+ Đổi mật khẩu mới
  * @param {string} email - Email của người dùng
  * @param {string} password - Mật khẩu mới
  * @param {string} confirmPassword - Xác nhận mật khẩu

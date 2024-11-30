@@ -42,7 +42,6 @@ export default function InputEmail() {
     return (
         <div className="flex flex-col min-h-screen">
             <HeaderComponent />
-
             <div className="flex flex-col items-center justify-center flex-grow bg-gray-50">
                 <div className="bg-white p-12 shadow-xl rounded-xl w-[500px]">
                     <div className="mb-6">
@@ -81,7 +80,6 @@ export default function InputEmail() {
                     </form>
                 </div>
             </div>
-
             <FooterComponent />
         </div>
     );

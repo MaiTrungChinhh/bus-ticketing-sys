@@ -28,7 +28,7 @@ export default function VerifyOtpPage() {
 
             // Kiểm tra response từ server
             if (response.code === 200) {
-                console.log(response.message); // Hiển thị thông báo thành công (hoặc điều hướng)
+                console.log(response.message); // Hiển thị thông báo thành công
                 navigate('/user/changepassword', { state: { email, otp } });
             } else {
                 setError(response.message || 'Đã xảy ra lỗi không xác định.');
@@ -39,9 +39,9 @@ export default function VerifyOtpPage() {
             console.error('Lỗi:', err);
         }
     };
+
     return (
         <div className="flex flex-col min-h-screen bg-gray-50">
-
             <HeaderComponent />
             <div className="flex flex-col items-center justify-center flex-grow">
                 <div className="bg-white p-12 shadow-xl rounded-xl w-[400px]">
