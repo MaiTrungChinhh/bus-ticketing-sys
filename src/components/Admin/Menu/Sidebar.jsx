@@ -383,44 +383,6 @@ const SidebarMenu = () => {
             onSubMenuToggle={() => handleSubMenuToggle('reports')}
             isOpen={isOpen}
           />
-          <NavMenuItem
-            label={isOpen || isHovered ? 'Báo cáo & Phân tích' : ''} // Hiện text khi hover
-            to="/reports"
-            icon={<FaChartLine />}
-            subMenus={[
-              {
-                label: 'Báo cáo doanh thu',
-                to: '/reports/revenue',
-                icon: <FaFileAlt />,
-              },
-              {
-                label: 'Phân tích người dùng',
-                to: '/reports/user-analysis',
-                icon: <FaUserFriends />,
-              },
-            ]}
-            onSubMenuToggle={() => handleSubMenuToggle('reports')}
-            isOpen={isOpen}
-          />
-          <NavMenuItem
-            label={isOpen || isHovered ? 'Cài đặt hệ thống' : ''} // Hiện text khi hover
-            to="/settings"
-            icon={<FaCogs />}
-            subMenus={[
-              {
-                label: 'Cài đặt chung',
-                to: '/settings/general',
-                icon: <FaWrench />,
-              },
-              {
-                label: 'Quản lý vai trò',
-                to: '/settings/roles',
-                icon: <FaUserShield />,
-              },
-            ]}
-            onSubMenuToggle={() => handleSubMenuToggle('settings')}
-            isOpen={isOpen}
-          />
         </nav>
       </div>
     </div>

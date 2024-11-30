@@ -157,36 +157,34 @@ export const routes = [
   },
   //quản lý phương thức thanh toán
 
-{
-  path: '/dashboard/paymentmethod/list',
-  page: PaymentMethodPage,
-},{
-  path: '/dashboard/paymentmethod/edit/:id',
-  page: EditPaymentMethodPage,
-},
-{
-  path: '/dashboard/paymentmethod/add',
-  page: AddPaymentMethodPage,
-},
+  {
+    path: '/dashboard/paymentmethod/list',
+    page: PaymentMethodPage,
+  },
+  {
+    path: '/dashboard/paymentmethod/edit/:id',
+    page: EditPaymentMethodPage,
+  },
+  {
+    path: '/dashboard/paymentmethod/add',
+    page: AddPaymentMethodPage,
+  },
 
+  // Quản lý tuyến
+  {
+    path: '/dashboard/routes/list',
+    page: RoutePage,
+  },
+  {
+    path: '/dashboard/route/add',
+    page: AddRoutePage,
+  },
+  {
+    path: '/dashboard/route/edit/:id',
+    page: EditRoutePage,
+  },
 
-// Quản lý tuyến
-{
-  path: '/dashboard/routes/list',
-  page: RoutePage, 
-},
-{
-  path: '/dashboard/route/add',
-  page: AddRoutePage, 
-},
-{
-  path: '/dashboard/route/edit/:id',
-  page: EditRoutePage, 
-},
-
-
-
-// quản lý chuyến xe
+  // quản lý chuyến xe
   {
     path: '/dashboard/trip/list',
     page: ListTrip,
@@ -244,21 +242,17 @@ export const routes = [
     page: NotFoundPage,
   },
 
-// Quên mật khẩu
-{
-  path: '/user/forgotpassword',
-  page: InputEmail ,
-},
-{
-  path: '/user/verifyotp',
-  page: VerifyOtpPage ,
-},
-{
-  path: '/user/changepassword',
-  page: ChangePasswordPage ,
-},
-
+  // Quên mật khẩu
+  {
+    path: '/user/forgotpassword',
+    page: InputEmail,
+  },
+  {
+    path: '/user/verifyotp',
+    page: VerifyOtpPage,
+  },
+  {
+    path: '/user/changepassword',
+    page: ChangePasswordPage,
+  },
 ];
-
-
-

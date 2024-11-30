@@ -141,7 +141,7 @@ const TicketInfoComponent = () => {
                     {tripDetails?.trip?.route?.departurePoint}
                   </td>
                 </tr>
-                <tr className="border-b py-3">
+                {/* <tr className="border-b py-3">
                   <td className="px-4 font-semibold text-gray-700">
                     Ghế đã chọn:
                   </td>
@@ -150,7 +150,7 @@ const TicketInfoComponent = () => {
                       ? tripDetails?.trip?.seats.join(', ')
                       : 'Chưa chọn'}
                   </td>
-                </tr>
+                </tr> */}
                 <tr className="py-3">
                   <td className="px-4 font-semibold text-gray-700">
                     Tổng tiền vé:
