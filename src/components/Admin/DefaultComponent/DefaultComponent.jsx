@@ -8,7 +8,7 @@ const DefaultComponent = ({ children, title }) => {
       <div className="sticky top-0 h-screen w-32 text-white">
         <SidebarMenu />
       </div>
-      <div className="flex-1 bg-gray-100 overflow-auto">
+      <div className="flex-1 bg-gray-100 ">
         <HeaderAdmin pageTitle={title} />
         <div className="container mx-auto p-4">{children}</div>
       </div>
