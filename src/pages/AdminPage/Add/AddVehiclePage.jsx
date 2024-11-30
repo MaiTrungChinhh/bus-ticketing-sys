@@ -2,7 +2,7 @@ import React, { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import Swal from 'sweetalert2';
 import DefaultComponent from '../../../components/Admin/DefaultComponent/DefaultComponent';
-import vehicleService from '../../../services/vehicleService';
+import { addVehicle, fetchVehicleTypes } from '../../../services/vehicleService';
 
 export default function AddVehiclePage() {
     const [formData, setFormData] = useState({
@@ -20,9 +20,9 @@ export default function AddVehiclePage() {
 
     // Lấy danh sách loại xe
     useEffect(() => {
-        const fetchVehicleTypes = async () => {
+        const fetchVehicleType = async () => {
             try {
-                const types = await vehicleService.fetchVehicleTypes();
+                const types = await fetchVehicleTypes();
                 setVehicleTypes(types);
             } catch (error) {
                 console.error('Error fetching vehicle types:', error);
@@ -30,7 +30,7 @@ export default function AddVehiclePage() {
             }
         };
 
-        fetchVehicleTypes();
+        fetchVehicleType();
     }, []);
 
     // Xử lý khi nhập liệu
@@ -60,7 +60,7 @@ export default function AddVehiclePage() {
 
         setIsLoading(true);
         try {
-            await vehicleService.addVehicle({ vehicleName, licensePlate, color, vehicleType, seatCount });
+            await addVehicle({ vehicleName, licensePlate, color, vehicleType, seatCount });
 
             Swal.fire({
                 icon: 'success',

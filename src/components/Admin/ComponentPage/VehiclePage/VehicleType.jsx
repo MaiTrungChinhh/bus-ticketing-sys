@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import Swal from 'sweetalert2';
-import vehicleService from '../../../../services/vehicleService';
+import { addVehicleType, deleteVehicleType, fetchVehicleTypes } from '../../../../services/vehicleService';
 import AdvancedFilter from '../../DefaultComponent/AdvancedFilter';
 import Pagination from '../../DefaultComponent/Pagination';
 import VehicleTypeTable from './VehicleTypeTable';
@@ -14,10 +14,10 @@ const VehicleType = () => {
     const [loading, setLoading] = useState(false);
     const [selectedFilters, setSelectedFilters] = useState({});
 
-    const fetchVehicleTypes = async () => {
+    const loadVehicleTypes = async () => {
         try {
             setLoading(true);
-            const data = await vehicleService.fetchVehicleTypes();
+            const data = await fetchVehicleTypes(); // Gọi hàm từ `vehicleService`
             setVehicleTypes(data);
             setFilteredVehicleTypes(data); // Cập nhật dữ liệu ban đầu vào bộ lọc
         } catch (error) {
@@ -33,9 +33,9 @@ const VehicleType = () => {
             return;
         }
         try {
-            await vehicleService.addVehicleType(name);
+            await addVehicleType(name);
             Swal.fire({ icon: 'success', title: 'Thành công!', text: 'Loại xe mới đã được thêm.' });
-            fetchVehicleTypes();
+            loadVehicleTypes();
         } catch {
             Swal.fire({ icon: 'error', title: 'Lỗi', text: 'Không thể thêm loại xe mới.' });
         }
@@ -54,9 +54,9 @@ const VehicleType = () => {
         });
         if (confirm.isConfirmed) {
             try {
-                await vehicleService.deleteVehicleType(id);
+                await deleteVehicleType(id);
                 Swal.fire({ icon: 'success', title: 'Thành công!', text: 'Đã xóa loại xe.' });
-                fetchVehicleTypes();
+                loadVehicleTypes();
             } catch {
                 Swal.fire({ icon: 'error', title: 'Lỗi', text: 'Không thể xóa loại xe này.' });
             }
@@ -84,7 +84,7 @@ const VehicleType = () => {
     };
 
     useEffect(() => {
-        fetchVehicleTypes();
+        loadVehicleTypes();
     }, []);
 
     useEffect(() => {

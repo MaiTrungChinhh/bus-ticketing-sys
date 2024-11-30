@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import vehicleService from '../../../../services/vehicleService';
+import { fetchVehicles } from '../../../../services/vehicleService';
+
 
 const VehicleInactive = () => {
     const [vehicles, setVehicles] = useState([]);
@@ -9,20 +10,25 @@ const VehicleInactive = () => {
     const navigate = useNavigate();
 
     useEffect(() => {
-        const fetchVehicles = async () => {
+        const fetchVehicle = async () => {
             try {
-                const fetchedVehicles = await vehicleService.fetchInactiveVehicles();
+                const fetchedVehicles = await fetchVehicles(); // Gọi đúng hàm từ `vehicleService`
                 setVehicles(fetchedVehicles);
             } catch (err) {
                 console.error('Error fetching vehicles:', err);
-                setError('Không thể tải dữ liệu. Vui lòng kiểm tra lại kết nối.');
+                Swal.fire({
+                    icon: 'error',
+                    title: 'Lỗi',
+                    text: 'Không thể tải danh sách xe. Vui lòng kiểm tra lại kết nối.',
+                });
             } finally {
                 setLoading(false);
             }
         };
 
-        fetchVehicles();
+        fetchVehicle();
     }, []);
+
 
     const handleEdit = (vehicle) => {
         navigate('/dashboard/vehiclesinactive/edit', { state: { vehicle } });

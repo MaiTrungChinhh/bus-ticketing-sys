@@ -2,21 +2,22 @@ import React, { useEffect } from 'react';
 import { FaEdit, FaPlus } from 'react-icons/fa';
 import { MdDelete } from 'react-icons/md';
 import { useNavigate } from 'react-router-dom';
+import { fetchVehicles } from '../../../../services/vehicleService';
 
 const VehicleTable = ({ vehicles, onEdit, onDelete }) => {
     const navigate = useNavigate(); // Import useNavigate để điều hướng
     useEffect(() => {
-        const fetchVehicles = async () => {
+        const fetchVehicle = async () => {
             try {
-                const fetchedVehicles = await vehicleService.fetchVehicles();
-                console.log('Fetched Vehicles:', fetchedVehicles); // Log dữ liệu
-                setVehicles(fetchedVehicles);
+                const fetchedVehicle = await fetchVehicles();
+                console.log('Fetched Vehicles:', fetchVehicles); // Log dữ liệu
+                setVehicles(fetchedVehicle);
             } catch (error) {
                 console.error('Error fetching vehicles:', error);
             }
         };
 
-        fetchVehicles();
+        fetchVehicle();
     }, []);
 
     return (

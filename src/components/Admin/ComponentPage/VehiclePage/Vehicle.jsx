@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import Swal from 'sweetalert2';
-import vehicleService from '../../../../services/vehicleService';
+import { addVehicle, fetchVehicles, updateVehicle, updateVehicleStatus } from '../../../../services/vehicleService';
 import AdvancedFilter from '../../DefaultComponent/AdvancedFilter';
 import Pagination from '../../DefaultComponent/Pagination';
 import VehicleForm from './VehicleForm';
@@ -16,9 +16,9 @@ const Vehicle = () => {
     const [itemsPerPage, setItemsPerPage] = useState(10);
 
     useEffect(() => {
-        const fetchVehicles = async () => {
+        const fetchVehicle = async () => {
             try {
-                const fetchedVehicles = await vehicleService.fetchVehicles();
+                const fetchedVehicles = await fetchVehicles();
                 setVehicles(fetchedVehicles);
             } catch (err) {
                 console.error('Error fetching vehicles:', err);
@@ -32,13 +32,13 @@ const Vehicle = () => {
             }
         };
 
-        fetchVehicles();
+        fetchVehicle();
     }, []);
 
     const handleFormSubmit = async (vehicleData) => {
         try {
             if (editingVehicle) {
-                const updatedVehicle = await vehicleService.updateVehicle(editingVehicle.id, vehicleData);
+                const updatedVehicle = await updateVehicle(editingVehicle.id, vehicleData);
                 setVehicles((prev) =>
                     prev.map((v) => (v.id === editingVehicle.id ? updatedVehicle : v))
                 );
@@ -48,7 +48,7 @@ const Vehicle = () => {
                     text: 'Thông tin xe đã được cập nhật.',
                 });
             } else {
-                const newVehicle = await vehicleService.addVehicle(vehicleData);
+                const newVehicle = await addVehicle(vehicleData);
                 setVehicles((prev) => [...prev, newVehicle]);
                 Swal.fire({
                     icon: 'success',
@@ -79,7 +79,7 @@ const Vehicle = () => {
 
         if (confirm.isConfirmed) {
             try {
-                await vehicleService.updateVehicleStatus(vehicleId, 'OUT_OF_SERVICE');
+                await updateVehicleStatus(vehicleId, 'OUT_OF_SERVICE');
                 setVehicles((prev) =>
                     prev.map((v) =>
                         v.id === vehicleId ? { ...v, status: 'OUT_OF_SERVICE' } : v
@@ -121,25 +121,31 @@ const Vehicle = () => {
                 (vehicle.vehicleName && vehicle.vehicleName.toLowerCase().includes(searchTerm)) ||
                 (vehicle.licensePlate && vehicle.licensePlate.toLowerCase().includes(searchTerm)) ||
                 (vehicle.color && vehicle.color.toLowerCase().includes(searchTerm));
+
             const statusMatch =
-                selectedFilters.status.length === 0 || selectedFilters.status.includes(vehicle.status);
+                selectedFilters.status.length > 0 // Nếu có bộ lọc trạng thái
+                    ? selectedFilters.status.includes(vehicle.status) // Chỉ giữ trạng thái phù hợp
+                    : true; // Nếu không có bộ lọc trạng thái, hiển thị tất cả
 
             return searchMatch && statusMatch;
         });
     };
+
 
     const handleSearch = (term) => {
         setSearchTerm(term ? term.toLowerCase() : '');
     };
 
     const handleApplyFilters = (appliedFilters) => {
-        console.log("Filters Applied:", appliedFilters);
         const { selectedOptions } = appliedFilters;
         const newFilters = {
             status: Object.keys(selectedOptions).filter((key) => selectedOptions[key]),
         };
         setSelectedFilters(newFilters);
+
+        console.log("Bộ lọc áp dụng:", newFilters); // Log để kiểm tra
     };
+
     const handleApply = () => {
         const appliedFilters = {
             selectedOptions,

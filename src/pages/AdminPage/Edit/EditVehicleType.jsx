@@ -2,7 +2,8 @@ import React, { useEffect, useState } from 'react';
 import { useLocation, useNavigate } from 'react-router-dom';
 import Swal from 'sweetalert2';
 import DefaultComponent from '../../../components/Admin/DefaultComponent/DefaultComponent';
-import vehicleService from '../../../services/vehicleService';
+import { updateVehicleType } from '../../../services/vehicleService';
+
 
 const EditVehicleType = () => {
     const location = useLocation();
@@ -39,7 +40,7 @@ const EditVehicleType = () => {
         }
 
         try {
-            await vehicleService.updateVehicleType(initialData.id, { vehicleTypeName });
+            await updateVehicleType(initialData.id, { vehicleTypeName });
             Swal.fire({
                 icon: 'success',
                 title: 'Thành công!',

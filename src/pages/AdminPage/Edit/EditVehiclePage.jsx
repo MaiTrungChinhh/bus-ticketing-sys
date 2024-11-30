@@ -2,7 +2,9 @@ import React, { useEffect, useState } from 'react';
 import { useLocation, useNavigate } from 'react-router-dom';
 import Swal from 'sweetalert2';
 import DefaultComponent from '../../../components/Admin/DefaultComponent/DefaultComponent';
-import vehicleService from '../../../services/vehicleService';
+import { fetchVehicleTypes, updateVehicle } from '../../../services/vehicleService';
+
+
 
 const EditVehiclePage = ({ setVehicles }) => {
     const location = useLocation();
@@ -30,9 +32,9 @@ const EditVehiclePage = ({ setVehicles }) => {
     }, [vehicle, navigate]);
 
     useEffect(() => {
-        const fetchVehicleTypes = async () => {
+        const fetchVehicleType = async () => {
             try {
-                const types = await vehicleService.fetchVehicleTypes();
+                const types = await fetchVehicleTypes();
                 setVehicleTypes(types);
             } catch (err) {
                 console.error('Lỗi khi tải danh sách loại xe:', err);
@@ -44,7 +46,7 @@ const EditVehiclePage = ({ setVehicles }) => {
             }
         };
 
-        fetchVehicleTypes();
+        fetchVehicleType();
     }, []);
 
     const handleChange = (e) => {
@@ -74,7 +76,7 @@ const EditVehiclePage = ({ setVehicles }) => {
                 vehicleType: formData.vehicleType,
             };
 
-            await vehicleService.updateVehicle(vehicle.id, payload);
+            await updateVehicle(vehicle.id, payload);
 
             if (setVehicles) {
                 setVehicles((prev) =>
