@@ -1,15 +1,40 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import Swal from 'sweetalert2';
 import DefaultComponent from '../../../components/Admin/DefaultComponent/DefaultComponent';
-import paymentMethodService from '../../../services/paymentMethodService';
+import priceService from '../../../services/priceService';
 
-const AddPaymentMethodPage = () => {
+const AddPricePage = () => {
     const navigate = useNavigate();
     const [formData, setFormData] = useState({
-        methodName: '',
-        roles: '',
+        route: '',
+        vehicleType: '',
+        ticketPrice: '',
     });
+
+    const [routes, setRoutes] = useState([]);
+    const [vehicleTypes, setVehicleTypes] = useState([]);
+
+    useEffect(() => {
+        const fetchData = async () => {
+            try {
+                const fetchedRoutes = await priceService.fetchRoutes();
+                const fetchedVehicleTypes = await priceService.fetchVehicleTypes();
+
+                setRoutes(fetchedRoutes);
+                setVehicleTypes(fetchedVehicleTypes);
+            } catch (err) {
+                console.error('Lỗi khi tải dữ liệu:', err);
+                Swal.fire({
+                    icon: 'error',
+                    title: 'Lỗi',
+                    text: 'Không thể tải dữ liệu. Vui lòng thử lại.',
+                });
+            }
+        };
+
+        fetchData();
+    }, []);
 
     const handleChange = (e) => {
         const { name, value } = e.target;
@@ -19,7 +44,7 @@ const AddPaymentMethodPage = () => {
     const handleSubmit = async (e) => {
         e.preventDefault();
 
-        if (!formData.methodName || !formData.roles) {
+        if (!formData.route || !formData.vehicleType || !formData.ticketPrice) {
             Swal.fire({
                 icon: 'error',
                 title: 'Lỗi',
@@ -30,25 +55,26 @@ const AddPaymentMethodPage = () => {
 
         try {
             const payload = {
-                methodName: formData.methodName,
-                roles: formData.roles.split(',').map((role) => role.trim()), // Chuyển roles thành mảng
+                routeId: formData.route,
+                vehicleTypeId: formData.vehicleType,
+                ticketPrice: parseInt(formData.ticketPrice, 10),
             };
 
-            await paymentMethodService.createPaymentMethod(payload);
+            await priceService.createPrice(payload);
 
             Swal.fire({
                 icon: 'success',
                 title: 'Thành công!',
-                text: 'Phương thức thanh toán đã được thêm mới.',
+                text: 'Giá vé đã được thêm mới.',
             }).then(() => {
-                navigate('/dashboard/payment-methods/list');
+                navigate('/dashboard/prices/list');
             });
         } catch (err) {
-            console.error('Lỗi khi thêm phương thức thanh toán:', err);
+            console.error('Lỗi khi thêm giá vé:', err);
             Swal.fire({
                 icon: 'error',
                 title: 'Lỗi',
-                text: 'Không thể thêm phương thức thanh toán. Vui lòng thử lại.',
+                text: 'Không thể thêm giá vé. Vui lòng thử lại.',
             });
         }
     };
@@ -56,35 +82,57 @@ const AddPaymentMethodPage = () => {
     return (
         <DefaultComponent>
             <div className="container mx-auto p-6">
-                <h1 className="text-3xl font-bold mb-4">Thêm Phương Thức Thanh Toán</h1>
+                <h1 className="text-3xl font-bold mb-4">Thêm Giá Vé Mới</h1>
                 <form onSubmit={handleSubmit} className="space-y-4 bg-white p-6 rounded shadow-md">
                     <div>
-                        <label className="block font-semibold mb-2">Tên Phương Thức</label>
-                        <input
-                            type="text"
-                            name="methodName"
-                            value={formData.methodName}
+                        <label className="block font-semibold mb-2">Tuyến Đường</label>
+                        <select
+                            name="route"
+                            value={formData.route}
                             onChange={handleChange}
                             className="w-full p-2 border rounded"
                             required
-                        />
+                        >
+                            <option value="">Chọn tuyến đường</option>
+                            {routes.map((route) => (
+                                <option key={route.id} value={route.id}>
+                                    {route.departureLocation} - {route.arrivalLocation}
+                                </option>
+                            ))}
+                        </select>
                     </div>
                     <div>
-                        <label className="block font-semibold mb-2">Roles</label>
-                        <input
-                            type="text"
-                            name="roles"
-                            value={formData.roles}
+                        <label className="block font-semibold mb-2">Loại Xe</label>
+                        <select
+                            name="vehicleType"
+                            value={formData.vehicleType}
                             onChange={handleChange}
                             className="w-full p-2 border rounded"
-                            placeholder="Nhập các roles cách nhau bằng dấu phẩy, ví dụ: ADMIN,USER"
+                            required
+                        >
+                            <option value="">Chọn loại xe</option>
+                            {vehicleTypes.map((type) => (
+                                <option key={type.id} value={type.id}>
+                                    {type.vehicleTypeName}
+                                </option>
+                            ))}
+                        </select>
+                    </div>
+                    <div>
+                        <label className="block font-semibold mb-2">Giá Vé</label>
+                        <input
+                            type="number"
+                            name="ticketPrice"
+                            value={formData.ticketPrice}
+                            onChange={handleChange}
+                            className="w-full p-2 border rounded"
                             required
                         />
                     </div>
                     <div className="flex justify-end">
                         <button
                             type="button"
-                            onClick={() => navigate('/dashboard/payment-methods/list')}
+                            onClick={() => navigate('/dashboard/prices/list')}
                             className="mr-2 bg-gray-500 text-white px-4 py-2 rounded"
                         >
                             Hủy
@@ -102,4 +150,4 @@ const AddPaymentMethodPage = () => {
     );
 };
 
-export default AddPaymentMethodPage;
+export default AddPricePage;

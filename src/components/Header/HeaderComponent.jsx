@@ -149,7 +149,7 @@ const HeaderComponent = () => {
               <a
                 href="/users/login/"
                 className={`flex items-center text-2xl account-link ${isHomePage ? 'text-white' : 'text-blue-400'
-                  }`}
+                  }`} A
                 title="Tài khoản"
               >
                 <PiUserCircleThin className="text-2xl lg:text-4xl account-icon" />
@@ -189,7 +189,7 @@ const HeaderComponent = () => {
                 <li>
                   <a
                     className="block px-4 py-2 text-blue-500 hover:bg-gray-100 dropdown-item text-2xl whitespace-nowrap"
-                    href="/users/lostpass/"
+                    href="/user/forgotpassword"
                     title="Quên mật khẩu?"
                   >
                     Quên mật khẩu?

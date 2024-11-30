@@ -1,10 +1,9 @@
-import React, { useState, useEffect } from 'react';
-import { MdOutlineLocationOn } from 'react-icons/md';
-import { GoArrowSwitch } from 'react-icons/go';
+import React, { useEffect, useState } from 'react';
 import DatePicker from 'react-datepicker';
-import { Link } from 'react-router-dom';
 import 'react-datepicker/dist/react-datepicker.css';
-import { fetchRoutes } from '../../services/routeService';
+import { GoArrowSwitch } from 'react-icons/go';
+import { MdOutlineLocationOn } from 'react-icons/md';
+import { Link } from 'react-router-dom';
 
 const FindTicketComponent = () => {
   const [startDate, setStartDate] = useState(new Date());
@@ -170,9 +169,8 @@ const FindTicketComponent = () => {
           </div>
 
           <div
-            className={`flex items-center justify-center border border-gray-300 rounded-lg p-2 col-span-${
-              isRoundTrip ? 1 : 2
-            }`}
+            className={`flex items-center justify-center border border-gray-300 rounded-lg p-2 col-span-${isRoundTrip ? 1 : 2
+              }`}
           >
             <div className="w-full text-center">
               <span className="block text-gray-800 lg:text-2xl mb-2">
@@ -213,9 +211,8 @@ const FindTicketComponent = () => {
                 selectedDeparture
               )}&arrival=${encodeURIComponent(
                 selectedArrival
-              )}&date=${formatDate(startDate)}${
-                isRoundTrip ? `&returnDate=${formatDate(returnDate)}` : ''
-              }`}
+              )}&date=${formatDate(startDate)}${isRoundTrip ? `&returnDate=${formatDate(returnDate)}` : ''
+                }`}
               onClick={saveToLocalStorage} // Gọi hàm lưu dữ liệu trước khi chuyển trang
             >
               <button className="bg-blue-500 text-white px-4 py-2 rounded-lg lg:text-2xl">

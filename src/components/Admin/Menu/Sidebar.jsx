@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import {
   FaBus,
+  FaBusAlt,
   FaChartLine,
   FaCogs,
   FaEdit,
@@ -8,12 +9,13 @@ import {
   FaHistory,
   FaList,
   FaPlus,
+  FaRoute,
   FaTachometerAlt,
   FaTicketAlt,
   FaUserFriends,
   FaUsers,
   FaUserShield,
-  FaWrench,
+  FaWrench
 } from 'react-icons/fa';
 import { IoPricetags } from "react-icons/io5";
 import { MdOutlinePayment } from "react-icons/md";
@@ -143,6 +145,8 @@ const SidebarMenu = () => {
               isOpen={isOpen}
             />
           )}
+
+
           {hasAccess(['ADMIN', 'EMPLOYEE']) && (
             <NavMenuItem
               label={isOpen || isHovered ? 'Quản lý chuyến xe' : ''} // Hiện text khi hover
@@ -175,13 +179,26 @@ const SidebarMenu = () => {
             <NavMenuItem
               label={isOpen || isHovered ? 'Quản lý xe' : ''}
               to="/vehicles"
-              icon={<FaBus />}
+              icon={<FaBusAlt />}
               subMenus={[
                 { label: 'Loại xe', to: '/dashboard/vehicles/type', icon: <FaList /> },
                 { label: 'Danh sách xe', to: '/dashboard/vehicles/list', icon: <FaList /> },
                 { label: 'Danh sách xe không còn hoạt động', to: '/dashboard/vehicles/list/inactive', icon: <FaList /> },
               ]}
               onSubMenuToggle={() => handleSubMenuToggle('vehicles')}
+              isOpen={isOpen}
+            />
+          )}
+
+          {hasAccess(['ADMIN']) && (
+            <NavMenuItem
+              label={isOpen || isHovered ? 'Quản lý tuyến' : ''}
+              to="/routes"
+              icon={<FaRoute />}
+              subMenus={[
+                { label: 'Danh sách tuyến', to: '/dashboard/routes/list', icon: <FaList /> }
+              ]}
+              onSubMenuToggle={() => handleSubMenuToggle('routes')}
               isOpen={isOpen}
             />
           )}
