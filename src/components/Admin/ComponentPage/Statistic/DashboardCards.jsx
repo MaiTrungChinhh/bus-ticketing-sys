@@ -3,7 +3,7 @@ import React from 'react';
 const DashboardCards = () => {
   const cardsData = [
     {
-      title: 'Tổng Đơn Hàng',
+      title: 'Tổng Đặt Vé',
       value: '13,647',
       icon: 'solar:cart-5-bold-duotone',
       percentage: '2.3%',
