@@ -1,3 +1,5 @@
+import TicketLookup from '../components/DetailTicket/TicketInfoComponent.jsx';
+import AddBookingPage from '../pages/AdminPage/Add/AddBookingPage.jsx';
 import AddCustomerPage from '../pages/AdminPage/Add/AddCustomerPage.jsx';
 import AddEmployeePage from '../pages/AdminPage/Add/AddEmployeePage.jsx'; // Thêm trang thêm nhân viên
 import AddEmployeeTypePage from '../pages/AdminPage/Add/AddEmployeeTypePage.jsx';
@@ -15,7 +17,11 @@ import {
 import EditPaymentMethodPage from '../pages/AdminPage/Edit/EditPaymentMethodPage.jsx';
 import EditPricePage from '../pages/AdminPage/Edit/EditPricePage.jsx';
 import EditRoutePage from '../pages/AdminPage/Edit/EditRoute.jsx';
+import EditTripPage from '../pages/AdminPage/Edit/EditTripPage.jsx';
 import EditVehiclePage from '../pages/AdminPage/Edit/EditVehiclePage.jsx';
+import AssignmentTrip from '../pages/AdminPage/Page/AssignmentTrip.jsx';
+import AssignmentVehicle from '../pages/AdminPage/Page/AssignmentVehicle.jsx';
+import BookTicketPage from '../pages/AdminPage/Page/BookTicketPage.jsx';
 import CustomerListPage from '../pages/AdminPage/Page/CustomerListPage.jsx';
 import Dashboard from '../pages/AdminPage/Page/DashboardPage';
 import EmployeeTypePage from '../pages/AdminPage/Page/EmployeeTypePage.jsx';
@@ -40,12 +46,6 @@ import LoginPage from '../pages/LoginLogout/LoginPage';
 import RegisterPage from '../pages/LoginLogout/RegisterPage';
 import NotFoundPage from '../pages/NotFoundPage/NotFoundPage';
 import OrderPage from '../pages/OrderPage/OrderPage';
-import BookTicketPage from '../pages/AdminPage/Page/BookTicketPage.jsx';
-import AddBookingPage from '../pages/AdminPage/Add/AddBookingPage.jsx';
-import AssignmentTrip from '../pages/AdminPage/Page/AssignmentTrip.jsx';
-import AssignmentVehicle from '../pages/AdminPage/Page/AssignmentVehicle.jsx';
-import EditTripPage from '../pages/AdminPage/Edit/EditTripPage.jsx';
-import TicketLookup from '../components/DetailTicket/TicketInfoComponent.jsx';
 
 export const routes = [
   {

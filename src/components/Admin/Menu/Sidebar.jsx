@@ -3,7 +3,6 @@ import {
   FaBus,
   FaEdit,
   FaFileAlt,
-  FaHistory,
   FaList,
   FaPlus,
   FaRoute,
@@ -143,11 +142,6 @@ const SidebarMenu = () => {
                   to: '/dashboard/bookings/add',
                   icon: <FaPlus />,
                 },
-                {
-                  label: 'Lịch sử đặt vé',
-                  to: '/bookings/history',
-                  icon: <FaHistory />,
-                },
               ]}
               onSubMenuToggle={() => handleSubMenuToggle('bookings')}
               isOpen={isOpen}
@@ -168,11 +162,6 @@ const SidebarMenu = () => {
                   label: 'Thêm chuyến xe',
                   to: '/dashboard/trip/add',
                   icon: <FaPlus />,
-                },
-                {
-                  label: 'Cập nhật chuyến xe',
-                  to: '/dashboard/trip/edit',
-                  icon: <FaEdit />,
                 },
               ]}
               onSubMenuToggle={() => handleSubMenuToggle('busSchedule')}
@@ -195,13 +184,8 @@ const SidebarMenu = () => {
                     },
                     {
                       label: 'Thêm xe',
-                      to: '/dashboard/vehicles/add',
+                      to: '/dashboard/vehicle/add',
                       icon: <FaPlus />,
-                    },
-                    {
-                      label: 'Cập nhật thông tin xe',
-                      to: '/dashboard/vehicles/update',
-                      icon: <FaEdit />,
                     },
                     {
                       label: 'Loại xe',
