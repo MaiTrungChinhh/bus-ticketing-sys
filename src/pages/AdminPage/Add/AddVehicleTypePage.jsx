@@ -2,7 +2,8 @@ import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import Swal from 'sweetalert2';
 import DefaultComponent from '../../../components/Admin/DefaultComponent/DefaultComponent';
-import vehicleService from '../../../services/vehicleService';
+import { addVehicleType } from '../../../services/vehicleService';
+
 
 export default function AddVehicleTypePage() {
     const [vehicleTypeName, setVehicleTypeName] = useState('');
@@ -20,7 +21,7 @@ export default function AddVehicleTypePage() {
         }
 
         try {
-            await vehicleService.addVehicleType(vehicleTypeName);
+            await addVehicleType(vehicleTypeName);
 
             Swal.fire({
                 icon: 'success',

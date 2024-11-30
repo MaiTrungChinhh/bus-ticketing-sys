@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from 'react';
-import vehicleService from '../../../../services/vehicleService';
+import { fetchVehicleTypes } from '../../../../services/vehicleService';
+
 
 const VehicleForm = ({ onSubmit, initialData = {} }) => {
     const [formData, setFormData] = useState({
@@ -13,15 +14,15 @@ const VehicleForm = ({ onSubmit, initialData = {} }) => {
     const [vehicleTypes, setVehicleTypes] = useState([]);
 
     useEffect(() => {
-        const fetchVehicleTypes = async () => {
+        const fetchVehicleType = async () => {
             try {
-                const fetchedVehicleTypes = await vehicleService.fetchVehicleTypes();
+                const fetchedVehicleTypes = await fetchVehicleTypes();
                 setVehicleTypes(fetchedVehicleTypes);
             } catch (err) {
                 console.error('Error fetching vehicle types:', err);
             }
         };
-        fetchVehicleTypes();
+        fetchVehicleType();
     }, []);
 
     const handleChange = (e) => {
