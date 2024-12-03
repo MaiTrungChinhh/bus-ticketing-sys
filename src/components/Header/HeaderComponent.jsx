@@ -176,7 +176,7 @@ const HeaderComponent = () => {
                 <li>
                   <a
                     className="block px-4 py-2 text-blue-500 hover:bg-gray-100 dropdown-item text-2xl whitespace-nowrap"
-                    href="/login"
+                    href="/"
                     title="Thông tin tài khoản"
                   >
                     <button className="login-button">

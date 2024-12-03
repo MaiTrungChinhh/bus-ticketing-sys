@@ -60,7 +60,7 @@ const TicketsSold = () => {
   return (
     <div className="flex justify-center p-5 max-w-6xl mx-auto bg-white shadow-lg rounded-lg">
       {/* Sidebar */}
-      <div className="w-1/6 p-4 bg-gray-100 rounded-l-lg">
+      <div className="w-1/5 p-4 bg-gray-100 rounded-l-lg">
         <h2 className="text-xl font-semibold text-center mb-6">Thống kê</h2>
 
         {/* Dropdown để chọn loại thống kê */}

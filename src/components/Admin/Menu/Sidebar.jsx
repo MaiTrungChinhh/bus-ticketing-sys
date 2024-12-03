@@ -10,7 +10,7 @@ import {
   FaTasks,
   FaTicketAlt,
   FaUserFriends,
-  FaUsers
+  FaUsers,
 } from 'react-icons/fa';
 import { IoPricetags } from 'react-icons/io5';
 import { MdOutlinePayment } from 'react-icons/md';
@@ -52,8 +52,9 @@ const SidebarMenu = () => {
 
   return (
     <div
-      className={`flex sidebar transition-all duration-500 ease-in-out ${isOpen || isHovered ? 'w-96 opacity-100' : 'w-24 opacity-75'
-        } bg-gradient-to-r from-blue-400 to-blue-600 p-1 shadow-lg`}
+      className={`flex sidebar transition-all duration-500 ease-in-out ${
+        isOpen || isHovered ? 'w-96 opacity-100' : 'w-24 opacity-75'
+      } bg-gradient-to-r from-blue-400 to-blue-600 p-1 shadow-lg`}
       onMouseEnter={() => setIsHovered(true)} // Hiện sidebar khi hover
       onMouseLeave={() => {
         setIsHovered(false); // Ẩn sidebar khi không hover
@@ -64,16 +65,17 @@ const SidebarMenu = () => {
         <nav className="flex flex-col p-4">
           <div className="flex items-center justify-between mb-4">
             <h1
-              className={`text-2xl font-bold transition-opacity duration-500 ${isOpen || isHovered ? 'block opacity-100' : 'hidden opacity-0'
-                }`}
+              className={`text-2xl font-bold transition-opacity duration-500 ${
+                isOpen || isHovered ? 'block opacity-100' : 'hidden opacity-0'
+              }`}
             >
               {isOpen || isHovered ? 'Quản lý Hệ thống' : ''}
             </h1>
             <button
               onClick={toggleSidebar}
-              className="text-white bg-blue-700 p-2 rounded focus:outline-none transition-all duration-300 hover:bg-blue-800"
+              className="text-white  p-2 rounded focus:outline-none transition-all duration-300 hover:bg-blue-800"
             >
-              {isOpen ? 'Đóng' : 'Mở'}
+              {isOpen ? 'Đóng' : ''}
             </button>
           </div>
 
@@ -96,31 +98,31 @@ const SidebarMenu = () => {
               subMenus={
                 localStorage.getItem('roles') === 'ADMIN'
                   ? [
-                    {
-                      label: 'Loại nhân viên',
-                      to: '/dashboard/employees/type',
-                      icon: <FaList />,
-                    },
-                    {
-                      label: 'Danh sách nhân viên',
-                      to: '/dashboard/employees/list',
-                      icon: <FaList />,
-                    },
-                    {
-                      label: 'Danh sách người dùng',
-                      to: '/dashboard/customers/list',
-                      icon: <FaList />,
-                    },
-                  ]
-                  : localStorage.getItem('roles') === 'EMPLOYEE'
-                    ? [
+                      {
+                        label: 'Loại nhân viên',
+                        to: '/dashboard/employees/type',
+                        icon: <FaList />,
+                      },
+                      {
+                        label: 'Danh sách nhân viên',
+                        to: '/dashboard/employees/list',
+                        icon: <FaList />,
+                      },
                       {
                         label: 'Danh sách người dùng',
                         to: '/dashboard/customers/list',
                         icon: <FaList />,
                       },
                     ]
-                    : []
+                  : localStorage.getItem('roles') === 'EMPLOYEE'
+                  ? [
+                      {
+                        label: 'Danh sách người dùng',
+                        to: '/dashboard/customers/list',
+                        icon: <FaList />,
+                      },
+                    ]
+                  : []
               }
               onSubMenuToggle={() => handleSubMenuToggle('customers')}
               isOpen={isOpen}
@@ -177,29 +179,29 @@ const SidebarMenu = () => {
               subMenus={
                 localStorage.getItem('roles') === 'ADMIN'
                   ? [
-                    {
-                      label: 'Danh sách xe',
-                      to: '/dashboard/vehicles/list',
-                      icon: <FaList />,
-                    },
-                    {
-                      label: 'Thêm xe',
-                      to: '/dashboard/vehicle/add',
-                      icon: <FaPlus />,
-                    },
-                    {
-                      label: 'Loại xe',
-                      to: '/dashboard/vehicles/type',
-                      icon: <FaList />,
-                    },
-                    {
-                      label: 'Danh sách xe không còn hoạt động',
-                      to: '/dashboard/vehicles/list/inactive',
-                      icon: <FaList />,
-                    },
-                  ]
+                      {
+                        label: 'Danh sách xe',
+                        to: '/dashboard/vehicles/list',
+                        icon: <FaList />,
+                      },
+                      {
+                        label: 'Thêm xe',
+                        to: '/dashboard/vehicle/add',
+                        icon: <FaPlus />,
+                      },
+                      {
+                        label: 'Loại xe',
+                        to: '/dashboard/vehicles/type',
+                        icon: <FaList />,
+                      },
+                      {
+                        label: 'Danh sách xe không còn hoạt động',
+                        to: '/dashboard/vehicles/list/inactive',
+                        icon: <FaList />,
+                      },
+                    ]
                   : localStorage.getItem('roles') === 'EMPLOYEE'
-                    ? [
+                  ? [
                       {
                         label: 'Danh sách xe',
                         to: '/dashboard/vehicles/list',
@@ -211,13 +213,12 @@ const SidebarMenu = () => {
                         icon: <FaEdit />,
                       },
                     ]
-                    : []
+                  : []
               }
               onSubMenuToggle={() => handleSubMenuToggle('vehicles')}
               isOpen={isOpen}
             />
           )}
-
 
           {hasAccess(['ADMIN', 'EMPLOYEE']) && (
             <NavMenuItem
@@ -253,7 +254,9 @@ const SidebarMenu = () => {
           )}
           {hasAccess(['ADMIN']) && (
             <NavMenuItem
-              label={isOpen || isHovered ? 'Quản lý phương thức thanh toán' : ''} // Hiện text khi hover
+              label={
+                isOpen || isHovered ? 'Quản lý phương thức thanh toán' : ''
+              } // Hiện text khi hover
               to="/paymentmethod"
               icon={<MdOutlinePayment />}
               subMenus={[

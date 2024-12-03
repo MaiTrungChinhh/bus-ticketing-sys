@@ -44,7 +44,7 @@ const BookingTable = () => {
         );
         if (Array.isArray(data)) {
           const now = new Date();
-          const sixHoursAgo = new Date(now.getTime() + 6 * 60 * 60 * 1000);
+          const sixHoursAgo = new Date(now.getTime() + 3 * 60 * 60 * 1000);
 
           const filteredData = data.filter((trip) => {
             const departureDateTime = new Date(

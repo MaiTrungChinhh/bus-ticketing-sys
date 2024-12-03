@@ -6,9 +6,8 @@ import { FcAdvance } from 'react-icons/fc';
 
 const TableTrip = ({ bookings }) => {
   const navigate = useNavigate();
-
+  console.log(bookings);
   const book = (id) => {
-    console.log(`Booking ID: ${id}`);
     navigate(`/buyticket/detail/${id}`);
   };
 
