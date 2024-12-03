@@ -46,6 +46,8 @@ import LoginPage from '../pages/LoginLogout/LoginPage';
 import RegisterPage from '../pages/LoginLogout/RegisterPage';
 import NotFoundPage from '../pages/NotFoundPage/NotFoundPage';
 import OrderPage from '../pages/OrderPage/OrderPage';
+import AssignmentTripAdd from '../pages/AdminPage/Add/AddAssignmentTrip.jsx';
+import AssignmentVehicleAdd from '../pages/AdminPage/Add/AddAssignmentVehicle.jsx';
 
 export const routes = [
   {
@@ -204,6 +206,14 @@ export const routes = [
   {
     path: '/dashboard/assignmentVehicle/list',
     page: AssignmentVehicle,
+  },
+  {
+    path: 'dashboard/assignmentTrip/add',
+    page: AssignmentTripAdd,
+  },
+  {
+    path: 'dashboard/assignmentVehicle/add',
+    page: AssignmentVehicleAdd,
   },
   // {
   //   path: '/dashboard/vehicles/list',

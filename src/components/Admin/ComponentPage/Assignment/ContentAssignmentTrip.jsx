@@ -37,7 +37,7 @@ const ContentAssignmentTrip = ({ assignmentTrips, totalResults }) => {
                 More Setting <FaCog className="ms-2" /> {/* Icon after text */}
               </button>
               <Link
-                to="/dashboard/trip/add"
+                to="/dashboard/assignmentTrip/add"
                 className="text-xl btn btn-success me-1 flex items-center text-blue-500 hover:text-blue-600 p-2 m-2 bg-blue-100 hover:bg-blue-200 rounded-xl"
               >
                 Thêm phân công <FaPlus className="ms-2" />{' '}

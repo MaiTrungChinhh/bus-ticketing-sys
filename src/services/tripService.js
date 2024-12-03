@@ -97,6 +97,16 @@ export const fetchAssignmentTrips = async (page, pageSize) => {
   }
 };
 
+export const fetchTripsunassigned = async () => {
+  try {
+    const response = await axiosInstance.get(`/trips/unassigned`);
+    return response.data.result;
+  } catch (error) {
+    console.error('Error fetching trips:', error);
+    throw error;
+  }
+};
+
 export const fetchAssignmentVehicles = async (page, pageSize) => {
   try {
     const response = await axiosInstance.get('/driverAssignmentsForVehicles', {
@@ -112,12 +122,60 @@ export const fetchAssignmentVehicles = async (page, pageSize) => {
   }
 };
 
+export const createAssignmentTrip = async (tripId, employeeId) => {
+  try {
+    const { data } = await axiosInstance.post('/driverAssignmentsForTrips', {
+      tripId,
+      employeeId,
+    });
+    return data;
+  } catch (error) {
+    console.error('Error creating trip assignment:', error);
+    throw error;
+  }
+};
+
 export const updateTrip = async (tripId, tripData) => {
   try {
     const response = await axiosInstance.put(`/trips/${tripId}`, tripData);
     return response.data;
   } catch (error) {
     console.error('Error updating trip:', error);
+    throw error;
+  }
+};
+
+export const fetchDrivers = async () => {
+  try {
+    const response = await axiosInstance.get('/employees/drivers');
+    return response.data.result;
+  } catch (error) {
+    console.error('Error fetching drivers:', error);
+    throw error;
+  }
+};
+
+export const fetchVehiclesUnassigned = async () => {
+  try {
+    const response = await axiosInstance.get(`/vehicles/unassigned`);
+    return response.data.result;
+  } catch (error) {
+    console.error('Error fetching trips:', error);
+    throw error;
+  }
+};
+
+export const createAssignmentVehicle = async (assignmentData) => {
+  try {
+    const response = await axiosInstance.post('/driverAssignmentsForVehicles', {
+      startDate: assignmentData.startDate,
+      endDate: assignmentData.endDate,
+      vehicleId: assignmentData.vehicleId,
+      employeeId: assignmentData.driverId,
+    });
+    return response.data;
+  } catch (error) {
+    console.error('Error creating trip assignment:', error);
     throw error;
   }
 };
