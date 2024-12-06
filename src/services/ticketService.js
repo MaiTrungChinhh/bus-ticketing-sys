@@ -36,3 +36,18 @@ export const fetchTickets = async (page, pageSize) => {
     throw error;
   }
 };
+
+export const fetchTicketsByTripId = async (tripId) => {
+  try {
+    const response = await axiosInstance.get(`/tickets/trip/${tripId}`);
+    return response.data;
+  } catch (error) {
+    if (error.response && error.response.status === 404) {
+      console.error('Trip not found:', error.response.data.message);
+      return { message: 'Chuyến đi không tồn tại.' }; // Trả về thông báo nếu chuyến đi không tồn tại
+    } else {
+      console.error('Error fetching tickets by trip ID:', error);
+      throw error; // Ném lỗi để xử lý ở nơi gọi hàm
+    }
+  }
+};

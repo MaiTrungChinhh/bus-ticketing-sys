@@ -6,14 +6,13 @@ import { deleteTrip } from '../../../../services/tripService';
 const TableTrip = ({ bookings }) => {
   const navigate = useNavigate();
 
-  const book = (id) => {
-    console.log(`Booking ID: ${id}`);
-    navigate(`/buyticket/detail/${id}`);
+  const editBooking = (id) => {
+    navigate(`/dashboard/trip/edit/${id}`);
+    // Add navigation or edit functionality here
   };
 
-  const editBooking = (id) => {
-    console.log(`Edit Booking ID: ${id}`);
-    navigate(`/dashboard/trip/edit/${id}`);
+  const viewBooking = (id) => {
+    navigate(`/dashboard/trip/${id}`);
     // Add navigation or edit functionality here
   };
 

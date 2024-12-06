@@ -48,6 +48,7 @@ import NotFoundPage from '../pages/NotFoundPage/NotFoundPage';
 import OrderPage from '../pages/OrderPage/OrderPage';
 import AssignmentTripAdd from '../pages/AdminPage/Add/AddAssignmentTrip.jsx';
 import AssignmentVehicleAdd from '../pages/AdminPage/Add/AddAssignmentVehicle.jsx';
+import TripDetailPage from '../pages/AdminPage/Page/TripDetailPage.jsx';
 
 export const routes = [
   {
@@ -238,6 +239,10 @@ export const routes = [
   {
     path: '/buyticket/detail/:id',
     page: BuyTicketDetailPage,
+  },
+  {
+    path: 'dashboard/Trip/:id',
+    page: TripDetailPage,
   },
   {
     path: '/payment',
