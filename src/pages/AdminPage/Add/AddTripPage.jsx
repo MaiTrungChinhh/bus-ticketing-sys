@@ -116,22 +116,20 @@ const AddTripPage = () => {
 
   // Thêm chuyến xe
   const handleAddTrip = async () => {
-    // Kiểm tra dữ liệu trước khi gọi API
-    if (
-      !tripData.departure ||
-      !tripData.destination ||
-      !tripData.date ||
-      !tripData.time
-    ) {
-      // Hiển thị thông báo lỗi nếu thiếu thông tin
-      Swal.fire({
-        icon: 'warning',
-        title: 'Thiếu thông tin!',
-        text: 'Vui lòng nhập đầy đủ thông tin trước khi thêm chuyến xe.',
-        showConfirmButton: true,
-      });
-      return; // Dừng hàm nếu dữ liệu không hợp lệ
-    }
+    // if (
+    //   !tripData.departure ||
+    //   !tripData.destination ||
+    //   !tripData.date ||
+    //   !tripData.time
+    // ) {
+    //   Swal.fire({
+    //     icon: 'warning',
+    //     title: 'Thiếu thông tin!',
+    //     text: 'Vui lòng nhập đầy đủ thông tin trước khi thêm chuyến xe.',
+    //     showConfirmButton: true,
+    //   });
+    //   return; // Dừng hàm nếu dữ liệu không hợp lệ
+    // }
 
     try {
       const response = await createTrip(tripData);
@@ -156,15 +154,10 @@ const AddTripPage = () => {
       }
     } catch (error) {
       console.error('Error adding trip:', error);
-
-      // Kiểm tra nếu lỗi từ API có thông tin chi tiết hơn
       if (error.response && error.response.data) {
-        // Nếu có response từ API
         const apiError = error.response.data;
         const errorMessage = apiError.message || 'Vui lòng thử lại sau.';
         const errorCode = apiError.code || 'Không xác định';
-
-        // Hiển thị thông báo lỗi chi tiết từ API
         Swal.fire({
           icon: 'error',
           title: `Lỗi ${errorCode}`,
@@ -172,7 +165,6 @@ const AddTripPage = () => {
           showConfirmButton: true,
         });
       } else {
-        // Nếu không có lỗi từ API, hiển thị lỗi chung
         Swal.fire({
           icon: 'error',
           title: 'Có lỗi xảy ra!',

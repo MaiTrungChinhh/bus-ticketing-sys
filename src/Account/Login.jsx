@@ -24,8 +24,8 @@ const Login = () => {
 
             if (loginData.result && loginData.result.token) {
                 const token = loginData.result.token;
-                localStorage.setItem('token', token); // Lưu token
-                localStorage.setItem('username', username); // Lưu tên đăng nhập
+                localStorage.setItem('token', token);
+                localStorage.setItem('username', username);
 
                 // Decode token và lấy vai trò
                 const decodedToken = jwtDecode(token);
