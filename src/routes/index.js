@@ -31,6 +31,7 @@ import ListEmployeePage from '../pages/AdminPage/Page/ListEmployeePage.jsx';
 import PaymentMethodPage from '../pages/AdminPage/Page/PaymentMethodPage.jsx';
 import PricePage from '../pages/AdminPage/Page/PricePage.jsx';
 import RoutePage from '../pages/AdminPage/Page/RoutePage.jsx';
+import TripDetailPage from '../pages/AdminPage/Page/TripDetailPage.jsx';
 import ListTrip from '../pages/AdminPage/Page/TripPage';
 import VehicleInactivePage from '../pages/AdminPage/Page/VehicleInactivePage.jsx';
 import VehicleListPage from '../pages/AdminPage/Page/VehicleListPage.jsx';
@@ -239,6 +240,10 @@ export const routes = [
   {
     path: '/buyticket/detail/:id',
     page: BuyTicketDetailPage,
+  },
+  {
+    path: 'dashboard/Trip/:id',
+    page: TripDetailPage,
   },
   {
     path: '/payment',
