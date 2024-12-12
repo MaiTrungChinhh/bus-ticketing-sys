@@ -1,4 +1,6 @@
 import TicketLookup from '../components/DetailTicket/TicketInfoComponent.jsx';
+import AssignmentTripAdd from '../pages/AdminPage/Add/AddAssignmentTrip.jsx';
+import AssignmentVehicleAdd from '../pages/AdminPage/Add/AddAssignmentVehicle.jsx';
 import AddBookingPage from '../pages/AdminPage/Add/AddBookingPage.jsx';
 import AddCustomerPage from '../pages/AdminPage/Add/AddCustomerPage.jsx';
 import AddEmployeePage from '../pages/AdminPage/Add/AddEmployeePage.jsx'; // Thêm trang thêm nhân viên
@@ -29,6 +31,7 @@ import ListEmployeePage from '../pages/AdminPage/Page/ListEmployeePage.jsx';
 import PaymentMethodPage from '../pages/AdminPage/Page/PaymentMethodPage.jsx';
 import PricePage from '../pages/AdminPage/Page/PricePage.jsx';
 import RoutePage from '../pages/AdminPage/Page/RoutePage.jsx';
+import TripDetailPage from '../pages/AdminPage/Page/TripDetailPage.jsx';
 import ListTrip from '../pages/AdminPage/Page/TripPage';
 import VehicleInactivePage from '../pages/AdminPage/Page/VehicleInactivePage.jsx';
 import VehicleListPage from '../pages/AdminPage/Page/VehicleListPage.jsx';
@@ -46,9 +49,7 @@ import LoginPage from '../pages/LoginLogout/LoginPage';
 import RegisterPage from '../pages/LoginLogout/RegisterPage';
 import NotFoundPage from '../pages/NotFoundPage/NotFoundPage';
 import OrderPage from '../pages/OrderPage/OrderPage';
-import AssignmentTripAdd from '../pages/AdminPage/Add/AddAssignmentTrip.jsx';
-import AssignmentVehicleAdd from '../pages/AdminPage/Add/AddAssignmentVehicle.jsx';
-import TripDetailPage from '../pages/AdminPage/Page/TripDetailPage.jsx';
+import UserInformationPage from '../pages/UserInFormationPage/UserInformationPage.jsx';
 
 export const routes = [
   {
@@ -270,4 +271,11 @@ export const routes = [
     path: '/user/changepassword',
     page: ChangePasswordPage,
   },
+  // thông tin người dùng và cập nhật thông tin 
+  {
+    path: '/user/information',
+    page: UserInformationPage,
+  },
+
+  // login gg
 ];

@@ -30,6 +30,8 @@ const RegisterAccount = () => {
 
             if (response.status === 201) {
                 setRegisterStatus('Đăng ký thành công!');
+                window.location.href = '/login';
+
             } else {
                 setRegisterStatus(`Đăng ký thất bại: ${data.message}`);
             }
