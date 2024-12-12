@@ -1,12 +1,7 @@
 import { jwtDecode } from 'jwt-decode';
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import {
-  getGoogleLogin,
-  getFacebookLogin,
-  getFacebookCallback,
-  getGoogleCallback,
-} from '../services/AuthService';
+
 import axiosInstance from '../services/Axios';
 
 const Login = () => {
@@ -15,63 +10,6 @@ const Login = () => {
   const [loginStatus, setLoginStatus] = useState('');
   const navigate = useNavigate();
 
-  const handleGoogleLogin = async () => {
-    try {
-      // Gọi API và lấy URL chuyển hướng
-      const googleAuthUrl = await getGoogleLogin();
-
-      // Chuyển hướng người dùng tới URL
-      if (googleAuthUrl) {
-        window.location.href = googleAuthUrl;
-      }
-    } catch (error) {
-      console.error('Lỗi khi xử lý đăng nhập Google:', error);
-      // alert('Không thể đăng nhập Google. Vui lòng thử lại.');
-    }
-  };
-
-  const handleClickFacebook = () => {
-    console.log('Người dùng đã nhấn vào nút Đăng nhập Facebook.');
-  };
-
-  // const handleResponseFacebook = async (response) => {
-  //   try {
-  //     if (response.status === 'unknown') {
-  //       console.error(
-  //         'Người dùng chưa đăng nhập hoặc hủy đăng nhập với Facebook.'
-  //       );
-  //       alert('Đăng nhập Facebook thất bại. Vui lòng thử lại.');
-  //       return;
-  //     }
-
-  //     // Phản hồi thành công từ Facebook
-  //     const { id, name, email } = response;
-  //     console.log('Phản hồi Facebook:', response);
-
-  // Gửi thông tin người dùng đến API backend để đăng nhập
-  //     const serverResponse = await axiosInstance.post(
-  //       'https://localhost:8080/auth/facebook',
-  //       { facebookId: id }
-  //     ); // này do trong console nó kêu là https mới được fb cho phép nên tui thử á
-
-  //     const { token, user } = serverResponse.data;
-
-  //     if (token) {
-  //       // Lưu token vào localStorage
-  //       localStorage.setItem('token', token);
-  //       localStorage.setItem('user', JSON.stringify(user)); // Lưu thông tin người dùng
-  //       setLoginStatus('Đăng nhập thành công!');
-  //       navigate('/'); // Điều hướng về trang chính sau khi đăng nhập thành công
-  //     } else {
-  //       setLoginStatus('Không thể xử lý đăng nhập. Vui lòng thử lại sau.');
-  //     }
-  //   } catch (error) {
-  //     console.error('Lỗi trong xử lý phản hồi Facebook:', error);
-  //     alert('Đăng nhập thất bại. Vui lòng kiểm tra kết nối mạng hoặc thử lại.');
-  //   }
-  // };
-
-  // Đăng nhập thường
   const handleLogin = async (e) => {
     e.preventDefault();
     try {
@@ -160,26 +98,6 @@ const Login = () => {
             required
           />
         </div>
-
-        {/* <div className="mb-8">
-          <button
-            type="button"
-            className="w-full bg-red-500 text-white py-5 rounded-lg text-2xl hover:bg-red-700"
-            onClick={handleGoogleLogin}
-          >
-            Đăng nhập với Google
-          </button>
-        </div>
-
-        <div className="mb-8">
-          <button
-            type="button"
-            className="w-full bg-blue-500 text-white py-5 rounded-lg text-2xl hover:bg-blue-800"
-            onClick={handleClickFacebook}
-          >
-            Đăng nhập với Facebook
-          </button>
-        </div> */}
 
         <div className="text-center mb-8">
           <button
